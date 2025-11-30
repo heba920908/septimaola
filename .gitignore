@@ -26,3 +26,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Latex temporary files
+/examples/
+*.pdf
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.xdv
