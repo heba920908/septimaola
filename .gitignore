@@ -31,6 +31,14 @@ yarn-error.log*
 /examples/
 *.pdf
 *.aux
+*.bbl
+bbl-*
+*.bcf
+*.blg
+*.idx
+*.nav
+*.run.xml
+*.snm
 *.log
 *.out
 *.fls
@@ -38,3 +46,4 @@ yarn-error.log*
 *.synctex.gz
 *.toc
 *.xdv
+*.vrb

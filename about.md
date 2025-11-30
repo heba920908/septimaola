@@ -2,11 +2,17 @@
 
 "Septima Ola" it is a band that combines reggae, ska, and rocksteady to create a unique sound that resonates with audiences worldwide. Their music is characterized by catchy melodies, infectious rhythms, and socially conscious lyrics that address themes of love, unity, and social justice.
 
+"Septima Ola" borne out of the shared passion for music among its members, who bring diverse influences and experiences to the table. In Alfred's departmen in La Raza DF, Mexico, the band keeps growing and evolving, captivating audiences with their energetic live performances and heartfelt songs.
+
+"Septima Ola" objective is to spread positive messages through their music, inspiring listeners to embrace love, peace, and social change.
+
+Our vision is to be a leading force in the reggae and ska music scene, known for our authentic sound, meaningful lyrics, and commitment to artistic integrity, while our mission is to create music that resonates with people from all walks of life, fostering a sense of community and empowerment through our art.
+
 This is the experience of each of the band members:
 
-```text
+## Integrantes
 
-<SANDY ROBINSUELL>
+### SANDY ROBINSUELL
 
 VOCALISTA CORISTA DE SÉPTIMA OLA. SU CAMINO MUSICAL COMENZÓ DESDE LA INFANCIA, CUANDO CANTABA PARA SU MADRE COMO SU PRIMERA ESPECTADORA. ESA PASIÓN CRECIÓ CON ELLA Y SE EXTENDIÓ A SU ENTORNO, LLEGANDO A SUS AMIGOS Y COMPAÑEROS DE LA FACULTAD DE PSICOLOGÍA, CARRERA DE LA QUE TAMBIÉN ES EGRESADA Y QUE FORMA PARTE ESENCIAL DE SU MIRADA HUMANA Y CREATIVA.
 
@@ -20,11 +26,11 @@ HOY, ROBINSUELL COMBINA TÉCNICA, SENSIBILIDAD Y UNA VOCACIÓN PROFUNDA POR LA E
 
 LA INVITACIÓN ESTÁ ABIERTA: SÚBETE A ESTA OLA Y DISFRUTA DE NUESTRA MÚSICA.
 
-<LEMANU>
+### LEMANU
 
 lemanu es un baterista que mezcla energía suave, firmeza rítmica y sensibilidad musical. Su estilo fusiona la fluidez del reggae con la presencia del rock. Actualmente estudia en la Escuela de Música del Rock a la Palabra, donde continúa desarrollando su técnica, su criterio musical y su lenguaje rítmico.
 
-<LEVI>
+### LEVI
 
 Soy saxofonista del estado de México con más de 10 años de experiencia.
 
@@ -41,7 +47,16 @@ Actualmente continuo con el proyecto como solista, ahora llamado "Jazz & Love." 
 
 Cofundador, saxofón tenor, maestro de saxofón y flauta traversa en la orquesta infantil y juvenil O.S.I.N Xochipilli con presentaciones culturales en en Estado de México y en la Ciudad de México.
 
-<ARTHUR>
+### ARTHUR
 
 Arthur es un bajista apasionado por la salsa y sus ritmos contagiosos. Su viaje musical comenzo con Alfred en "Arthur en sus dias", una banda de salsa que le permitió explorar y perfeccionar su técnica en el bajo. A lo largo de los años, Arthur ha desarrollado un estilo único que combina la energía vibrante de la salsa con la profundidad rítmica del reggae.
-```
+
+### Rodrigo Mera
+
+Violinista de Séptima Ola - En la escena musical donde el ska y el reggae son la base, el sonido de un violín destaca por su rareza y calidez. Rodrigo Mera es quien aporta ese elemento distintivo a Séptima Ola, un proyecto que nace sin etiquetas precisas, con la libertad de fusionar y explorar.
+
+Para Rodrigo, unirse a la banda representó una oportunidad única: ser considerado como violinista fundador en un género donde su instrumento no es común, pero donde encuentra un espacio fértil para la innovación. Su formación de más de 11 años, que incluye estudios de licenciatura y experiencia en orquestas como la Sinfónica de la UACM, le proporciona una base de precisión técnica y profundidad melódica. Sin embargo, es su mentalidad de aprendizaje constante la que le permite enfrentar el reto de adaptar el violín a sonidos festivos, trabajando para que su calidez se integre de manera orgánica en la energía del grupo.
+
+Dentro de Séptima Ola, la química es fundamental. Rodrigo encuentra un ecosistema creativo donde cada integrante, con su historia única, aporta para construir un sueño colectivo. Desde su trinchera, Rodrigo contribuye no solo con su instrumento, sino con ideas de composición y arreglos, aspirando a fusionar su mundo clásico con toques de folklor mexicano, buscando siempre transmitir un abanico de emociones que va desde la nostalgia hasta la liberación y la diversión.
+
+Con una curiosidad que lo lleva a escuchar constantemente nuevos sonidos, Rodrigo Mera y su violín son la capa de calidez y singularidad que ayuda a definir el paisaje sonoro, fresco y en evolución constante, de Séptima Ola.

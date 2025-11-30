@@ -1,0 +1,123 @@
+% Presskit para la banda "Séptima Ola" — versión en español (México)
+\documentclass[11pt,notheorems,hyperref={pdfauthor={Séptima Ola}}]{beamer}
+
+\input{loadslides.tex} % Reusar el archivo de configuración (tipografías, tema)
+
+% Metadatos
+\title[Presskit · Séptima Ola]{SÉPTIMA OLA — PRESSKIT OFICIAL}
+\subtitle{Reggae · Ska · Rocksteady — Ciudad de México}
+\author[]{SÉPTIMA OLA}
+\institute{Press kit para medios y promotores — Público: México}
+% date will be set after the language is selected to ensure spanish locale names
+
+% Add project logo to slides (appears in the title/foot area via beamer \logo)
+\logo{\includegraphics[height=1.6cm]{../assets/Logo_01.jpeg}}
+
+% Load babel (language-specific macros can be set manually for this presskit)
+\usepackage{babel}
+% If babel is present or not, ensure Spanish names for month and part appear.
+% Build a Spanish month name macro and set a localized date string.
+\newcommand{\esmonthname}{%
+  \ifcase\month\or enero\or febrero\or marzo\or abril\or mayo\or junio\or julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre\fi
+}
+\date{\number\day\ de\ \esmonthname\ de\ \number\year}
+% Force the 'part' caption to Spanish
+\renewcommand{\partname}{Parte}
+
+\begin{document}
+
+% Portada
+% Portada (custom, avoid translator placeholders for date)
+{
+\setbeamertemplate{footline}{}
+\begin{frame}
+  \vspace{0.6cm}
+  \begin{center}
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\Huge\inserttitle\par}
+    \vspace{0.4cm}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\large\insertsubtitle\par}
+    \vspace{0.6cm}
+    {\large\insertauthor\par}
+    {\small\insertinstitute\par}
+    \vfill
+    {\small\insertdate\par}
+  \end{center}
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+% Simple section header for the presskit (avoid partname placeholder)
+\begin{frame}
+  \centering\Huge\textbf{PRESS KIT}
+  \begin{center}
+  \includegraphics[height=0.28\textheight,keepaspectratio]{../assets/Logo_01.jpeg}
+  \end{center}
+\end{frame}
+
+\section{Biografía}
+\begin{frame}{¿Quiénes somos?}{Una presentación breve}
+\begin{itemize}
+  \item Séptima Ola nace en Ciudad de México como una fusión honesta entre reggae, ska y rocksteady, con letras orientadas a la unión y la conciencia social.
+  \item Sus presentaciones destacan por la interacción con el público y una propuesta sonora inspirada en la tradición de los ritmos jamaicanos y la energía latina.
+  \item Entre sus proyectos destacados se incluye ``Desde mi Ventana'' y ``Contraluz''.
+\end{itemize}
+\vspace{0.2cm}
+\begin{flushright}
+  \includegraphics[height=0.28\textheight,keepaspectratio]{../assets/Grupal_01.jpeg}
+\end{flushright}
+\end{frame}
+
+\section{Integrantes}
+\begin{frame}{Miembros principales}
+\begin{itemize}
+  \item \textbf{Sandy Robinsuell —} Vocalista y tecladista. Formación coral, estudios en Psicología y creadora de proyectos colaborativos en línea.
+  \item \textbf{Lemanu —} Batería. Ritmo sólido que combina la fluidez del reggae con presencia rockera.
+  \item \textbf{Levi —} Saxofón tenor. Más de una década en escena, proyectos solistas y pedagógicos; proyecto destacado: ``Jazz \& Love''.
+  \item \textbf{Rodri (Rodrigo Mera) —} Violín. Rodrigo aporta la calidez y singularidad del violín a un proyecto donde el instrumento no es habitual: más de 11 años de formación, estudios de licenciatura y experiencia en orquestas (incluida la Sinfónica de la UACM). En Séptima Ola contribuye con arreglos, composición y la habilidad de integrar el violín en colores folklóricos y ritmos festivos, aportando desde la nostalgia a la liberación y la alegría.
+  \item \textbf{Arthur —} Bajista. Influencias en salsa y música latina que aportan groove y profundidad sonora.
+\end{itemize}
+\end{frame}
+
+\section{Música}
+\begin{frame}{Discografía / Material}
+\begin{itemize}
+  \item Singles ``Desde mi ventana''.
+  \item Singles y maquetas en plataformas de streaming (Spotify / Bandcamp / YouTube).
+  \item Masters y material técnico disponibles a solicitud para prensa y promociones.
+\end{itemize}
+\vspace{0.25cm}
+\begin{center}
+  \includegraphics[height=0.28\textheight,keepaspectratio]{../assets/Grupal_02.jpeg}
+\end{center}
+\end{frame}
+
+\section{Galería}
+\begin{frame}{Material visual}
+\begin{center}
+  \includegraphics[height=0.5\textheight,keepaspectratio]{../assets/Grupal_03.jpeg}
+  \vspace{0.2cm}
+  \small{Fotos oficiales (alta resolución) y logos vectoriales disponibles bajo petición.}
+\end{center}
+\end{frame}
+
+\section{Rider técnico}
+\begin{frame}{Resumen técnico}
+\begin{itemize}
+  \item Microfonía sugerida: vocal principal (SM58 o similar), 3 micros para coros, 1 micro para saxofón, 1 para violin.
+  \item Configuración mínima: PA y monitores según aforo.
+  \item Backline: batería completa, amplificador de bajo y guitarra; ajustes según formato del evento.
+\end{itemize}
+\end{frame}
+
+\section{Contacto}
+\begin{frame}{Contactos para booking y prensa}
+\begin{itemize}
+  \item \textbf{Booking:} septimaolaoficial@gmail.com
+  \item \textbf{Prensa:} septimaolaoficial@gmail.com
+  \item \textbf{Redes sociales:} @septimaolaoficial (Instagram / Facebook / YouTube)
+  \item \textbf{Base:} Ciudad de México, México
+\end{itemize}
+\vspace{0.35cm} \centering{\small Para entrevistas, fechas y material adicional (MP3, WAV, fotos, logos), por favor contacta a los correos anteriores.}
+\end{frame}
+
+\end{document}
