@@ -1,6 +1,12 @@
 # Latex Presentation for presskit
 
 ```shell
+cd latex/
+podman build -t latex-build .
+podman run --rm -v $(pwd):/data latex-build latexmk -pdf -interaction=nonstopmode slides.tex
+```
+
+```shell
 cd latex && latexmk -pdf -interaction=nonstopmode slides.tex
 ## Search for missing LaTeX packages:
 dnf provides '*/multirow.sty' || true
