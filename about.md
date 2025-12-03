@@ -47,7 +47,7 @@ Actualmente continuo con el proyecto como solista, ahora llamado "Jazz & Love." 
 
 Cofundador, saxofón tenor, maestro de saxofón y flauta traversa en la orquesta infantil y juvenil O.S.I.N Xochipilli con presentaciones culturales en en Estado de México y en la Ciudad de México.
 
-### ARTHUR
+### Arthur en sus dias
 
 Arthur es un bajista apasionado por la salsa y sus ritmos contagiosos. Su viaje musical comenzo con Alfred en "Arthur en sus dias", una banda de salsa que le permitió explorar y perfeccionar su técnica en el bajo. A lo largo de los años, Arthur ha desarrollado un estilo único que combina la energía vibrante de la salsa con la profundidad rítmica del reggae.
 
@@ -60,3 +60,7 @@ Para Rodrigo, unirse a la banda representó una oportunidad única: ser consider
 Dentro de Séptima Ola, la química es fundamental. Rodrigo encuentra un ecosistema creativo donde cada integrante, con su historia única, aporta para construir un sueño colectivo. Desde su trinchera, Rodrigo contribuye no solo con su instrumento, sino con ideas de composición y arreglos, aspirando a fusionar su mundo clásico con toques de folklor mexicano, buscando siempre transmitir un abanico de emociones que va desde la nostalgia hasta la liberación y la diversión.
 
 Con una curiosidad que lo lleva a escuchar constantemente nuevos sonidos, Rodrigo Mera y su violín son la capa de calidez y singularidad que ayuda a definir el paisaje sonoro, fresco y en evolución constante, de Séptima Ola.
+
+### Ingri Mona
+
+Ingri Mona es la percusionista de Séptima Ola, aportando ritmos vibrantes y una energía contagiosa que eleva la música de la banda. Su pasión por la percusión comenzó en su juventud, explorando diversos estilos y técnicas que ahora enriquecen el sonido único del grupo. Su especialidad en instrumentos como congas, bongos y otros elementos de percusión latina comenzaron en la musica salsa y cumbia , y ahora se fusionan perfectamente con los ritmos reggae y ska de Séptima Ola. Ingri Mona no solo aporta su habilidad técnica, sino también una presencia escénica dinámica que conecta con el público, haciendo que cada presentación sea una experiencia inolvidable. Su dedicación y amor por la música son evidentes en cada ritmo que toca, contribuyendo significativamente al carácter distintivo de la banda.
