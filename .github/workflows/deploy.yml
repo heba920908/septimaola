@@ -30,6 +30,7 @@ jobs:
         with:
           name: github-pages
           path: ./react/dist
+          expire-in: 1d
 
   deploy:
     environment:
