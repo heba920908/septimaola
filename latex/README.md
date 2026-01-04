@@ -1,5 +1,9 @@
 # Latex Presentation for presskit
 
+## Prerequisites
+
+Download the assets from Google Drive: [Latex Assets](https://drive.google.com/file/d/1hYChucBrjdjkYjl1iyFMZohzh4mSEXAC/view?usp=sharing)
+
 ```shell
 cd latex/
 podman build -t latex-build .

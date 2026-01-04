@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.env
+# These can be downloaded from google drive

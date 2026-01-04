@@ -47,3 +47,6 @@ bbl-*
 *.toc
 *.xdv
 *.vrb
+
+# Can be downloaded from google drive
+assets/
