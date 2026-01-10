@@ -1,61 +1,144 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+
+// Component to handle image loading with retry logic for 429 errors
+// Leverages browser HTTP cache - uses cached images when available, retries on errors
+function ImageWithRetry({ src, alt, className, style, imagePosition }) {
+  const [retryCount, setRetryCount] = useState(0)
+  const [shouldShow, setShouldShow] = useState(true)
+  const retryTimeoutRef = useRef(null)
+  const maxRetries = 2
+
+  useEffect(() => {
+    // Reset when src changes
+    if (src) {
+      setRetryCount(0)
+      setShouldShow(true)
+    }
+    
+    return () => {
+      // Cleanup timeout on unmount or src change
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current)
+      }
+    }
+  }, [src])
+
+  const handleError = (e) => {
+    if (retryCount < maxRetries) {
+      // Incremental delay: 1s for first retry, 2s for second retry
+      const delay = (retryCount + 1) * 1000
+      
+      retryTimeoutRef.current = setTimeout(() => {
+        setRetryCount(prev => prev + 1)
+        // Simply trigger a re-render by updating retryCount
+        // Browser will use cache if available, or make fresh request if not
+        // No need to clear/reset src - browser handles caching automatically
+      }, delay)
+    } else {
+      // Max retries reached, hide image
+      setShouldShow(false)
+      if (e.target) {
+        e.target.style.display = 'none'
+      }
+    }
+  }
+
+  const handleLoad = () => {
+    // Successfully loaded, clear any pending retries
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current)
+    }
+    // Reset retry count on successful load
+    setRetryCount(0)
+  }
+
+  if (!src || src === 'PLACEHOLDER_ID' || !shouldShow) return null
+
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className} 
+      style={{ 
+        ...style, 
+        objectPosition: imagePosition || 'center'
+      }}
+      onError={handleError}
+      onLoad={handleLoad}
+      key={`${src}-${retryCount}`} // Key change forces re-render on retry
+    />
+  )
+}
 
 export default function Members() {
+  const [expandedMember, setExpandedMember] = useState(null)
+
   const members = [
     {
       name: 'Sandy Robinsuell',
       role: 'Vocalista y Tecladista',
       image: '11URa6v_EjHpjz9s23eAo8siVFfbRcLkc',
-      imagePosition: 'center', // center, top, bottom
-      description: 'Formada en FARO Indios Verdes, egresada de Psicología y creadora del canal "Puente Mágico". Combina técnica coral, sensibilidad y texturas atmosféricas que elevan el sello emocional de Séptima Ola.'
+      imagePosition: 'center',
+      shortDescription: 'Vocalista y tecladista. Combina técnica coral y texturas atmosféricas.',
+      fullDescription: 'Vocalista corista de Séptima Ola. Su camino musical comenzó desde la infancia, cuando cantaba para su madre como su primera espectadora. Esa pasión creció con ella y se extendió a su entorno, llegando a sus amigos y compañeros de la Facultad de Psicología, carrera de la que también es egresada y que forma parte esencial de su mirada humana y creativa. A los 12 años inició sus prácticas en teclado junto a una de sus primas, quien hoy sigue siendo parte fundamental de su vida y su arte. Tiempo después se integró al coro de la FARO Indios Verdes, etapa que le brindó disciplina vocal, experiencia escénica y una profunda conexión con el trabajo colectivo. Durante la pandemia desarrolló "Puente Mágico", un canal de jam en vivo donde colaboró con cantantes y músicos de distintos países, explorando nuevas sonoridades, improvisación y comunidades creativas globales. A los 22 años, un amigo estudiante de la Facultad de Música la invitó a trabajar en sus primeras maquetas profesionales, abriendo así la puerta a proyectos cada vez más sólidos y a su participación en la banda Séptima Ola. Hoy, Robinsuell combina técnica, sensibilidad y una vocación profunda por la expresión artística. Su estilo tecladístico atmosférico y su aportación vocal añaden textura y emoción al sello musical de Séptima Ola.'
     },
     {
       name: 'Itzel BP',
       role: 'Percusionista',
       image: '1NyA4KL3OsFB9m2W4u6JS7qcTJ_5-K3Mq',
       imagePosition: 'center',
-      description: 'Especializada en congas, bongós y percusión latina. Sus raíces en salsa y cumbia se mezclan con el reggae y ska para aportar dinamismo y conexión con el público.'
+      shortDescription: 'Percusionista especializada en congas y bongós. Fusiona ritmos latinos con reggae y ska.',
+      fullDescription: 'Percusionista de Séptima Ola, aportando ritmos vibrantes y una energía contagiosa que eleva la música de la banda. Su pasión por la percusión comenzó en su juventud, explorando diversos estilos y técnicas que ahora enriquecen el sonido único del grupo. Su especialidad en instrumentos como congas, bongós y otros elementos de percusión latina comenzó en la música salsa y cumbia, y ahora se fusionan perfectamente con los ritmos reggae y ska de Séptima Ola. Itzel BP no solo aporta su habilidad técnica, sino también una presencia escénica dinámica que conecta con el público, haciendo que cada presentación sea una experiencia inolvidable. Su dedicación y amor por la música son evidentes en cada ritmo que toca, contribuyendo significativamente al carácter distintivo de la banda.'
     },
     {
       name: 'Alfred Herrera',
       role: 'Vocalista y Guitarrista',
       image: '1NLXEkoOz8CcVXXAFOMoCwttNoPVw7t35',
       imagePosition: 'top',
-      description: 'Con influencias de Bob Marley y The Skatalites. Lidera la visión creativa y los mensajes de unidad, amor y justicia social de Séptima Ola.'
+      shortDescription: 'Fundador, guitarrista y vocalista. Lidera la visión creativa con mensajes de unidad y justicia social.',
+      fullDescription: 'Alfred Herrera es el guitarrista y fundador de Séptima Ola, una banda que fusiona reggae, ska y rocksteady para crear un sonido único. Su viaje musical comenzó en la Ciudad de México, donde se sumergió en la escena local y desarrolló su estilo distintivo. Con influencias que van desde Bob Marley hasta The Skatalites, Alfred ha trabajado incansablemente para perfeccionar su técnica y llevar la música de Séptima Ola a audiencias de todo el mundo. Su enfoque creativo y su pasión por la música se reflejan en cada composición, haciendo de Séptima Ola una banda que no solo entretiene, sino que también inspira con mensajes de amor, unidad y justicia social. Destaca por su habilidad para combinar ritmos tradicionales con elementos modernos, creando un sonido fresco y relevante en la escena musical contemporánea.'
     },
     {
       name: 'Lemanu',
       role: 'Baterista',
       image: '1vZxL4byBgKMExxKbakuZhEgQ2hsFDPVY',
       imagePosition: 'top',
-      description: 'Mezcla fluidez reggae con presencia rockera. Estudia en la Escuela de Música del Rock a la Palabra y construye grooves sólidos que sostienen los cambios dinámicos del show.'
+      shortDescription: 'Baterista que fusiona la fluidez del reggae con la presencia del rock.',
+      fullDescription: 'Lemanu es un baterista que mezcla energía suave, firmeza rítmica y sensibilidad musical. Su estilo fusiona la fluidez del reggae con la presencia del rock. Actualmente estudia en la Escuela de Música del Rock a la Palabra, donde continúa desarrollando su técnica, su criterio musical y su lenguaje rítmico. Construye grooves sólidos que sostienen los cambios dinámicos del show, aportando una base rítmica esencial para el sonido característico de Séptima Ola.'
     },
     {
       name: 'Levi',
       role: 'Saxofón Tenor',
       image: '1kh42JDOOif795zfIgig1c3THcWXdvsYq',
       imagePosition: 'top',
-      description: 'Del Estado de México con más de 10 años de trayectoria. Fundó "Jazz & Love" y es maestro en la orquesta O.S.I.N Xochipilli.'
+      shortDescription: 'Saxofonista del Estado de México con más de 10 años de trayectoria.',
+      fullDescription: 'Saxofonista del Estado de México con más de 10 años de experiencia. Su carrera musical se ha ido desarrollando en el Estado de México desde el 2005 aproximadamente con clases de guitarra en la secundaria, continuando de manera autodidacta y llegando a ensambles de cámara con prestaciones de ámbito cultural. Formó parte de bandas locales de rock, ska y reggae, llegando a grabar un disco con esta última. La búsqueda del sonido versátil del saxofón lo llevó a seguirse formando musicalmente en diferentes centros culturales locales, cursos, máster class y de manera particular con variados profesores, Tito Hinojosa desde España y Sebastián Clementin desde Argentina. Dando como resultado el seguir como solista en presentaciones privadas, y ya reconocido por impartir clases localmente, la Secretaría de Turismo del Estado de México lo buscó, llegando a una serie de presentaciones del llamado: "Concierto de saxofón, a mi manera", donde expuso algunas de las melodías más populares del jazz en diferentes centros culturales y casas de cultura, culminando en el auditorio Dr. Miguel León Portilla en el Centro Cultural México Bicentenario en Texcoco, Edo. Mex. Actualmente continúa con el proyecto como solista, ahora llamado "Jazz & Love", con presentaciones privadas, culturales y públicas. Es cofundador, saxofón tenor, maestro de saxofón y flauta traversa en la orquesta infantil y juvenil O.S.I.N Xochipilli con presentaciones culturales en el Estado de México y en la Ciudad de México.'
     },
     {
       name: 'Rodrigo Mera',
       role: 'Violinista',
       image: '1EXP5Kh_RfxbQLrNVMUn7-Fygg1LrC7Xw',
       imagePosition: 'top',
-      description: 'Fundador con 11+ años de formación académica en la Sinfónica de la UACM. Integra el violín en ska/reggae con arreglos únicos.'
+      shortDescription: 'Violinista fundador con más de 11 años de formación académica. Integra el violín en ska y reggae.',
+      fullDescription: 'Violinista de Séptima Ola. En la escena musical donde el ska y el reggae son la base, el sonido de un violín destaca por su rareza y calidez. Rodrigo Mera es quien aporta ese elemento distintivo a Séptima Ola, un proyecto que nace sin etiquetas precisas, con la libertad de fusionar y explorar. Para Rodrigo, unirse a la banda representó una oportunidad única: ser considerado como violinista fundador en un género donde su instrumento no es común, pero donde encuentra un espacio fértil para la innovación. Su formación de más de 11 años, que incluye estudios de licenciatura y experiencia en orquestas como la Sinfónica de la UACM, le proporciona una base de precisión técnica y profundidad melódica. Sin embargo, es su mentalidad de aprendizaje constante la que le permite enfrentar el reto de adaptar el violín a sonidos festivos, trabajando para que su calidez se integre de manera orgánica en la energía del grupo. Dentro de Séptima Ola, la química es fundamental. Rodrigo encuentra un ecosistema creativo donde cada integrante, con su historia única, aporta para construir un sueño colectivo. Desde su trinchera, Rodrigo contribuye no solo con su instrumento, sino con ideas de composición y arreglos, aspirando a fusionar su mundo clásico con toques de folclor mexicano, buscando siempre transmitir un abanico de emociones que va desde la nostalgia hasta la liberación y la diversión. Con una curiosidad que lo lleva a escuchar constantemente nuevos sonidos, Rodrigo Mera y su violín son la capa de calidez y singularidad que ayuda a definir el paisaje sonoro, fresco y en evolución constante, de Séptima Ola.'
     },
     {
       name: 'Arthur Mono',
       role: 'Bajista',
       image: '10nWFvuwRtm_hR9LMtT5SmwRO5NCWey30',
-      imagePosition: 'center', // Focus on top of the image
-      description: 'Con raíces en la salsa. Su mezcla de ritmos caribeños y reggae añade profundidad y groove a cada arreglo.'
+      imagePosition: 'center',
+      shortDescription: 'Bajista apasionado por la salsa. Combina ritmos caribeños con reggae.',
+      fullDescription: 'Arthur es un bajista apasionado por la salsa y sus ritmos contagiosos. Su viaje musical comenzó con Alfred en "Arthur en sus días", una banda de salsa que le permitió explorar y perfeccionar su técnica en el bajo. A lo largo de los años, Arthur ha desarrollado un estilo único que combina la energía vibrante de la salsa con la profundidad rítmica del reggae. Su mezcla de ritmos caribeños y reggae añade profundidad y groove a cada arreglo, aportando una base sólida y rica en texturas al sonido de Séptima Ola.'
     }
   ]
 
   const getGoogleDriveImageUrl = (fileId) => {
     if (!fileId || fileId === 'PLACEHOLDER_ID') return null
     return `https://lh3.googleusercontent.com/d/${fileId}=w400-h400-c`
+  }
+
+  const toggleExpand = (idx) => {
+    setExpandedMember(expandedMember === idx ? null : idx)
   }
 
   return (
@@ -66,17 +149,24 @@ export default function Members() {
           {members.map((member, idx) => (
             <div key={idx} className="member-card">
               {member.image && member.image !== 'PLACEHOLDER_ID' && (
-                <img 
-                  src={getGoogleDriveImageUrl(member.image)} 
-                  alt={member.name} 
-                  className="member-image" 
-                  style={{ objectPosition: member.imagePosition || 'center' }}
-                  onError={(e) => {e.target.style.display = 'none'}} 
+                <ImageWithRetry
+                  src={getGoogleDriveImageUrl(member.image)}
+                  alt={member.name}
+                  className="member-image"
+                  imagePosition={member.imagePosition}
                 />
               )}
               <h3>{member.name}</h3>
               <p className="role">{member.role}</p>
-              <p className="description">{member.description}</p>
+              <p className="description">
+                {expandedMember === idx ? member.fullDescription : member.shortDescription}
+              </p>
+              <button 
+                className="ver-mas-btn"
+                onClick={() => toggleExpand(idx)}
+              >
+                {expandedMember === idx ? 'ver menos' : 'ver más'}
+              </button>
             </div>
           ))}
         </div>

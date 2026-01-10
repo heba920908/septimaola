@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Hero from './components/Hero'
 import Section from './components/Section'
 import Members from './components/Members'
@@ -7,19 +7,69 @@ import Gallery from './components/Gallery'
 import Contact from './components/Contact'
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen)
+  }
+
+  const closeMenu = () => {
+    setMenuOpen(false)
+  }
+
+  // Close menu when clicking outside or on escape key
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuOpen && !event.target.closest('.site-header')) {
+        closeMenu()
+      }
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && menuOpen) {
+        closeMenu()
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('click', handleClickOutside)
+      document.addEventListener('keydown', handleEscape)
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen])
+
   return (
     <div className="app">
-      <header className="site-header">
+      <header className={`site-header ${menuOpen ? 'menu-open' : ''}`}>
         <div className="header-branding">
           <h1 className="header-title">SÉPTIMA OLA</h1>
           <p className="header-subtitle">Reggae · Ska · Rocksteady</p>
         </div>
-        <nav>
-          <a href="#biografia">Biografía</a>
-          <a href="#integrantes">Integrantes</a>
-          <a href="#musica">Música</a>
-          <a href="#galeria">Galería</a>
-          <a href="#contacto">Contacto</a>
+        <button 
+          className="menu-toggle" 
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav className={menuOpen ? 'nav-open' : ''}>
+          <a href="#biografia" onClick={closeMenu}>Biografía</a>
+          <a href="#integrantes" onClick={closeMenu}>Integrantes</a>
+          <a href="#musica" onClick={closeMenu}>Música</a>
+          <a href="#galeria" onClick={closeMenu}>Galería</a>
+          <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
       </header>
 
