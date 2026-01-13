@@ -8,7 +8,6 @@ RUN dnf install -y --skip-unavailable \
     texlive-collection-fontsrecommended \
     texlive-collection-latexextra \
     texlive-chktex \
-    texlive-fonts-extra \
     texlive-latex \
     texlive-schemabloc \
     texlive-multirow \
