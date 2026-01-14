@@ -3,12 +3,12 @@
 _By Panteón Rococó_
 
 ## Quick Chord Reference
-**Key:** Am (A minor / La menor)  
+**Key:** Fm (F minor / Fa menor)  
 **Tempo:** ~85 BPM  
 **Time Signature:** 4/4
 
 ### Chords Used
-- Main chords: **Am, Dm, G, C**
+- Main chords: **Fm, Cm, A#, C**⁵ the à aww
 - Secondary chords: **F, E**
 - Capo position: None (open position)
 
@@ -16,7 +16,8 @@ _By Panteón Rococó_
 
 **Intro (4 bars):**
 ```
-| Am | Dm | Am | G |
+| B  | C  |- Dm - E
+| Fm | Cm | A# |
 ```
 
 **Verse 1 (16 bars):**
