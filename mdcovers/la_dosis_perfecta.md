@@ -1,6 +1,6 @@
 # La Dosis Perfecta
 
-_By Panteón Rococó_
+_By Panteón Rococó_  -- status: revised
 
 ## Quick Chord Reference
 **Key:** Cm (C minor / Do menor)  
@@ -51,6 +51,6 @@ _By Panteón Rococó_
 
 **References:**  
 - **YouTube (Live Performance):** [Panteón Rococó en el Festival Vive Latino 2008 - La Dosis Perfecta](https://www.youtube.com/watch?v=Z271Shchmug)
-- **Chords Source:** [E-Chords - La Dosis Perfecta](https://www.e-chords.com/chords/panteon-rococo/la-dosis-perfecta)
+- **Chords Source:** [La Cuerda - La Dosis Perfecta](https://chords.lacuerda.net/panteon_rococo/la_dosis_perfecta.shtml)
 
 _Last updated: 2024_

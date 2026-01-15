@@ -1,6 +1,6 @@
 # Para no verte más
 
-_La Mosca Tsé-Tsé_
+_La Mosca Tsé-Tsé_  -- status: revised
 
 ## Quick Chord Reference
 **Key:** C (C major / Do mayor)  

@@ -8,6 +8,7 @@ Writing Style and Content:
 - Should contain "Quick Chord Reference", "Chord Progression Map", "Performance Notes" sections.
 - The "Performance Notes" section should emphasise on the bass lines and performance details.
 - Also should include the link of the song which was researched in the internet, I suggest to include the link of the song (youtube or spotify), but also include the chords source link (specify which is for youtube and which it is for chords).
+- As this is latin based songs, would be more accurate to get chords from https://chords.lacuerda.net/ instead of e-chords.com.
 
 Code Examples:
 - Take as an example file #la_dosis_perfecta.md under mdcovers/ directory.
