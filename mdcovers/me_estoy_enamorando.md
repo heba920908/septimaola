@@ -1,5 +1,7 @@
 # Me estoy enamorando
 
+[← Back to Index](README.md)
+
 _Inspector_
 
 ## Quick Chord Reference
@@ -51,3 +53,5 @@ _Inspector_
 - **Chords Source:** [La Cuerda - Me estoy enamorando](https://acordes.lacuerda.net/inspector/me_estoy_enamorando)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

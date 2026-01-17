@@ -1,5 +1,7 @@
 # Arreglame el Alma
 
+[← Back to Index](README.md)
+
 _By Panteón Rococó_  -- status: revised
 
 ## Quick Chord Reference
@@ -71,3 +73,5 @@ _By Panteón Rococó_  -- status: revised
 - **Chords Source:** [La Cuerda - Arréglame el Alma](https://chords.lacuerda.net/panteon_rococo/arreglame_el_alma-2.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

@@ -1,5 +1,7 @@
 # Take Five
 
+[← Back to Index](README.md)
+
 _Antidoping_  -- status: revised
 
 ## Quick Chord Reference
@@ -42,3 +44,5 @@ _Antidoping_  -- status: revised
 - **Chords Source:** Analysis based on original "Take Five" harmony adapted to 4/4 ska version probably a [link](https://tabs.ultimate-guitar.com/tab/the-dave-brubeck-quartet/take-five-chords-1196457).
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

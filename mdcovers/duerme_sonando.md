@@ -1,5 +1,7 @@
 # Duerme soñando
 
+[← Back to Index](README.md)
+
 _El Gran Silencio_  -- status: revised
 
 ## Quick Chord Reference
@@ -54,3 +56,5 @@ _El Gran Silencio_  -- status: revised
 - **Chords Source:** [La Cuerda - Duerme soñando](https://chords.lacuerda.net/gran_silencio/duerme_soniando-2.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

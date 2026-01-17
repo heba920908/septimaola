@@ -1,5 +1,7 @@
 # Para no verte más
 
+[← Back to Index](README.md)
+
 _La Mosca Tsé-Tsé_  -- status: revised
 
 ## Quick Chord Reference
@@ -56,3 +58,5 @@ _La Mosca Tsé-Tsé_  -- status: revised
 - **Chords Source:** [Cifra Club - Para No Verte Más](https://www.cifraclub.com/la-mosca/para-no-verte-mas/)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

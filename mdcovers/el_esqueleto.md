@@ -1,5 +1,7 @@
 # El esqueleto
 
+[← Back to Index](README.md)
+
 _Víctimas del Doctor Cerebro_
 
 ## Quick Chord Reference
@@ -55,3 +57,5 @@ _Víctimas del Doctor Cerebro_
 - **Chords Source:** [La Cuerda - El esqueleto](https://chords.lacuerda.net/victimas/esqueleto)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

@@ -1,5 +1,7 @@
 # Pobre de Ti
 
+[← Back to Index](README.md)
+
 _Tijuana No_
 
 ## Quick Chord Reference
@@ -55,3 +57,5 @@ _Tijuana No_
 - **Chords Source:** [La Cuerda - Pobre de Ti](https://chords.lacuerda.net/tijuana/pobre_de_ti)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

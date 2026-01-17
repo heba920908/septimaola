@@ -1,5 +1,7 @@
 # Si tu boquita fuera
 
+[← Back to Index](README.md)
+
 _Salón Victoria_  -- status: revised
 
 ## Quick Chord Reference
@@ -56,3 +58,5 @@ _Salón Victoria_  -- status: revised
 - **Chords Source:** [La Cuerda - Si tu boquita fuera](https://acordes.lacuerda.net/salon_victoria/si_tu_boquita_fuera)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

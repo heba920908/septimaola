@@ -1,5 +1,7 @@
 # Calaveras y diablitos
 
+[← Back to Index](README.md)
+
 _Los Fabulosos Cadillacs_  -- status: revised
 
 ## Quick Chord Reference
@@ -52,3 +54,5 @@ _Los Fabulosos Cadillacs_  -- status: revised
 - **Chords Source:** [La Cuerda - Calaveras y diablitos](https://chords.lacuerda.net/fabulosos/calaveras_y_diablitos)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

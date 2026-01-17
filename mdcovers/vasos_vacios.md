@@ -1,5 +1,7 @@
 # Vasos vacíos
 
+[← Back to Index](README.md)
+
 _Los Fabulosos Cadillacs (feat. Celia Cruz)_
 
 ## Quick Chord Reference
@@ -56,3 +58,5 @@ _Los Fabulosos Cadillacs (feat. Celia Cruz)_
 - **Chords Source:** [La Cuerda - Vasos Vacíos](https://chords.lacuerda.net/fabulosos/vasos_vacios-7.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

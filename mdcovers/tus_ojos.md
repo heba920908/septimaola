@@ -1,5 +1,7 @@
 # Tus Ojos
 
+[← Back to Index](README.md)
+
 _Los Cafres_
 
 ## Quick Chord Reference
@@ -55,3 +57,5 @@ _Los Cafres_
 - **Chords Source:** [La Cuerda - Tus Ojos](https://chords.lacuerda.net/cafres/tus_ojos.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

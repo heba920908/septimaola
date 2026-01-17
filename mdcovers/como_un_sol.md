@@ -1,5 +1,7 @@
 # Como un sol
 
+[← Back to Index](README.md)
+
 _Inspector_
 
 ## Quick Chord Reference
@@ -59,3 +61,5 @@ _Inspector_
 - **Chords Source:** [La Cuerda - Como un sol](https://acordes.lacuerda.net/inspector/como_un_sol)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

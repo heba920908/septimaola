@@ -1,5 +1,7 @@
 # Total
 
+[← Back to Index](README.md)
+
 _La Tremenda Korte_  -- status: revised
 
 ## Quick Chord Reference
@@ -64,3 +66,5 @@ _La Tremenda Korte_  -- status: revised
 - **Chords Source:** [La Cuerda - Total](https://chords.lacuerda.net/tremenda_korte/total.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)

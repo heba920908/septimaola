@@ -1,5 +1,7 @@
 # La Dosis Perfecta
 
+[← Back to Index](README.md)
+
 _By Panteón Rococó_  -- status: revised
 
 ## Quick Chord Reference
@@ -54,3 +56,5 @@ _By Panteón Rococó_  -- status: revised
 - **Chords Source:** [La Cuerda - La Dosis Perfecta](https://chords.lacuerda.net/panteon_rococo/la_dosis_perfecta.shtml)
 
 _Last updated: 2024_
+
+[← Back to Index](README.md)
