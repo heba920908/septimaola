@@ -28,13 +28,12 @@ _Inspector_
 
 **Chorus (12 bars):**
 ```
-| Cm | F7 | Bb | Cm |
-| F7 | Eb | Bb | Gm |
+| Cm | F7 | Bb | Gm |
 ```
 
 **Bridge (8 bars):**
 ```
-| F7 | Eb | Bb | Gm |
+| Cm | F7 | Bb | F-F#-Gm |
 ```
 
 ## Performance Notes
