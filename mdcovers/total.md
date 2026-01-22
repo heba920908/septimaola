@@ -34,8 +34,8 @@ _La Tremenda Korte_  -- status: revised
 
 **Pre-chorus (8 bars):**
 ```
-| **Bb** | C | Bb | **Gm** |
-| **A7** | D | Bm | **Em** |
+| **G** | - | A | - |
+| **G** | - | A | - |
 ```
 
 **Chorus (8 bars):**
