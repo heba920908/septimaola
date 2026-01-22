@@ -33,7 +33,7 @@ _Inspector_
 
 **Bridge (8 bars):**
 ```
-| Cm | F7 | Bb | F-F#-Gm |
+| Cm | F7 / F# | Bb | F-F#-Gm |
 ```
 
 ## Performance Notes
