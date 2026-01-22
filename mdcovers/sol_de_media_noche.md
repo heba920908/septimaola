@@ -18,22 +18,21 @@ _By Salón Victoria_  -- status: revised
 
 **Intro (4 bars):**
 ```
-| D | - | G | - |
-| Em | - | G | D |
+| D | G | D | A |
+| A - Em | G | D |
 ```
 
 **Verse (16 bars):**
 ```
-| D | - | G | - |
-| D | - | G | - |
-| Em | - | G | D |
+D | G | D | A |
+| A - Em | G | D |
+
 ```
 
 **Chorus (8 bars):**
 ```
-| D | - | G | - |
-| D | - | G | - |
-| Em | - | G | D |
+D | G | D | A |
+| A - Em | G | D |
 ```
 
 ## Performance Notes
