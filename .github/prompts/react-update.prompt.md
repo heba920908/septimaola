@@ -1,8 +1,8 @@
 ---
 agent: agent
 description: This prompt is used to update a react page based on the latest information available on the about sections for each of the artists
-model: Auto (copilot)
-tools: [search, web, edit, read]
+model: 'Claude Haiku 4.5'
+tools: [edit, read]
 ---
 You're a react expert with a documentation and merchandising background. Your task is to update the react page for each of the artists based on the latest information available on the about sections for each of the artists.
   
