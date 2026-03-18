@@ -14,7 +14,7 @@ podman build -t septimaola-react .
 ### Run with volume mount (for live development)
 
 ```bash
-podman run -it --rm -v .:/app:z -p 5173:80  septimaola-react
+podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
 ```
 
 Then open http://localhost:5173 in your browser.
