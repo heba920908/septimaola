@@ -3,6 +3,13 @@
 
 \input{loadslides.tex} % Reusar el archivo de configuración (tipografías, tema)
 
+% Aumentar jerarquía de tipografía para los slides (títulos + texto general)
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\large}
+\setbeamerfont{normal text}{size=\large}
+\setbeamerfont{itemize/enumerate body}{size=\large}
+\setbeamerfont{itemize/enumerate subbody}{size=\large}
+
 % Metadatos
 \title[Presskit · Séptima Ola]{SÉPTIMA OLA — PRESSKIT OFICIAL}
 \subtitle{Reggae · Ska · Rocksteady — Ciudad de México}
@@ -11,7 +18,7 @@
 % date will be set after the language is selected to ensure spanish locale names
 
 % Add project logo to slides (appears in the title/foot area via beamer \logo)
-\logo{\includegraphics[height=1.6cm]{./assets/Logo_01.jpeg}}
+\logo{\includegraphics[height=1.6cm]{./assets/logo.png}}
 
 % Load babel (language-specific macros can be set manually for this presskit)
 \usepackage{babel}
@@ -49,7 +56,7 @@
   \end{center}
   \vfill
   \begin{center}
-    \includegraphics[height=0.28\textheight,keepaspectratio]{./assets/Logo_01.jpeg}
+    \includegraphics[height=0.28\textheight,keepaspectratio]{./assets/logo.png}
   \end{center}
 \end{frame}
 }
@@ -64,77 +71,171 @@
   \end{tikzpicture}}
 \begin{frame}[plain]{¿Quiénes somos?}{Una presentación breve}
 \begin{itemize}
-  \item Séptima Ola nace en Ciudad de México como una fusión honesta entre reggae, ska y rocksteady, con letras orientadas a la unión y la conciencia social.
-  \item Una banda que fusiona ritmos latinos con melodías contemporáneas para crear una experiencia sonora única
-  \item Nuestra música celebra la diversidad cultural y la pasión por la innovación, invitando a todos a sumergirse en un viaje de sonidos vibrantes y emociones auténticas.
-  \item Entre sus proyectos destacados se incluye ``Desde mi Ventana'' y ``Contraluz''.
+  \item Séptima Ola nació en Ciudad de México, desde La Raza DF, como una alianza de músicos de reggae, ska y rocksteady que alimentan sus composiciones con raíces latinas.
+  \item Su propuesta busca conectar corazón y comunidad, con letras de amor, unidad, justicia social y conciencia ambiental.
+  \item El proyecto se construye desde la colaboración colectiva: entrenamientos en FARO Indios Verdes, Escuela de Música del Rock a la Palabra y experiencia en orquestas sinfónicas.
+  \item Material destacado: singles ``Desde mi Ventana'', ``Contraluz'', y próximos lanzamientos en Spotify/Bandcamp/YouTube.
 \end{itemize}
 \vspace{0.2cm}
 \begin{flushright}
   \begin{tikzpicture}[baseline={(img.base)}]
     \node[opacity=0.7] (img)
-      {\includegraphics[width=0.28\textwidth]{./assets/Grupal_01.jpeg}};
+      {\includegraphics[width=0.28\textwidth]{./assets/logo.png}};
   \end{tikzpicture}
 \end{flushright}
 \end{frame}}
 
 \section{Integrantes}
-% Voces y percusiones (fondo femenino)
+
+% Slide para each member con detalle adicional
 {\setbeamertemplate{background}{%
   \begin{tikzpicture}[remember picture,overlay]
     \node[anchor=center,opacity=0.22] at (current page.center)
       {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_female.png}};
   \end{tikzpicture}}
-\begin{frame}[plain]{Integrantes}{Voces y Percusión}
+\begin{frame}[plain]{Sandy Robinsuell}{Vocalista / Corista}
 \begin{columns}[T,totalwidth=\textwidth]
-  \begin{column}{0.5\textwidth}
-    {\small
-    	\textbf{Sandy Robinsuell}\\[0.15cm]
-    Vocalista y tecladista formada en FARO Indios Verdes, egresada de Psicología y creadora del canal de jams ``Puente Mágico''. Combina técnica coral, sensibilidad y texturas atmosféricas que elevan el sello emocional de Séptima Ola.}
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Sandy_Robinsuell.jpg}
+    \end{center}
   \end{column}
-  \begin{column}{0.5\textwidth}
-    {\small
-    	\textbf{Rams Mona}\\[0.15cm]
-    Percusionista especializada en congas, bongós y percusión latina. Su energía escénica y raíces en salsa/cumbia se mezclan con el reggae y ska de la banda para aportar dinamismo y conexión con el público.}
+  \begin{column}{0.55\textwidth}
+    \small
+    Formación en Psicología y FARO Indios Verdes. Creadora de “Puente Mágico”. Con técnica coral y texturas emotivas, lidera la voz central y armonías de Séptima Ola.
+    \newline
+    Ha producido maquetas profesionales y coordina sesiones de jam globales para conectar la banda con la comunidad.
   \end{column}
 \end{columns}
 \end{frame}}
 
-% Ritmo y vientos (fondo masculino)
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_female.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Rams}{Percusión}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio]{./assets/Itzel_BP.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Percusionista de congas, bongós y ritmos latinos. Groove salsa/cumbia/reggae que impulsa la base y la energía en el escenario.
+    \newline
+    Se nutre de un proceso autodidacta basado en sesiones con artistas de salsa y el circuito local, y es pivote para el carácter latino de Séptima Ola.
+  \end{column}
+\end{columns}
+\end{frame}}
+
 {\setbeamertemplate{background}{%
   \begin{tikzpicture}[remember picture,overlay]
     \node[anchor=center,opacity=0.22] at (current page.center)
       {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
   \end{tikzpicture}}
-\begin{frame}[plain]{Integrantes}{Ritmo y Vientos}
+\begin{frame}[plain]{Lemanu}{Batería}
 \begin{columns}[T,totalwidth=\textwidth]
-  \begin{column}{0.5\textwidth}
-    {\small
-    	\textbf{Lemanu}\\[0.15cm]
-    Baterista que mezcla fluidez reggae con presencia rockera. Estudia en la Escuela de Música del Rock a la Palabra y construye grooves sólidos que sostienen los cambios dinámicos del show.}
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Lemanu.jpg}
+    \end{center}
   \end{column}
-  \begin{column}{0.5\textwidth}
-    {\small
-    	\textbf{Levi}\\[0.15cm]
-    Saxofonista tenor del Estado de México con más de 10 años de trayectoria. Fundó el proyecto ``Jazz \& Love'', colabora con centros culturales y es maestro en la orquesta O.S.I.N. Xochipilli.}
+  \begin{column}{0.55\textwidth}
+    \small
+    Estudiante de la Escuela de Música del Rock a la Palabra. Sus grooves mezclan reggae y rock con dinamismo y precisión.
+    \newline
+    Iniciando formalmente en 2023, integra malabares y danza contemporánea como inspiración rítmica diferencial.
   \end{column}
 \end{columns}
 \end{frame}}
 
-% Cuerdas y dirección (fondo masculino)
 {\setbeamertemplate{background}{%
   \begin{tikzpicture}[remember picture,overlay]
     \node[anchor=center,opacity=0.22] at (current page.center)
       {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
   \end{tikzpicture}}
-\begin{frame}[plain]{Integrantes}{Cuerdas y Dirección}
-{\small
-\begin{itemize}
-  \item \textbf{Arthur Mono —} Bajista con raíces en la salsa (``Arthur en sus días''). Su mezcla de ritmos caribeños y reggae añade profundidad y groove a cada arreglo.
-  \item \textbf{Rodrigo Mera —} Violinista fundador con 11+ años de formación académica y paso por la Sinfónica de la UACM. Integra el violín en el ska/reggae con arreglos que viajan de la nostalgia a la fiesta.
-  \item \textbf{Alfred Herrera —} Guitarrista y fundador. Influencias de Bob Marley y The Skatalites; lidera la visión creativa y los mensajes de unidad, amor y justicia social de Séptima Ola.
-\end{itemize}}
+\begin{frame}[plain]{Levi'Sax}{Saxofonista tenor}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Levi.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    10+ años de experiencia. Jazz, ska y trova, con proyectos como “Jazz \& Love” y docencia en O.S.I.N. Xochipilli.
+    \newline
+    Su trabajo incluye masterclass, cursos y un fuerte componente de formación autodidacta al estilo de grandes saxofonistas.
+  \end{column}
+\end{columns}
 \end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Arthur}{Bajista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Arthur_Mono.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Arraigo en salsa y reggae, proyecto “Arthur en sus días”. El bajo marca la columna sonora con groove y profundidad.
+    \newline
+    Su línea combina los mejores elementos de salsa, reggae y ska; su historia con Alfred lo hizo motor creativo de la base sonora.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Rodrigo Mera}{Violín y arreglo}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Rodrigo_Mera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Violín clásico fusionado con ska/reggae. Fundador de “Violines en Armonía” y arreglista de la banda.
+    \newline
+    Combina licencias formales y experiencia pedagógica con arreglos que tienden al terreno colectivo y de gestión comunitaria.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Alfred Herrera}{Compositor / Vocalista / Guitarrista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Alfred_Herrera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Influencias Marley y Skatalites. Lidera la visión creativa y el mensaje social de Séptima Ola.
+    \newline
+    Fundador del proyecto y autor de la mayoría de canciones; mezcla guitarra moderna con motivos clásicos de reggae y mensaje socioambiental.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Música}
 
 \section{Música}
 {\setbeamertemplate{background}{%
@@ -150,21 +251,7 @@
 \end{itemize}
 \vspace{0.25cm}
 \begin{center}
-  \includegraphics[height=0.28\textheight,keepaspectratio]{./assets/Grupal_02.jpeg}
-\end{center}
-\end{frame}}
-
-\section{Galería}
-{\setbeamertemplate{background}{%
-  \begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=center,opacity=0.22] at (current page.center)
-      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_material_visual.png}};
-  \end{tikzpicture}}
-\begin{frame}[plain]{Material visual}
-\begin{center}
-  \includegraphics[height=0.5\textheight,keepaspectratio]{./assets/Grupal_03.jpeg}
-  \vspace{0.2cm}
-  \small{Fotos oficiales (alta resolución) y logos vectoriales disponibles bajo petición.}
+  \includegraphics[height=0.6\textheight,keepaspectratio]{./assets/Grupal_02.jpeg}
 \end{center}
 \end{frame}}
 
@@ -196,6 +283,7 @@
   \item \textbf{Booking:} septimaolaoficial@gmail.com
   \item \textbf{Prensa:} septimaolaoficial@gmail.com
   \item \textbf{Redes sociales:} @septimaolaoficial (Instagram / Facebook / YouTube)
+  \item \textbf{Sitio web:} https://septimaola.com
   \item \textbf{Base:} Ciudad de México, México
 \end{itemize}
 \vspace{0.35cm} \centering{\small Para entrevistas, fechas y material adicional (MP3, WAV, fotos, logos), por favor contacta a los correos anteriores.}
