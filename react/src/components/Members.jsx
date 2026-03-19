@@ -75,22 +75,6 @@ export default function Members() {
 
   const members = [
     {
-      name: 'Sandy Robinsuell',
-      role: 'Vocalista y Tecladista',
-      image: '11URa6v_EjHpjz9s23eAo8siVFfbRcLkc',
-      imagePosition: 'center',
-      shortDescription: 'Tecladista y vocalista corista. Licenciada en Psicología con técnica y sensibilidad artística.',
-      fullDescription: 'Sandy Robinsuell es tecladista y vocalista corista de Séptima Ola, egresada de la Facultad de Psicología. Su camino musical comenzó desde la infancia, cuando cantaba para su madre como su primera espectadora. Esa pasión creció con ella y se extendió a su entorno, llegando a sus amigos y compañeros de la Facultad, donde su formación académica en Psicología enriqueció su mirada humana y creativa. \nA los 12 años inició sus prácticas en teclado junto a una de sus primas, quien sigue siendo parte fundamental de su vida y su arte. Se integró al coro de la FARO Indios Verdes, etapa que le brindó disciplina vocal, experiencia escénica y una profunda conexión con el trabajo colectivo. Durante la pandemia desarrolló "Puente Mágico", un canal de jam en vivo donde colaboró con cantantes y músicos de distintos países, explorando nuevas sonoridades, improvisación y comunidades creativas globales. A los 22 años fue invitada a trabajar en primeras maquetas profesionales, abriendo la puerta a proyectos sólidos que culminaron en su participación en Séptima Ola.\n Hoy, Robinsuell combina técnica y sensibilidad en la interpretación. Su aporte musical construye puentes sonoros desde lo íntimo hacia lo colectivo, aportando textura, emoción y atmósfera al sonido de la banda.'
-    },
-    {
-      name: 'Rams',
-      role: 'Percusionista',
-      image: '1NyA4KL3OsFB9m2W4u6JS7qcTJ_5-K3Mq',
-      imagePosition: 'center',
-      shortDescription: 'Percusionista de congas, bongós y percusión latina. Nació el 3 de marzo de 1999 en el Estado de México.',
-      fullDescription: 'Rams es percusionista de Séptima Ola, especializada en congas, bongós, percusión latina y elementos de mano. Nativa del Estado de México (nacida el 3 de marzo de 1999), su formación musical ha sido principalmente empírica y autodidacta. Aprendió escuchando, imitando y tocando en vivo, complementando su camino con talleres ocasionales y sesiones con otros percusionistas.\nSu influencia proviene de la salsa, cumbia, reggae, ska y ritmos afrocaribeños, encontrando inspiración en artistas como Celia Cruz, Rubén Blades y bandas como Fania All Stars. Con una trayectoria que incluye proyectos como "Arthur en sus días" (salsa), "El Croar Norteño" y colaboraciones en vivo con distintas agrupaciones de la escena local, Rams consolidó su estilo fusionando ritmos latinos con reggae y ska.\nSu conexión con Alfred y Arthur desde "Arthur en sus días" fue natural cuando Séptima Ola nació. Lleva la percusión latina al corazón del sonido, dando calidez y fiesta con su presencia escénica dinámica y energía contagiosa. Cada ritmo que toca es "una invitación a mover el cuerpo y soltar el alma", haciendo que cada presentación sea una celebración.'
-    },
-    {
       name: 'Alfred YearckLei',
       role: 'Guitarrista, Vocalista y Compositor',
       image: '1NLXEkoOz8CcVXXAFOMoCwttNoPVw7t35',
@@ -121,6 +105,22 @@ export default function Members() {
       imagePosition: 'top',
       shortDescription: 'Arreglista y Compositor',
       fullDescription: 'Licenciado por la Escuela de Bellas Artes de Nezahualcóyotl, Rodrigo aporta a Séptima Ola una sólida formación académica, colaborando activamente en la creación de la música y los arreglos del grupo. Su trayectoria incluye presentaciones en recintos como el Castillo de Chapultepec y la Biblioteca Vasconcelos, participando en orquestas como la Sinfónica de la UACM y la Metropolitana junto a artistas de renombre y solistas internacionales.\n\nComo productor independiente, su trabajo supera las 200,000 reproducciones en plataformas digitales. Además, dirige el proyecto EMVA, donde impulsa la formación musical de nuevos talentos que se presentan en los foros de las UTOPÍAS de la CDMX. En Séptima Ola, Rodrigo equilibra el rigor orquestal con la versatilidad de la producción contemporánea.'
+    },
+    {
+      name: 'Sandy Robinsuell',
+      role: 'Vocalista y Tecladista',
+      image: '1EfbO0_BJL924CbnvjxfwbDaUj6Vo3uhp',
+      imagePosition: 'center',
+      shortDescription: 'Tecladista y vocalista corista. Licenciada en Psicología con técnica y sensibilidad artística.',
+      fullDescription: 'Sandy Robinsuell es tecladista y vocalista corista de Séptima Ola, egresada de la Facultad de Psicología. Su camino musical comenzó desde la infancia, cuando cantaba para su madre como su primera espectadora. Esa pasión creció con ella y se extendió a su entorno, llegando a sus amigos y compañeros de la Facultad, donde su formación académica en Psicología enriqueció su mirada humana y creativa. \nA los 12 años inició sus prácticas en teclado junto a una de sus primas, quien sigue siendo parte fundamental de su vida y su arte. Se integró al coro de la FARO Indios Verdes, etapa que le brindó disciplina vocal, experiencia escénica y una profunda conexión con el trabajo colectivo. Durante la pandemia desarrolló "Puente Mágico", un canal de jam en vivo donde colaboró con cantantes y músicos de distintos países, explorando nuevas sonoridades, improvisación y comunidades creativas globales. A los 22 años fue invitada a trabajar en primeras maquetas profesionales, abriendo la puerta a proyectos sólidos que culminaron en su participación en Séptima Ola.\n Hoy, Robinsuell combina técnica y sensibilidad en la interpretación. Su aporte musical construye puentes sonoros desde lo íntimo hacia lo colectivo, aportando textura, emoción y atmósfera al sonido de la banda.'
+    },
+    {
+      name: 'Rams',
+      role: 'Percusionista',
+      image: '1NyA4KL3OsFB9m2W4u6JS7qcTJ_5-K3Mq',
+      imagePosition: 'center',
+      shortDescription: 'Percusionista de congas, bongós y percusión latina. Nació el 3 de marzo de 1999 en el Estado de México.',
+      fullDescription: 'Rams es percusionista de Séptima Ola, especializada en congas, bongós, percusión latina y elementos de mano. Nativa del Estado de México (nacida el 3 de marzo de 1999), su formación musical ha sido principalmente empírica y autodidacta. Aprendió escuchando, imitando y tocando en vivo, complementando su camino con talleres ocasionales y sesiones con otros percusionistas.\nSu influencia proviene de la salsa, cumbia, reggae, ska y ritmos afrocaribeños, encontrando inspiración en artistas como Celia Cruz, Rubén Blades y bandas como Fania All Stars. Con una trayectoria que incluye proyectos como "Arthur en sus días" (salsa), "El Croar Norteño" y colaboraciones en vivo con distintas agrupaciones de la escena local, Rams consolidó su estilo fusionando ritmos latinos con reggae y ska.\nSu conexión con Alfred y Arthur desde "Arthur en sus días" fue natural cuando Séptima Ola nació. Lleva la percusión latina al corazón del sonido, dando calidez y fiesta con su presencia escénica dinámica y energía contagiosa. Cada ritmo que toca es "una invitación a mover el cuerpo y soltar el alma", haciendo que cada presentación sea una celebración.'
     },
     {
       name: 'Arthur',

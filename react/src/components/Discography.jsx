@@ -30,9 +30,7 @@ export default function Discography() {
               <h3>{song.title}</h3>
               <p>{song.description}</p>
               <div className="song-streaming">
-                <a href="https://open.spotify.com/search" target="_blank" rel="noopener noreferrer">Spotify</a>
-                <a href="https://bandcamp.com" target="_blank" rel="noopener noreferrer">Bandcamp</a>
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://open.spotify.com/search" target="_blank" rel="noopener noreferrer">Ver más</a>
               </div>
             </div>
           ))}

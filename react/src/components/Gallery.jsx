@@ -3,12 +3,16 @@ import React from 'react'
 export default function Gallery() {
   const gallery = [
     {
-      id: '19uaer0nzCFxDSXnsLbUQxiMTvsar7bWk',
+      id: '17NlhB47l-1RD9mlxM9hJpMwvSz1g8UEb',
       caption: 'Séptima Ola - Foto oficial 1'
     },
     {
-      id: '1Dota0wNlio8W_4w7w8VuPa2IHGgnBcTD',
+      id: '1LmL-xTYYOU-jf1WVThT4N3Y9vLytwvWy',
       caption: 'Séptima Ola - Foto oficial 2'
+    },
+    {
+      id: '1LmL-xTYYOU-jf1WVThT4N3Y9vLytwvWy',
+      caption: 'Robinsuell'
     }
   ]
 
