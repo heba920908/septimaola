@@ -26,3 +26,27 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Latex temporary files
+/examples/
+*.pdf
+*.aux
+*.bbl
+bbl-*
+*.bcf
+*.blg
+*.idx
+*.nav
+*.run.xml
+*.snm
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.xdv
+*.vrb
+
+# Can be downloaded from google drive
+assets/

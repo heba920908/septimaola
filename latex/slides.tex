@@ -1,0 +1,292 @@
+% Presskit para la banda "Séptima Ola" — versión en español (México)
+\documentclass[11pt,notheorems,hyperref={pdfauthor={Séptima Ola}}]{beamer}
+
+\input{loadslides.tex} % Reusar el archivo de configuración (tipografías, tema)
+
+% Aumentar jerarquía de tipografía para los slides (títulos + texto general)
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\large}
+\setbeamerfont{normal text}{size=\large}
+\setbeamerfont{itemize/enumerate body}{size=\large}
+\setbeamerfont{itemize/enumerate subbody}{size=\large}
+
+% Metadatos
+\title[Presskit · Séptima Ola]{SÉPTIMA OLA — PRESSKIT OFICIAL}
+\subtitle{Reggae · Ska · Rocksteady — Ciudad de México}
+\author[]{SÉPTIMA OLA}
+\institute{Press kit para medios y promotores — Público: México}
+% date will be set after the language is selected to ensure spanish locale names
+
+% Add project logo to slides (appears in the title/foot area via beamer \logo)
+\logo{\includegraphics[height=1.6cm]{./assets/logo.png}}
+
+% Load babel (language-specific macros can be set manually for this presskit)
+\usepackage{babel}
+% If babel is present or not, ensure Spanish names for month and part appear.
+% Build a Spanish month name macro and set a localized date string.
+\newcommand{\esmonthname}{%
+  \ifcase\month\or enero\or febrero\or marzo\or abril\or mayo\or junio\or julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre\fi
+}
+\date{\number\day\ de\ \esmonthname\ de\ \number\year}
+% Force the 'part' caption to Spanish
+\renewcommand{\partname}{Parte}
+
+\begin{document}
+
+% Portada
+% Portada (custom, avoid translator placeholders for date)
+{
+\setbeamertemplate{footline}{}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_discografia.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]
+  \vspace{0.4cm}
+  \begin{center}
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\Huge\inserttitle\par}
+    \vspace{0.35cm}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\large\insertsubtitle\par}
+    \vspace{0.5cm}
+    {\large\insertauthor\par}
+    {\small\insertinstitute\par}
+    \vspace{0.4cm}
+    {\small\insertdate\par}
+  \end{center}
+  \vfill
+  \begin{center}
+    \includegraphics[height=0.28\textheight,keepaspectratio]{./assets/logo.png}
+  \end{center}
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+\section{Biografía}
+% Aplicar un fondo dedicado únicamente a este cuadro; se atenúa para mejorar la legibilidad.
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[opacity=0.25,anchor=center] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_quienes_somos.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{¿Quiénes somos?}{Una presentación breve}
+\begin{itemize}
+  \item Séptima Ola nació en Ciudad de México, desde La Raza DF, como una alianza de músicos de reggae, ska y rocksteady que alimentan sus composiciones con raíces latinas.
+  \item Su propuesta busca conectar corazón y comunidad, con letras de amor, unidad, justicia social y conciencia ambiental.
+  \item El proyecto se construye desde la colaboración colectiva: entrenamientos en FARO Indios Verdes, Escuela de Música del Rock a la Palabra y experiencia en orquestas sinfónicas.
+  \item Material destacado: singles ``Desde mi Ventana'', ``Contraluz'', y próximos lanzamientos en Spotify/Bandcamp/YouTube.
+\end{itemize}
+\vspace{0.2cm}
+\begin{flushright}
+  \begin{tikzpicture}[baseline={(img.base)}]
+    \node[opacity=0.7] (img)
+      {\includegraphics[width=0.28\textwidth]{./assets/logo.png}};
+  \end{tikzpicture}
+\end{flushright}
+\end{frame}}
+
+\section{Integrantes}
+
+% Slide para each member con detalle adicional
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_female.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Sandy Robinsuell}{Tecladista / Vocalista Corista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Sandy_Robinsuell.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Psicóloga egresada, canta desde la infancia y se formó en coro en FARO Indios Verdes. Creadora del proyecto de pandemia “Puente Mágico” y voz clave en las armonías de Séptima Ola.
+    \newline
+    A los 22 años inició grabaciones de maquetas profesionales; aporta textura, emoción y atmósfera con una perspectiva psicológica y colectiva.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_female.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Rams}{Percusión}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio]{./assets/Itzel_BP.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Percusionista de congas, bongós y ritmos latinos. Groove salsa/cumbia/reggae que impulsa la base y la energía en el escenario.
+    \newline
+    Se nutre de un proceso autodidacta basado en sesiones con artistas de salsa y el circuito local, y es pivote para el carácter latino de Séptima Ola.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Lemanu}{Batería}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Lemanu.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Estudiante de la Escuela de Música del Rock a la Palabra. Sus grooves mezclan reggae y rock con dinamismo y precisión.
+    \newline
+    Iniciando formalmente en 2023, integra malabares y danza contemporánea como inspiración rítmica diferencial.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Levi'Sax}{Saxofonista tenor}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Levi.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    10+ años de experiencia. Jazz, ska y trova, con proyectos como “Jazz \& Love” y docencia en O.S.I.N. Xochipilli.
+    \newline
+    Su trabajo incluye masterclass, cursos y un fuerte componente de formación autodidacta al estilo de grandes saxofonistas.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Arthur}{Bajista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Arthur_Mono.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Arraigo en salsa y reggae, proyecto “Arthur en sus días”. El bajo marca la columna sonora con groove y profundidad.
+    \newline
+    Su línea combina los mejores elementos de salsa, reggae y ska; su historia con Alfred lo hizo motor creativo de la base sonora.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Rodrigo Mera}{Violín y arreglo}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Rodrigo_Mera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Violín clásico fusionado con ska/reggae. Fundador de “Violines en Armonía” y arreglista de la banda.
+    \newline
+    Combina licencias formales y experiencia pedagógica con arreglos que tienden al terreno colectivo y de gestión comunitaria.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Alfred YearckLei}{Guitarra / Voz / Compositor}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Alfred_Herrera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \small
+    Guitarrista y compositor con 18 años de trayectoria. Formación en rock, blues y jazz, masterclasses con referentes y entrenamientos de voz.
+    \newline
+    Fundador del proyecto, autor de letras con mensaje de amor, unidad y justicia social; mezcla reggae/rocksteady con rap, trova y solidez rítmica.
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Música}
+
+\section{Música}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_landing_2.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Discografía / Material}
+\begin{itemize}
+  \item Singles ``Desde mi ventana''.
+  \item Singles y maquetas en plataformas de streaming (Spotify / Bandcamp / YouTube).
+  \item Masters y material técnico disponibles a solicitud para prensa y promociones.
+\end{itemize}
+\vspace{0.25cm}
+\begin{center}
+  \includegraphics[height=0.6\textheight,keepaspectratio]{./assets/Grupal_02.jpeg}
+\end{center}
+\end{frame}}
+
+\section{Rider técnico}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_tecnico.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Resumen técnico}
+\begin{itemize}
+  \item \textbf{PA y mezcla reggae:} Sistema LR capaz de entregar bajos profundos y medios definidos. Consola con al menos 24 canales, 6 envíos auxiliares y compresores para voz principal y bajo.
+  \item \textbf{Microfonía (7 músicos):} SM58 o KSM8 para voz líder, 2 micros dinámicos para coros/teclado, SM57 para guitarra, clip para saxofón, condensador de violín, kit de batería (bombo, tarola, OHs) y DI activas para bajo y teclados.
+  \item \textbf{Monitores/sidefills:} 4 wedges independientes (voz líder, coros/teclado, sección rítmica, vientos) y, de ser posible, sidefill para percusiones y metales.
+  \item \textbf{Backline:} Batería completa con bombo 22", tarola 14", 3 toms, platillos medium. Amplificador de bajo de 500W con caja 4x10 y ampli de guitarra 1x12 o 2x12. Percusión latina: congas, bongó, campanas y soporte.
+  \item \textbf{Alimentación eléctrica:} 6 contactos independientes con tierra física para teclados, efectos de guitarra, pedalboards y cargadores inalámbricos.
+  \item \textbf{Extras reggae/dub:} Envío auxiliar para efectos de delay/dub, preferentemente con pedal o rack a pie de sala, y lámparas de escenario cálidas para facilitar cambios instrumentales.
+\end{itemize}
+\end{frame}}
+
+\section{Contacto}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_contactos.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Contactos para booking y prensa}
+\begin{itemize}
+  \item \textbf{Booking:} septimaolaoficial@gmail.com
+  \item \textbf{Prensa:} septimaolaoficial@gmail.com
+  \item \textbf{Redes sociales:} @septimaolaoficial (Instagram / Facebook / YouTube)
+  \item \textbf{Sitio web:} https://septimaola.com
+  \item \textbf{Base:} Ciudad de México, México
+\end{itemize}
+\vspace{0.35cm} \centering{\small Para entrevistas, fechas y material adicional (MP3, WAV, fotos, logos), por favor contacta a los correos anteriores.}
+\end{frame}}
+
+\end{document}

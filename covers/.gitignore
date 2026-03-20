@@ -1,0 +1,21 @@
+# Latex temporary files
+/examples/
+*.pdf
+*.aux
+*.bbl
+bbl-*
+*.bcf
+*.blg
+*.idx
+*.nav
+*.run.xml
+*.snm
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.xdv
+*.vrb
+tmp-ly
