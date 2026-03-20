@@ -156,17 +156,19 @@ export default function Members() {
                   imagePosition={member.imagePosition}
                 />
               )}
-              <h3>{member.name}</h3>
-              <p className="role">{member.role}</p>
-              <p className="description">
-                {expandedMember === idx ? member.fullDescription : member.shortDescription}
-              </p>
-              <button 
-                className="ver-mas-btn"
-                onClick={() => toggleExpand(idx)}
-              >
-                {expandedMember === idx ? 'ver menos' : 'ver más'}
-              </button>
+              <div className="member-card-body">
+                <h3>{member.name}</h3>
+                <p className="role">{member.role}</p>
+                <p className="description">
+                  {expandedMember === idx ? member.fullDescription : member.shortDescription}
+                </p>
+                <button
+                  className="ver-mas-btn"
+                  onClick={() => toggleExpand(idx)}
+                >
+                  {expandedMember === idx ? 'ver menos' : 'ver más'}
+                </button>
+              </div>
             </div>
           ))}
         </div>
