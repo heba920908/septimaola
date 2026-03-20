@@ -11,7 +11,7 @@ export default function Hero() {
 
         <a
           className="btn btn-primary presskit-btn"
-          href="https://mega.nz/file/zoYB1DyI#jXOpxEf3_8e7mI8ZvLaL8V8sKJd0VbIKtfz30i7mt-g"
+          href="https://drive.google.com/file/d/1bV4JgTpkhVVMLHrzG9m4ke5q4n1Ts8hE/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
           download
