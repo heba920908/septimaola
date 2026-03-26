@@ -43,3 +43,49 @@
 - **Frase:** *"Creo en la música como un puente entre almas; el bajo es el cable que une el ritmo con el corazón."*
 - **Curiosidad personal:** Le gusta coleccionar o probar distintos bajos y cuerdas; cada instrumento le inspira un color distinto para las canciones.
 
+## Calendario de disponibilidad
+
+**Leyenda:**
+
+| Símbolo | Significado |
+|:-------:|-------------|
+| *(sin marca)* | Disponible sin restricción (fines de semana) |
+| 🟡 | Día laboral — disponible **a partir de las 18:00 h** · Se puede solicitar excepción |
+| 🔴 | Fecha comprometida (no disponible) |
+
+---
+
+### Abril 2026
+
+| Lun | Mar | Mié | Jue | Vie | Sáb | Dom |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|     |     | 1 🟡 | 2 🟡 | 3 🟡 | 4 🔴 | 5   |
+| 6 🟡 | 7 🟡 | 8 🟡 | 9 🟡 | 10 🟡 | 11 🔴 | 12  |
+| 13 🟡 | 14 🔴 | 15 🟡 | 16 🟡 | 17 🟡 | 18  | 19  |
+| 20 🟡 | 21 🟡 | 22 🟡 | 23 🟡 | 24 🟡 | 25  | 26  |
+| 27 🟡 | 28 🟡 | 29 🟡 | 30 🟡 |     |     |     |
+
+---
+
+### Mayo 2026
+
+| Lun | Mar | Mié | Jue | Vie | Sáb | Dom |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|     |     |     |     | 1 🔴 | 2 🔴  | 3 🔴 |
+| 4 🔴 | 5 🟡 | 6 🟡 | 7 🟡 | 8 🟡 | 9 | 10 🔴 |
+| 11 🟡 | 12 🟡 | 13 🟡 | 14 🔴 | 15 🟡 | 16  | 17  |
+| 18 🟡 | 19 🟡 | 20 🟡 | 21 🟡 | 22 🟡 | 23  | 24  |
+| 25 🟡 | 26 🟡 | 27 🟡 | 28 🟡 | 29 🟡 | 30  | 31  |
+
+---
+
+### Junio 2026
+
+| Lun | Mar | Mié | Jue | Vie | Sáb | Dom |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 🟡 | 2 🟡 | 3 🟡 | 4 🟡 | 5 🟡 | 6 🔴 | 7   |
+| 8 🟡 | 9 🟡 | 10 🟡 | 11 🟡 | 12 🟡 | 13  | 14  |
+| 15 🟡 | 16 🟡 | 17 🟡 | 18 🟡 | 19 🟡 | 20  | 21  |
+| 22 🟡 | 23 🟡 | 24 🟡 | 25 🔴 | 26 🟡 | 27 🔴 | 28  |
+| 29 🟡 | 30 🟡 |     |     |     |     |     |
+
