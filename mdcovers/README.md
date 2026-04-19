@@ -8,7 +8,7 @@ Quick reference for live performances.
 - [Calaveras y diablitos](calaveras_y_diablitos.md)
 - [Como un sol](como_un_sol.md)
 - [Duerme soñando](duerme_sonando.md)
-- Dulce Amor
+- [Dulce Amor](dulce_amor.md)
 - [El esqueleto](el_esqueleto.md)
 - [Kilómetros](kilometros.md)
 - [Kumbala](kumbala.md)
@@ -29,7 +29,7 @@ Quick reference for live performances.
 - [Skapate](skapate.md)
 - [Sol de Media Noche](sol_de_media_noche.md)
 - [Take Five](take_five.md)
-- Toloache pa mi negra
+- [Toloache pa' mi negra](toloache_pa_mi_negra.md)
 - [Total](total.md)
 - [Tú Qué Pedirás](tu_que_pediras.md)
 - [Tus Ojos](tus_ojos.md)
