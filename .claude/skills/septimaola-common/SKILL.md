@@ -15,7 +15,6 @@ This is the experience of each of the band members:
 - [Alfred Herrera](alfred.md)
 - [Arthur](arthur.md)
 - [Levi'Sax](levi_sax.md)
-- [Rams](rams.md)
 - [Rodrigo Mera](rodrigo_mera.md)
 - [Sandy Robinsuell](sandy_robinsuell.md)
 - [lemanu](lemanu.md)

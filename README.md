@@ -42,6 +42,12 @@ flowchart TD
 2. **On merge to `main`**, the `deploy` job picks up the compiled artifact, configures GitHub Pages, and publishes the site.
 3. The two jobs share the compiled output via `actions/upload-artifact` / `actions/download-artifact`, keeping the deploy job free of Node.js setup.
 
+## Architecture Decision Records
+
+Design and feature decisions for the React press kit are tracked as ADRs in [`docs/decisions/`](docs/decisions/README.md). Each ADR captures context, the decision, and its consequences.
+
+To propose a new decision, copy `docs/decisions/template.md` and follow the naming convention `NNNN-short-title.md`.
+
 ## Cursor
 
 * [Cursor Rules](https://cursor.com/docs/context/rules)
