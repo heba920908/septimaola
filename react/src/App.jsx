@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Hero from './components/Hero'
+import News from './components/News'
 import Section from './components/Section'
 import Members from './components/Members'
 import Discography from './components/Discography'
@@ -65,6 +66,7 @@ export default function App() {
           <span></span>
         </button>
         <nav className={menuOpen ? 'nav-open' : ''}>
+          <a href="#noticias" onClick={closeMenu}>Noticias</a>
           <a href="#biografia" onClick={closeMenu}>Biografía</a>
           <a href="#integrantes" onClick={closeMenu}>Integrantes</a>
           <a href="#musica" onClick={closeMenu}>Música</a>
@@ -76,6 +78,8 @@ export default function App() {
       <Hero />
 
       <main>
+        <News />
+
         <Section id="biografia" title="¿Quiénes somos?">
           <p>
             Séptima Ola emerge desde las calles vibrantes de Ciudad de México como una ola imparable de fusión musical, donde el reggae jamaicano se encuentra con el corazón latino, el ska británico con el alma mexicana, y el rocksteady con la pasión de nuestra gente. Nacidos en la tierra del mariachi y la cumbia, pero enamorados de las raíces rasta, somos la prueba viva de que la música no conoce fronteras.

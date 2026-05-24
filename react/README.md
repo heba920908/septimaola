@@ -19,16 +19,6 @@ podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
 
 Then open http://localhost:5173 in your browser.
 
-### Or, develop locally without containers
-
-```bash
-cd react
-npm install
-npm run dev
-```
-
-Open http://localhost:5173
-
 ---
 
 **Notes:**

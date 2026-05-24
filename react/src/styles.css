@@ -349,3 +349,76 @@ main h2::after{
   .container{max-width:1120px}
   .members-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 }
+
+/* ─── News Slider ────────────────────────────────────── */
+.news-slider{max-width:720px;margin:0 auto}
+
+.news-card{
+  background:var(--card-bg);
+  border-top:3px solid var(--accent);
+  border-radius:8px;
+  padding:2rem 2.5rem;
+  box-shadow:var(--card-shadow);
+  min-height:180px;
+  animation:newsCardIn 0.35s ease;
+  transition:background 0.2s,box-shadow 0.2s;
+}
+.news-card:hover{background:var(--card-bg-hover);box-shadow:var(--card-shadow-hover)}
+.news-card h3{color:var(--white);font-size:1.25rem;margin:0.5rem 0 0.75rem}
+
+.news-badge{
+  display:inline-block;
+  background:var(--accent-orange);
+  color:var(--white);
+  font-size:0.72rem;
+  font-weight:700;
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  padding:0.2em 0.65em;
+  border-radius:3px;
+}
+.news-date{color:var(--light-gray);font-size:0.85rem;margin:0.5rem 0 0;opacity:0.8}
+.news-description{color:var(--light-gray);line-height:1.65;margin:0 0 1.25rem}
+.news-link{display:inline-block;text-decoration:none}
+
+.news-nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem}
+
+.news-btn{
+  background:var(--card-bg);
+  border:1px solid var(--accent);
+  color:var(--accent);
+  font-size:1.1rem;
+  width:2.4rem;
+  height:2.4rem;
+  border-radius:6px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background 0.2s,color 0.2s;
+  line-height:1;
+  padding:0;
+}
+.news-btn:hover{background:var(--accent);color:#0a3d62}
+
+.news-dots{display:flex;gap:0.5rem;align-items:center}
+.news-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:transparent;
+  border:2px solid var(--accent);
+  cursor:pointer;
+  padding:0;
+  transition:background 0.2s;
+}
+.news-dot.active{background:var(--accent)}
+
+@keyframes newsCardIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media(max-width:480px){
+  .news-card{padding:1.5rem 1.25rem}
+}
