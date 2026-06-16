@@ -18,7 +18,7 @@ const NEWS_ITEMS = [
     title: 'Desde mi ventana — Nuevo sencillo',
     date: '30 de mayo, 2026',
     description:
-      'Séptima Ola se presentará su nuevo sencillo "Desde mi ventana". Puertas abren a las 20:00 h. Entrada libre.',
+      'Escucha el nuevo sencillo "Desde mi ventana". Disponible en todas las plataformas digitales.',
     embed: 'https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fseptimaolaoficial%2Fposts%2Fpfbid0v5yAqWmx4a9v9YCcbmGu6Ds5sv4givdwg2NbEf94YMPMeeMBtZ87cSohdbWipSpnl&show_text=true&width=500',
     image: null,
     link: 'https://www.facebook.com/septimaolaoficial',
