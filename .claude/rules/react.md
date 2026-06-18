@@ -22,13 +22,7 @@ podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
 
 The volume mount (`-v .:/app:z`) lets you edit `src/` files and see changes after a rebuild inside the container. The app is then served at `http://localhost:5173`.
 
-If Podman is not available, fall back to the local dev server:
-
-```bash
-cd react && npm run dev
-```
-
-Wait for the server to be ready before proceeding.
+Do not use local npm fallback for verification in this repository; use Podman for validation.
 
 ## Recommended MCP
 
@@ -49,19 +43,26 @@ Use **Playwright MCP** (`@playwright/mcp`) for all browser-based verification st
 
 ### 1. Navigate and Screenshot
 
-Navigate to `http://localhost:5173` and take a full-page screenshot. Confirm the page loads without a blank screen or error overlay.
+Navigate to `http://127.0.0.1:5173` and take a full-page screenshot. Confirm the page loads without a blank screen or error overlay.
 
 ### 2. Section Visibility
 
-Scroll through the page and confirm all five sections render with their expected headings:
+Scroll through the page and confirm all six sections render with their expected headings:
 
 | Section ID     | Expected heading                 | Key element           |
 | -------------- | -------------------------------- | --------------------- |
+| `#noticias`    | "Noticias"                      | `.news-slider` with news cards |
 | `#biografia`   | "¿Quiénes somos?"                | `.container p` blocks + `.vision-mission` cards |
 | `#integrantes` | "Integrantes"                    | `.members-grid` with member cards |
 | `#musica`      | "Discografía / Material"         | `.songs-grid` with song cards |
 | `#galeria`     | "Galería"                        | `.gallery-grid` |
 | `#contacto`    | "Contacto"                       | `.contact-info`, social links |
+
+For Noticias specifically:
+
+- Cards should render (Facebook-only data source).
+- The old timeline fallback message (`No fue posible generar las tarjetas...`) should not appear.
+- If an item has empty description, the card should render without description text.
 
 ### 3. Hero Section
 
@@ -69,7 +70,7 @@ Confirm `.hero-content` is visible and contains the text "Reggae · Ska · Rocks
 
 ### 4. Navigation Bar
 
-Confirm the sticky header renders with all five nav links: **Biografía**, **Integrantes**, **Música**, **Galería**, **Contacto**.
+Confirm the sticky header renders with all six nav links: **Noticias**, **Biografía**, **Integrantes**, **Música**, **Galería**, **Contacto**.
 
 ### 5. CSS Design Language
 
@@ -94,14 +95,16 @@ Gallery (`.gallery-grid`) and Members (`.members-grid`) images are served from G
 
 Note any unexpected JavaScript console errors captured by Playwright. Errors related to Google Drive image loading (network/CORS/429) are expected and can be ignored.
 
+Facebook plugin/embed warnings or errors emitted from third-party iframe scripts can also be treated as expected, as long as the app layout and interactions remain stable.
+
 ## Pass Criteria
 
 The change is verified when all of the following hold:
 
-1. All five sections scroll into view and display their expected headings
+1. All six sections scroll into view and display their expected headings
 2. The background gradient and accent colors are visually consistent with the design language
 3. No layout breakage: no overlapping elements, no invisible text, grids render correctly
-4. No unexpected JS console errors (Drive CDN errors are exempt)
+4. No unexpected JS console errors (Drive CDN and Facebook iframe/plugin errors are exempt)
 
 ## Scope
 

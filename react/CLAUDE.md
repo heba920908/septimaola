@@ -3,87 +3,91 @@
 ## Quick Reference
 
 ```bash
-cd react/
-npm install          # Install dependencies
-npm run dev          # Vite dev server at http://localhost:5173
-npm run build        # Production build → dist/
-npm run preview      # Serve production build locally
-npm start            # npx serve -s dist -l 5173
+cd react
+podman build -t septimaola-react .
+podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
 ```
 
 ## Checking for Errors
 
-### Build Errors
+Validation for this project must use Podman + Playwright MCP. Do not use local npm fallback commands for verification.
+
+### Runtime and UI Verification
 
 ```bash
-npm run build
+cd react
+podman build -t septimaola-react .
+podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
 ```
 
-A successful build exits with code 0 and produces `dist/`. Any JSX syntax errors, missing imports, or broken references will fail the build.
+Then use Playwright MCP against `http://127.0.0.1:5173`.
 
 ### Lint / Static Analysis
 
 There is no ESLint or TypeScript config in this project. To catch issues:
 
-1. Run `npm run build` — Vite/Rollup will report unresolved imports, syntax errors, and React JSX issues.
-2. Open the browser console after `npm run dev` to check for runtime errors (missing images, CORS, 404s).
+1. Run the Podman workflow above and verify UI behavior with Playwright MCP.
+2. Review browser console events from Playwright output to detect runtime errors.
 
 ### Common Runtime Issues
 
 - **Google Drive images returning 429** — `Members.jsx` has retry logic (`ImageWithRetry`), but rate limits can still cause blank photos in dev. This is expected.
 - **Base path mismatch** — Production uses `/septimaola/` base path (see `vite.config.js`). Dev uses `/`. If assets 404 in production, check the base path.
+- **Facebook timeline embed console noise** — Third-party iframe scripts may emit warnings/errors unrelated to app code.
 
 ## Testing with Playwright MCP
 
-This project has no automated test suite. Use the Playwright MCP tools to visually verify the built site:
+This project has no automated test suite. Use Playwright MCP to verify the Podman-served app.
 
-### Workflow: Build → Serve → Verify
+### Workflow: Podman Serve → Verify
 
-1. **Build the production bundle:**
-
-   ```bash
-   cd react/ && npm run build
-   ```
-
-2. **Start a local static server (async):**
+1. **Start the app with Podman:**
 
    ```bash
-   npx serve -s dist -l 5173
+   cd react
+   podman build -t septimaola-react .
+   podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
    ```
 
-3. **Open the site with Playwright MCP:**
+2. **Open the site with Playwright MCP:**
 
-   Use `open_browser_page` to navigate to `http://localhost:5173/septimaola/` (production base path).
+   Use `open_browser_page` to navigate to `http://127.0.0.1:5173`.
 
-4. **Visual checks to perform:**
+3. **Visual checks to perform:**
 
    - `screenshot_page` — capture full page, verify layout renders correctly
-   - `click_element` — test hamburger menu opens/closes on mobile viewport
-   - `read_page` — verify text content (band name, section headings, member names)
-   - Navigate to each section anchor: `#inicio`, `#nosotros`, `#musica`, `#galeria`, `#contacto`
+   - `run_playwright_code` — verify section IDs/headings and nav link set
+   - `read_page` — inspect accessibility tree and recent console events
+   - Navigate to each section anchor: `#noticias`, `#biografia`, `#integrantes`, `#musica`, `#galeria`, `#contacto`
 
-5. **Kill the server** when done.
+4. **Kill the Podman run** when done.
 
 ### Example Playwright MCP Sequence
 
 ```
-open_browser_page → http://localhost:5173/septimaola/
+open_browser_page → http://127.0.0.1:5173
 screenshot_page   → verify Hero section renders
-click_element     → hamburger button (mobile viewport)
-screenshot_page   → verify nav menu opened
-read_page         → confirm all section headings present
+run_playwright_code → verify headings for biografia/integrantes/musica/galeria/contacto
+read_page         → inspect recent console events and navigation links
 ```
 
 ### What to Verify
 
 | Section | Check |
 |---------|-------|
-| Hero | Logo/title visible, gradient background renders |
-| Nosotros (Members) | Member cards render, images load or gracefully hide |
+| Hero | Logo/title visible, gradient background renders, tagline present |
+| Noticias | Slider cards render with Facebook posts |
+| Biografía | Text blocks and Visión/Misión cards render |
+| Integrantes | Member cards render, images load or gracefully hide |
 | Discografía | Song cards display titles and descriptions |
 | Galería | Photo grid renders, broken images are hidden (not blank boxes) |
 | Contacto | Contact info and social links present |
-| Navigation | Sticky header visible, hamburger menu works, anchor links scroll |
+| Navigation | Sticky header visible, links include Noticias/Biografía/Integrantes/Música/Galería/Contacto |
+
+## News Automation Scope
+
+- News generation is Facebook-only.
+- Instagram fetching is intentionally not used to keep the pipeline simpler and more stable.
 
 ## Container Development
 
