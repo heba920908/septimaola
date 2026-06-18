@@ -9,7 +9,17 @@ After making any change to a JSX or CSS file under `react/`, verify the page ren
 
 ## Pre-flight
 
-Ensure the app is running and reachable on port 5173. The preferred method is via the Podman container with a volume mount so that source changes are reflected without rebuilding the image:
+Ensure the app is running and reachable on port 5173. Use the native npm/npx Vite dev server first:
+
+```bash
+cd react
+npm install
+npm run dev
+```
+
+`npm run dev` runs Vite (equivalent to `npx vite`) with HMR, so source changes in `src/` reload automatically.
+
+If local Node.js is not available, use Podman as a fallback with a volume mount:
 
 ```bash
 # 1. Build the image (only needed once or after Dockerfile changes)
@@ -17,16 +27,20 @@ cd react
 podman build -t septimaola-react .
 
 # 2. Run with live volume mount
-podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
+podman run --rm -v .:/app:z -p 5173:5173 septimaola-react
 ```
 
 The volume mount (`-v .:/app:z`) lets you edit `src/` files and see changes after a rebuild inside the container. The app is then served at `http://localhost:5173`.
 
-Do not use local npm fallback for verification in this repository; use Podman for validation.
+## Browser Tool Priority
 
-## Recommended MCP
+Use browser automation tools in this order for all verification steps below:
 
-Use **Playwright MCP** (`@playwright/mcp`) for all browser-based verification steps below. If Playwright MCP is not configured in your Cursor MCP settings, add it before running this rule:
+1. Use integrated browser tools first when available (for example: `open_browser_page`, `read_page`, `screenshot_page`, `click_element`, `type_in_page`).
+2. If integrated browser tools are unavailable, use **Playwright MCP** (`@playwright/mcp`).
+3. If neither of the above is available, use any available browser automation tooling and apply the same checks.
+
+If Playwright MCP is needed and not configured in your Cursor MCP settings, add it before running this rule:
 
 ```json
 {
@@ -93,7 +107,7 @@ Gallery (`.gallery-grid`) and Members (`.members-grid`) images are served from G
 
 ### 7. Console Errors
 
-Note any unexpected JavaScript console errors captured by Playwright. Errors related to Google Drive image loading (network/CORS/429) are expected and can be ignored.
+Note any unexpected JavaScript console errors captured by your browser tool. Errors related to Google Drive image loading (network/CORS/429) are expected and can be ignored.
 
 Facebook plugin/embed warnings or errors emitted from third-party iframe scripts can also be treated as expected, as long as the app layout and interactions remain stable.
 

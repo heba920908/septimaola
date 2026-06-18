@@ -18,17 +18,22 @@ This is the marketing and promotional repository for **Septima Ola**, a reggae/s
 ### Commands
 
 ```bash
+cd react/
+npm install       # one-time install
 npm run dev       # Vite dev server (port 5173)
 npm run build     # Production build → react/dist/
 npm run preview   # Serve the dist/ build
 npm start         # npx serve -s dist -l 5173
 ```
 
-### Container (Podman/Docker)
+### Container Fallback (Podman/Docker)
+
+Use this only when you need an isolated runtime instead of local Node.js.
 
 ```bash
+cd react/
 podman build -t septimaola-react .
-podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
+podman run --rm -v .:/app:z -p 5173:5173 septimaola-react
 ```
 
 ### Architecture

@@ -4,15 +4,29 @@
 
 ```bash
 cd react
-podman build -t septimaola-react .
-podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
+npm install
+npm run dev
 ```
 
 ## Checking for Errors
 
-Validation for this project must use Podman + Playwright MCP. Do not use local npm fallback commands for verification.
+Use local npm/npx first for runtime verification. Use Podman only as an optional fallback.
 
 ### Runtime and UI Verification
+
+```bash
+cd react
+npm install
+npm run dev
+```
+
+Then run browser verification against `http://127.0.0.1:5173` using this priority:
+
+1. Integrated browser tools first (for example: `open_browser_page`, `read_page`, `screenshot_page`, `click_element`, `type_in_page`).
+2. Playwright MCP as fallback.
+3. Any available browser automation tooling if the above are unavailable.
+
+Optional fallback:
 
 ```bash
 cd react
@@ -20,14 +34,12 @@ podman build -t septimaola-react .
 podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
 ```
 
-Then use Playwright MCP against `http://127.0.0.1:5173`.
-
 ### Lint / Static Analysis
 
 There is no ESLint or TypeScript config in this project. To catch issues:
 
-1. Run the Podman workflow above and verify UI behavior with Playwright MCP.
-2. Review browser console events from Playwright output to detect runtime errors.
+1. Run the npm workflow above and verify UI behavior with browser automation tools (integrated first, Playwright MCP fallback).
+2. Review browser console events from your browser tool output to detect runtime errors.
 
 ### Common Runtime Issues
 
@@ -35,13 +47,21 @@ There is no ESLint or TypeScript config in this project. To catch issues:
 - **Base path mismatch** — Production uses `/septimaola/` base path (see `vite.config.js`). Dev uses `/`. If assets 404 in production, check the base path.
 - **Facebook timeline embed console noise** — Third-party iframe scripts may emit warnings/errors unrelated to app code.
 
-## Testing with Playwright MCP
+## Testing with Browser Tools (Integrated First)
 
-This project has no automated test suite. Use Playwright MCP to verify the Podman-served app.
+This project has no automated test suite. Verify the npm-served app with integrated browser tools first, then Playwright MCP as fallback.
 
-### Workflow: Podman Serve → Verify
+### Workflow: npm Serve → Verify
 
-1. **Start the app with Podman:**
+1. **Start the app with npm:**
+
+   ```bash
+   cd react
+   npm install
+   npm run dev
+   ```
+
+   Optional fallback:
 
    ```bash
    cd react
@@ -49,7 +69,7 @@ This project has no automated test suite. Use Playwright MCP to verify the Podma
    podman run --rm -v /absolute/path/to/septimaola/react:/app:z -p 5173:5173 septimaola-react
    ```
 
-2. **Open the site with Playwright MCP:**
+2. **Open the site with browser automation tools (integrated first):**
 
    Use `open_browser_page` to navigate to `http://127.0.0.1:5173`.
 
@@ -60,9 +80,9 @@ This project has no automated test suite. Use Playwright MCP to verify the Podma
    - `read_page` — inspect accessibility tree and recent console events
    - Navigate to each section anchor: `#noticias`, `#biografia`, `#integrantes`, `#musica`, `#galeria`, `#contacto`
 
-4. **Kill the Podman run** when done.
+4. **Stop the running server** when done.
 
-### Example Playwright MCP Sequence
+### Example Integrated Browser Tool Sequence
 
 ```
 open_browser_page → http://127.0.0.1:5173
@@ -70,6 +90,8 @@ screenshot_page   → verify Hero section renders
 run_playwright_code → verify headings for biografia/integrantes/musica/galeria/contacto
 read_page         → inspect recent console events and navigation links
 ```
+
+If integrated tools are unavailable in your environment, run an equivalent sequence with Playwright MCP.
 
 ### What to Verify
 
@@ -93,10 +115,10 @@ read_page         → inspect recent console events and navigation links
 
 ```bash
 podman build -t septimaola-react .
-podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
+podman run --rm -v .:/app:z -p 5173:5173 septimaola-react
 ```
 
-The container runs `npm install` then starts the dev server. Use for isolated development without local Node.js.
+The container runs dependency installation and starts the Vite dev server. Use this as a fallback for isolated development without local Node.js.
 
 ## Architecture Notes
 

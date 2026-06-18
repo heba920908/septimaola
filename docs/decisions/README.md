@@ -41,4 +41,5 @@ What are the resulting effects — positive, negative, and neutral?
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| [0001](0001-news-slide-section.md) | News slide section | Proposed |
+| [0001](0001-news-slide-section.md) | News slide section | Accepted |
+| [0002](0002-local-dev-npm-vite.md) | npm/npx-first local development for React press kit | Accepted |
