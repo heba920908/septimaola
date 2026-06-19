@@ -35,6 +35,7 @@ Notes:
 
 - `npm run dev` runs Vite (equivalent to `npx vite`) with HMR enabled.
 - Source changes under `src/` reload automatically.
+- **Images are fetched automatically** before the dev server starts via the `predev` hook. On first run, band photos download from Google Drive to `public/images/`. If images are missing, run `npm run fetch:images` manually.
 
 ## Optional Container Fallback (Podman)
 

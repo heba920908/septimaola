@@ -43,7 +43,7 @@ There is no ESLint or TypeScript config in this project. To catch issues:
 
 ### Common Runtime Issues
 
-- **Google Drive images returning 429** — `Members.jsx` has retry logic (`ImageWithRetry`), but rate limits can still cause blank photos in dev. This is expected.
+- **Images not loading** — Run `npm run fetch:images` to download them. Check `public/images/` exists.
 - **Base path mismatch** — Production uses `/septimaola/` base path (see `vite.config.js`). Dev uses `/`. If assets 404 in production, check the base path.
 - **Facebook timeline embed console noise** — Third-party iframe scripts may emit warnings/errors unrelated to app code.
 
@@ -126,7 +126,38 @@ The container runs dependency installation and starts the Vite dev server. Use t
 - **No state library** — only React `useState`/`useEffect`
 - **No TypeScript** — plain JSX
 - **Single stylesheet** — `src/styles.css` with CSS custom properties (see root CLAUDE.md for palette)
-- **Google Drive CDN** — image IDs hardcoded in `Members.jsx` and `Gallery.jsx`
+- **Images** — Downloaded at build time from Google Drive to `public/images/`, then served as static assets
+
+## Image Pipeline
+
+Images are no longer fetched at runtime from Google Drive's CDN. Instead, a build-time script downloads them once and they are served as local static assets.
+
+### How it works
+
+1. **Manifest** (`scripts/fetch-images.mjs`) contains `{ slug, driveId }` entries for member photos and gallery images.
+2. **Fetch script** downloads from `https://lh3.googleusercontent.com/d/<id>` to `public/images/{members,gallery}/<slug>.jpg`.
+3. **Auto-run** via npm lifecycle:
+   - `predev` — fetches before starting the Vite dev server
+   - `prebuild` — fetches before creating the production bundle
+4. **Idempotent** — existing files are skipped; use `--force` to refresh all.
+5. **Gitignored** — `public/images/` is not committed; CI re-fetches on every build.
+
+### Adding a new image
+
+1. Add a new `{ slug, id }` entry to the appropriate section in `scripts/fetch-images.mjs`.
+2. Reference the image by slug in `Members.jsx` or `Gallery.jsx`:
+   ```jsx
+   <img src={`${import.meta.env.BASE_URL}images/members/<slug>.jpg`} ... />
+   ```
+3. Run `npm run fetch:images` (or just `npm run dev` / `npm run build`).
+
+### Commands
+
+```bash
+cd react
+npm run fetch:images      # Download images once
+npm run fetch:images -- --force  # Re-download all images
+```
 
 ## Deployment
 

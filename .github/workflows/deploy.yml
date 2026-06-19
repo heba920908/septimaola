@@ -34,6 +34,10 @@ jobs:
         working-directory: ./react
         run: npm install
 
+      - name: Fetch images from Google Drive
+        working-directory: ./react
+        run: npm run fetch:images
+
       - name: Build React app
         working-directory: ./react
         env:

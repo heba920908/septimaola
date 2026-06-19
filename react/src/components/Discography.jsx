@@ -1,43 +1,99 @@
 import React from 'react'
+import { motion } from 'framer-motion'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+}
+
+const songs = [
+  { title: 'Desde mi Ventana' },
+  { title: 'Despertar' },
+  { title: 'Arenga' },
+  { title: 'Contraluz' },
+]
 
 export default function Discography() {
-  const songs = [
-    {
-      title: 'Desde mi Ventana',
-      description: 'Un viaje melódico que captura la esencia del reggae contemplativo con armonías ska.'
-    },
-    {
-      title: 'Despertar',
-      description: 'Llamada a la conciencia social con ritmos vibrantes y mensajes de transformación.'
-    },
-    {
-      title: 'Arenga',
-      description: 'Energía pura. Un grito de unidad y resistencia que resuena en el corazón del movimiento.'
-    },
-    {
-      title: 'Contraluz',
-      description: 'Melodía introspectiva que juega entre luces y sombras, explorando las paradojas de la existencia.'
-    }
-  ]
-
   return (
-    <section id="musica" className="section-discography">
+    <section id="musica" className="fullpage-section">
       <div className="container">
-        <h2>Discografía / Material</h2>
-        <div className="songs-grid">
-          {songs.map((song, index) => (
-            <div key={index} className="song-card">
+        <motion.div 
+          className="section-heading"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+        >
+          <motion.h2 variants={itemVariants}>Música</motion.h2>
+          <motion.div className="minimal-line" variants={itemVariants} />
+        </motion.div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+        >
+          <motion.p className="impact-phrase" variants={itemVariants}>
+            «<strong>Cuatro canciones</strong>. Una revolución sonora.»
+          </motion.p>
+        </motion.div>
+
+        <motion.div 
+          className="discography-minimal"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+        >
+          {songs.map((song, idx) => (
+            <motion.div 
+              key={idx} 
+              className="song-minimal"
+              variants={itemVariants}
+              whileHover={{ x: 8 }}
+            >
               <h3>{song.title}</h3>
-              <p>{song.description}</p>
-              <div className="song-streaming">
-                <a href="https://open.spotify.com/search" target="_blank" rel="noopener noreferrer">Ver más</a>
-              </div>
-            </div>
+              <a 
+                href="https://open.spotify.com/search?q=Septima+Ola"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="play-btn"
+                aria-label={`Escuchar ${song.title}`}
+              >
+                ▶
+              </a>
+            </motion.div>
           ))}
-        </div>
-        <div className="discography-note">
-          <p><strong>Material técnico:</strong> Masters y maquetas disponibles a solicitud para prensa y promociones.</p>
-        </div>
+        </motion.div>
+
+        <motion.p 
+          className="minimal-text"
+          variants={itemVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+        >
+          Masters disponibles para prensa y promociones.
+        </motion.p>
       </div>
     </section>
   )

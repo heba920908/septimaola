@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Hero from './components/Hero'
 import News from './components/News'
-import Section from './components/Section'
+import Biografia from './components/Biografia'
 import Members from './components/Members'
 import Discography from './components/Discography'
 import Gallery from './components/Gallery'
@@ -18,7 +18,6 @@ export default function App() {
     setMenuOpen(false)
   }
 
-  // Close menu when clicking outside or on escape key
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuOpen && !event.target.closest('.site-header')) {
@@ -35,7 +34,6 @@ export default function App() {
     if (menuOpen) {
       document.addEventListener('click', handleClickOutside)
       document.addEventListener('keydown', handleEscape)
-      // Prevent body scroll when menu is open
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -66,56 +64,66 @@ export default function App() {
           <span></span>
         </button>
         <nav className={menuOpen ? 'nav-open' : ''}>
+          <a href="#inicio" onClick={closeMenu}>Inicio</a>
           <a href="#noticias" onClick={closeMenu}>Noticias</a>
-          <a href="#biografia" onClick={closeMenu}>Biografía</a>
-          <a href="#integrantes" onClick={closeMenu}>Integrantes</a>
+          <a href="#biografia" onClick={closeMenu}>Nosotros</a>
+          <a href="#integrantes" onClick={closeMenu}>Banda</a>
           <a href="#musica" onClick={closeMenu}>Música</a>
           <a href="#galeria" onClick={closeMenu}>Galería</a>
           <a href="#contacto" onClick={closeMenu}>Contacto</a>
         </nav>
       </header>
 
-      <Hero />
-
       <main>
+        <Hero />
         <News />
-
-        <Section id="biografia" title="¿Quiénes somos?">
-          <p>
-            Séptima Ola emerge desde las calles vibrantes de Ciudad de México como una ola imparable de fusión musical, donde el reggae jamaicano se encuentra con el corazón latino, el ska británico con el alma mexicana, y el rocksteady con la pasión de nuestra gente. Nacidos en la tierra del mariachi y la cumbia, pero enamorados de las raíces rasta, somos la prueba viva de que la música no conoce fronteras.
-          </p>
-          <p>
-            En nuestro departamento en La Raza, donde Alfred Herrera comenzó a tejer los primeros acordes de esta aventura sonora, hemos creado un espacio donde la diversidad es nuestra mayor fortaleza. Nuestros integrantes traen consigo historias únicas: desde el saxofón de Levi, que ha conquistado escenarios desde Texcoco hasta el Centro Cultural México Bicentenario, pasando por el violín clásico de Rodrigo Mera que se reinventa en ritmos festivos, hasta la percusión contagiosa de Rams que fusiona salsa y reggae con maestría innata.
-          </p>
-          <p>
-            Somos la banda que hace bailar a los amantes del reggae en México, que lleva la conciencia social a las plazas públicas, que transforma el dolor colectivo en canciones de esperanza. Nuestras letras hablan de amor en tiempos de crisis, de unidad en una ciudad dividida, de justicia social mientras el mundo cambia. Cada riff de guitarra de Alfred, cada golpe de batería de Lemánu, cada nota de bajo de Arthur, cada voz de Sandy Robinsuell, nos recuerda que la música es el puente entre culturas, el grito de libertad, la celebración de la vida.
-          </p>
-          <p>
-            En una época donde el mundo parece más dividido que nunca, Séptima Ola surge como respuesta: reggae hecho en México, para mexicanos y para el mundo. Invitamos a todos los corazones inquietos, a los que buscan ritmo en el caos urbano, a los que creen que una canción puede cambiar el mundo. Únete a nuestra ola, siente el poder de la música que nace de las raíces profundas de nuestra tierra, pero que se eleva hacia horizontes infinitos.
-          </p>
-          <div className="vision-mission">
-            <div className="vision">
-              <h3>Visión</h3>
-              <p>Ser la voz reggae más auténtica de México, reconocida internacionalmente por fusionar las tradiciones musicales mexicanas con las raíces jamaicanas, llevando mensajes de paz, amor y justicia social a través de escenarios que van desde las cantinas tradicionales hasta los grandes festivales globales.</p>
-            </div>
-            <div className="mission">
-              <h3>Misión</h3>
-              <p>Crear música que conecte el alma mexicana con el espíritu universal del reggae, fomentando comunidad, empoderamiento y transformación social. Cada canción es una invitación a bailar, reflexionar y soñar con un mundo mejor, donde la diversidad cultural sea nuestra mayor riqueza y la música nuestro idioma común.</p>
-            </div>
-          </div>
-        </Section>
-
+        <Biografia />
         <Members />
-
         <Discography />
-
         <Gallery />
-
         <Contact />
       </main>
 
       <footer className="site-footer">
-        <small>© {new Date().getFullYear()} SÉPTIMA OLA — Ciudad de México</small>
+        <div className="footer-social-links">
+          <a
+            href="https://instagram.com/septimaolaoficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-social-btn"
+            aria-label="Instagram"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <a
+            href="https://facebook.com/septimaolaoficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-social-btn"
+            aria-label="Facebook"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+          <a
+            href="https://youtube.com/septimaolaoficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-social-btn"
+            aria-label="YouTube"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/>
+              <path d="m10 15 5-3-5-3z"/>
+            </svg>
+          </a>
+        </div>
+        <small>© {new Date().getFullYear()} SÉPTIMA OLA — CIUDAD DE MÉXICO</small>
       </footer>
     </div>
   )

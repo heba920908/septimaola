@@ -24,13 +24,10 @@ const itemVariants = {
   },
 }
 
-const FB_PAGE_URL = 'https://www.facebook.com/septimaolaoficial'
-const FB_PAGE_PLUGIN_SRC = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FB_PAGE_URL)}&tabs=timeline&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false&width=500&height=500`
-
-export default function News() {
+export default function Biografia() {
   return (
-    <section id="noticias" className="fullpage-section">
-      <div className="container">
+    <section id="biografia" className="fullpage-section">
+      <div className="container container-narrow">
         <motion.div 
           className="section-heading"
           variants={containerVariants}
@@ -38,7 +35,7 @@ export default function News() {
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
         >
-          <motion.h2 variants={itemVariants}>Noticias</motion.h2>
+          <motion.h2 variants={itemVariants}>Nosotros</motion.h2>
           <motion.div className="minimal-line" variants={itemVariants} />
         </motion.div>
 
@@ -49,26 +46,30 @@ export default function News() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.p className="impact-phrase" variants={itemVariants}>
-            «Cada concierto es una <strong>ola nueva</strong>»
+            «Donde el <strong>reggae jamaicano</strong> encuentra el <strong>corazón latino</strong>»
+          </motion.p>
+
+          <motion.p className="minimal-text" variants={itemVariants}>
+            Nacidos en Ciudad de México, fusionamos reggae, ska y rocksteady con la pasión de nuestra tierra. 
+            Cada canción es un puente entre culturas, un grito de libertad, una celebración de la vida.
           </motion.p>
         </motion.div>
 
         <motion.div 
-          className="news-minimal"
-          variants={itemVariants}
+          className="vision-mission-minimal"
+          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
         >
-          <iframe
-            title="Noticias de Facebook"
-            src={FB_PAGE_PLUGIN_SRC}
-            loading="lazy"
-            scrolling="no"
-            frameBorder="0"
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          />
+          <motion.div className="vision-card" variants={itemVariants}>
+            <h3>Visión</h3>
+            <p>Ser la voz reggae más auténtica de México, llevando mensajes de paz y justicia social a escenarios globales.</p>
+          </motion.div>
+          <motion.div className="mission-card" variants={itemVariants}>
+            <h3>Misión</h3>
+            <p>Crear música que conecte el alma mexicana con el espíritu universal del reggae.</p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
