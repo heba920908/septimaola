@@ -25,6 +25,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ./react/node_modules
+          key: septimaola-node_modules-${{ hashFiles('react/package-lock.json') }}
+          restore-keys: |
+            septimaola-node_modules-
+
+      - name: Cache downloaded images
+        uses: actions/cache@v4
+        with:
+          path: ./react/public/images
+          key: septimaola-images-${{ hashFiles('react/scripts/fetch-images.mjs') }}
+          restore-keys: |
+            septimaola-images-
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -33,10 +49,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./react
         run: npm install
-
-      - name: Fetch images from Google Drive
-        working-directory: ./react
-        run: npm run fetch:images
 
       - name: Build React app
         working-directory: ./react

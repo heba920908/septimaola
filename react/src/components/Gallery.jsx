@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import useEmblaCarousel from 'embla-carousel-react'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,6 +31,32 @@ const galleryImages = [
 ]
 
 export default function Gallery() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    dragFree: false,
+    align: 'center',
+    loop: false,
+  })
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    onSelect()
+    emblaApi.on('select', onSelect)
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi, onSelect])
+
+  const scrollTo = useCallback(
+    (index) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  )
+
   return (
     <section id="galeria" className="fullpage-section">
       <div className="container">
@@ -55,8 +82,9 @@ export default function Gallery() {
           </motion.p>
         </motion.div>
 
+        {/* Desktop Grid View */}
         <motion.div
-          className="gallery-minimal"
+          className="gallery-desktop"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -71,18 +99,42 @@ export default function Gallery() {
               <img
                 src={`${import.meta.env.BASE_URL}images/gallery/${img.slug}.jpg`}
                 alt={img.alt}
+                loading="lazy"
+                decoding="async"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
-                style={{
-                  width: '100%',
-                  height: '200px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  display: 'block',
-                }}
               />
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Mobile Carousel View */}
+        <div className="gallery-carousel">
+          <div className="gallery-carousel-viewport" ref={emblaRef}>
+            <div className="gallery-carousel-container">
+              {galleryImages.map((img, idx) => (
+                <div key={idx} className="gallery-carousel-slide">
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/gallery/${img.slug}.jpg`}
+                    alt={img.alt}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="gallery-carousel-dots">
+            {galleryImages.map((_, idx) => (
+              <button
+                key={idx}
+                className={`gallery-carousel-dot ${idx === selectedIndex ? 'active' : ''}`}
+                onClick={() => scrollTo(idx)}
+                aria-label={`Ir a foto ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
 
         <motion.p
           className="minimal-text"

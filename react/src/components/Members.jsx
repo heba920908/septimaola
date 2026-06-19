@@ -77,6 +77,8 @@ export default function Members() {
                 <img
                   src={`${import.meta.env.BASE_URL}images/members/${member.image}.jpg`}
                   alt={member.name}
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => { e.currentTarget.style.display = 'none' }}
                   style={{
                     width: '100%',

@@ -35,7 +35,7 @@ export default function Discography() {
   return (
     <section id="musica" className="fullpage-section">
       <div className="container">
-        <motion.div 
+        <motion.div
           className="section-heading"
           variants={containerVariants}
           initial="hidden"
@@ -57,7 +57,7 @@ export default function Discography() {
           </motion.p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="discography-minimal"
           variants={containerVariants}
           initial="hidden"
@@ -65,14 +65,15 @@ export default function Discography() {
           viewport={{ once: true, margin: '-100px' }}
         >
           {songs.map((song, idx) => (
-            <motion.div 
-              key={idx} 
+            <motion.div
+              key={idx}
               className="song-minimal"
               variants={itemVariants}
               whileHover={{ x: 8 }}
+              whileTap={{ scale: 0.99 }}
             >
               <h3>{song.title}</h3>
-              <a 
+              <a
                 href="https://open.spotify.com/search?q=Septima+Ola"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -85,7 +86,7 @@ export default function Discography() {
           ))}
         </motion.div>
 
-        <motion.p 
+        <motion.p
           className="minimal-text"
           variants={itemVariants}
           initial="hidden"

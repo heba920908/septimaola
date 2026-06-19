@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Hero from './components/Hero'
 import News from './components/News'
 import Biografia from './components/Biografia'
@@ -9,6 +9,9 @@ import Contact from './components/Contact'
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const navRef = useRef(null)
+  const menuToggleRef = useRef(null)
+  const lastFocusedElement = useRef(null)
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
@@ -16,6 +19,57 @@ export default function App() {
 
   const closeMenu = () => {
     setMenuOpen(false)
+  }
+
+  // Focus trap for mobile nav drawer
+  const trapFocus = useCallback((element) => {
+    const focusableElements = element.querySelectorAll(
+      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
+    )
+    const firstFocusable = focusableElements[0]
+    const lastFocusable = focusableElements[focusableElements.length - 1]
+
+    const handleTabKey = (e) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstFocusable) {
+            lastFocusable.focus()
+            e.preventDefault()
+          }
+        } else {
+          if (document.activeElement === lastFocusable) {
+            firstFocusable.focus()
+            e.preventDefault()
+          }
+        }
+      }
+    }
+
+    element.addEventListener('keydown', handleTabKey)
+    return () => element.removeEventListener('keydown', handleTabKey)
+  }, [])
+
+  // Swipe to dismiss nav drawer
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].screenX
+  }
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].screenX
+    handleSwipe()
+  }
+
+  const handleSwipe = () => {
+    const swipeThreshold = 50
+    const diff = touchStartX.current - touchEndX.current
+    // Swipe right to open (from right edge), swipe left to close
+    if (diff > swipeThreshold && menuOpen) {
+      // Swiped left - close menu
+      closeMenu()
+    }
   }
 
   useEffect(() => {
@@ -32,11 +86,25 @@ export default function App() {
     }
 
     if (menuOpen) {
+      // Save current focus
+      lastFocusedElement.current = document.activeElement
       document.addEventListener('click', handleClickOutside)
       document.addEventListener('keydown', handleEscape)
       document.body.style.overflow = 'hidden'
+      // Focus first nav item
+      setTimeout(() => {
+        if (navRef.current) {
+          const firstLink = navRef.current.querySelector('a')
+          if (firstLink) firstLink.focus()
+          trapFocus(navRef.current)
+        }
+      }, 100)
     } else {
       document.body.style.overflow = ''
+      // Return focus to toggle button
+      if (menuToggleRef.current) {
+        menuToggleRef.current.focus()
+      }
     }
 
     return () => {
@@ -44,7 +112,7 @@ export default function App() {
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = ''
     }
-  }, [menuOpen])
+  }, [menuOpen, trapFocus])
 
   return (
     <div className="app">
@@ -53,17 +121,27 @@ export default function App() {
           <h1 className="header-title">SÉPTIMA OLA</h1>
           <p className="header-subtitle">Reggae · Ska · Rocksteady</p>
         </div>
-        <button 
-          className="menu-toggle" 
+        <button
+          ref={menuToggleRef}
+          className="menu-toggle"
           onClick={toggleMenu}
-          aria-label="Toggle menu"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={menuOpen}
+          aria-controls="main-nav"
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
-        <nav className={menuOpen ? 'nav-open' : ''}>
+        <nav
+          ref={navRef}
+          id="main-nav"
+          className={menuOpen ? 'nav-open' : ''}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <a href="#inicio" onClick={closeMenu}>Inicio</a>
           <a href="#noticias" onClick={closeMenu}>Noticias</a>
           <a href="#biografia" onClick={closeMenu}>Nosotros</a>

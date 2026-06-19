@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 const containerVariants = {
@@ -28,10 +28,39 @@ const FB_PAGE_URL = 'https://www.facebook.com/septimaolaoficial'
 const FB_PAGE_PLUGIN_SRC = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FB_PAGE_URL)}&tabs=timeline&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false&width=500&height=500`
 
 export default function News() {
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
+
+  useEffect(() => {
+    // IntersectionObserver to defer iframe loading
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      {
+        rootMargin: '100px',
+        threshold: 0.1,
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
+
   return (
-    <section id="noticias" className="fullpage-section">
+    <section id="noticias" className="fullpage-section" ref={sectionRef}>
       <div className="container">
-        <motion.div 
+        <motion.div
           className="section-heading"
           variants={containerVariants}
           initial="hidden"
@@ -53,22 +82,28 @@ export default function News() {
           </motion.p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="news-minimal"
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
         >
-          <iframe
-            title="Noticias de Facebook"
-            src={FB_PAGE_PLUGIN_SRC}
-            loading="lazy"
-            scrolling="no"
-            frameBorder="0"
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          />
+          {isVisible ? (
+            <iframe
+              title="Noticias de Facebook"
+              src={FB_PAGE_PLUGIN_SRC}
+              loading="lazy"
+              scrolling="no"
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            />
+          ) : (
+            <div className="news-minimal-placeholder">
+              <p>Cargando noticias...</p>
+            </div>
+          )}
         </motion.div>
       </div>
     </section>

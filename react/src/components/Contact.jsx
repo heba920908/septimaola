@@ -28,7 +28,7 @@ export default function Contact() {
   return (
     <section id="contacto" className="fullpage-section">
       <div className="container">
-        <motion.div 
+        <motion.div
           className="section-heading"
           variants={containerVariants}
           initial="hidden"
@@ -39,7 +39,7 @@ export default function Contact() {
           <motion.div className="minimal-line" variants={itemVariants} />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="contact-minimal"
           variants={containerVariants}
           initial="hidden"
@@ -50,7 +50,7 @@ export default function Contact() {
             «<strong>Únete</strong> a la ola»
           </motion.p>
 
-          <motion.a 
+          <motion.a
             href="mailto:septimaolaoficial@gmail.com"
             className="contact-email"
             variants={itemVariants}
@@ -58,43 +58,46 @@ export default function Contact() {
             septimaolaoficial@gmail.com
           </motion.a>
 
-          <motion.div 
+          <motion.div
             className="social-minimal"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
           >
-            <motion.a 
-              href="https://instagram.com/septimaolaoficial" 
-              target="_blank" 
+            <motion.a
+              href="https://instagram.com/septimaolaoficial"
+              target="_blank"
               rel="noopener noreferrer"
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
               Instagram
             </motion.a>
-            <motion.a 
-              href="https://facebook.com/septimaolaoficial" 
-              target="_blank" 
+            <motion.a
+              href="https://facebook.com/septimaolaoficial"
+              target="_blank"
               rel="noopener noreferrer"
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
               Facebook
             </motion.a>
-            <motion.a 
-              href="https://youtube.com/septimaolaoficial" 
-              target="_blank" 
+            <motion.a
+              href="https://youtube.com/septimaolaoficial"
+              target="_blank"
               rel="noopener noreferrer"
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
               YouTube
             </motion.a>
           </motion.div>
 
-          <motion.p 
+          <motion.p
             className="contact-location"
             variants={itemVariants}
           >
