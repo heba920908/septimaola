@@ -61,7 +61,7 @@ function ShareButton() {
       } catch (err) {
         // User cancelled or share failed - fallback to opening press kit
         window.open(
-          'https://drive.google.com/file/d/1bV4JgTpkhVVMLHrzG9m4ke5q4n1Ts8hE/view?usp=sharing',
+          'https://drive.google.com/file/d/1o_ODH3OizxgFXNNM5PLdVOC0Ww4r7hEf/view?usp=drivesdk',
           '_blank',
           'noopener,noreferrer'
         )
@@ -69,7 +69,7 @@ function ShareButton() {
     } else {
       // Fallback for browsers without Web Share API
       window.open(
-        'https://drive.google.com/file/d/1bV4JgTpkhVVMLHrzG9m4ke5q4n1Ts8hE/view?usp=sharing',
+        'https://drive.google.com/file/d/1o_ODH3OizxgFXNNM5PLdVOC0Ww4r7hEf/view?usp=drivesdk',
         '_blank',
         'noopener,noreferrer'
       )
@@ -81,7 +81,6 @@ function ShareButton() {
       className="presskit-btn"
       onClick={handleShare}
       variants={itemVariants}
-      whileHover={{ y: -3, boxShadow: '0 8px 30px rgba(0,212,255,0.4)' }}
       whileTap={{ scale: 0.98 }}
     >
       {canShare ? 'Compartir' : 'Press Kit'}

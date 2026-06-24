@@ -107,20 +107,19 @@ The band was born from a shared passion for music among members with diverse
 influences and experiences. Based in La Raza, Mexico City, Septima Ola keeps
 evolving through energetic live performances and heartfelt songs.
 
-## Objective
+## History
 
-Spread positive messages through music and inspire people to embrace love,
-peace, and social change.
+Séptima Ola was born in November 2025, making its debut at the FARO de Indios
+Verdes under the name "The Soul Groove Collective", with a set of original songs
+and covers that had the cultural venue dancing and singing along.
 
-## Vision
+## The start of a new wave
 
-Be a leading force in reggae and ska, recognized for authentic sound,
-meaningful lyrics, and artistic integrity.
-
-## Mission
-
-Create music that resonates with people from all walks of life and fosters
-community and empowerment.
+In an era where the world seems more divided than ever, Séptima Ola emerges as
+a response: sounds made in Mexico for restless hearts seeking movement and
+inspiration. Come, be part of a wave born from our land and expanding without
+limits in a fusion of Ska, Reggae, and Rocksteady rhythms with notes and sounds
+drawn from Jazz.
 
 # Press & Production Kit
 
@@ -140,7 +139,7 @@ hospitality, booking/logistics, and downloadable assets.
 | [Levi'Sax](levi_sax.md) | Sax tenor | TBD |
 | [Rodrigo Mera](rodrigo_mera.md) | Violinist and Arranger | TBD |
 | [Sandy Robinsuell](sandy_robinsuell.md) | Keyboardist and Backing Vocalist | TBD |
-| [lemanu](lemanu.md) | Drummer | TBD |
+| [LeManu](lemanu.md) | Drummer | TBD |
 
 ### Audio Requirements
 

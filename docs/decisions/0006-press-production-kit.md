@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -39,17 +39,19 @@ Initial intended structure of the Press & Production Kit:
 - Booking & Logistics (contacts, fees, load-in) `TBD`
 - Downloads (PDF rider, stage plot, hi-res photos) `TBD`
 
-For this phase, implementation is intentionally limited to documentation and
-content readiness:
+Implementation follows a two-phase approach:
 
+Phase 1 (completed): Documentation and content readiness
 - Capture this architectural/product direction in ADR form.
 - Reframe the canonical knowledge base so the technical rider lives under the
   Press & Production Kit umbrella, and complete the Stage Plot content.
-- Defer React UI integration and routing/page changes to a later decision and
-  implementation phase.
 
-This keeps the promotional page focused while allowing the kit to mature in
-parallel.
+Phase 2 (implemented): React UI integration and routing
+- Deliver React surface as a separate page using hash routing (`#/press-kit`).
+- Reachable through subtle links in footer and Contact section.
+- Initial content includes full Technical Rider with visible `TBD` stubs for 
+  Hospitality, Booking & Logistics, and Downloads sections.
+- Language uses Spanish UI/labels with canonical English technical terms.
 
 ## Consequences
 
@@ -61,8 +63,6 @@ parallel.
   place before UI decisions.
 - Positive: Enables cleaner future options (separate route, standalone kit page,
   or separate artifact) without forcing immediate front-end coupling.
-- Negative: The Press & Production Kit is not yet directly reachable from the
-  public web experience until a follow-up implementation phase is approved.
-- Negative: Introduces an extra step in delivery planning (future integration
-  task/ADR required).
-- Neutral: No React code changes are made in this phase by design.
+- Positive: React surface delivered without disturbing the promotional single-page flow (separate hash route).
+- Positive: Footer + Contact links provide a low-friction discovery path for professional audiences.
+- Neutral: Hospitality, Booking & Logistics, and Downloads remain `TBD` placeholders pending content.

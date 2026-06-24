@@ -178,18 +178,19 @@ body{
 .presskit-btn{
   position:relative;z-index:1;
   margin-top:2.5rem;display:inline-flex;align-items:center;gap:0.5rem;
-  padding:1rem 2.5rem;background:var(--accent);color:var(--accent-contrast);
-  border-radius:6px;text-decoration:none;font-weight:700;font-size:clamp(0.9rem, 2vw, 1rem);
-  letter-spacing:0.75px;text-transform:uppercase;
-  box-shadow:0 4px 20px rgba(0,212,255,0.2);
-  transition:all var(--dur-base) var(--ease-out);
-  /* Minimum 44px height */
-  min-height: 48px;
+  padding:0.6rem 1.25rem;background:transparent;color:var(--text-muted);
+  border:1px solid var(--border-subtle);
+  border-radius:6px;text-decoration:none;font-weight:500;font-size:0.85rem;
+  letter-spacing:0.3px;
+  transition:color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-fast) var(--ease-out);
+  min-height: 44px;
 }
-.presskit-btn:hover{
-  background:var(--accent);
-  box-shadow:0 6px 28px rgba(0,212,255,0.35);
-  transform:translateY(-2px);
+.presskit-btn:hover,
+.presskit-btn:focus{
+  color:var(--accent);
+  border-color:var(--accent);
+  outline:none;
 }
 .presskit-btn:active {
   transform: scale(0.98);
@@ -678,7 +679,7 @@ body{
   }
 
   .hero-logo{height:clamp(100px, 30vw, 140px)}
-  .presskit-btn{font-size:0.9rem;padding:0.8rem 1.5rem;margin-top:1.25rem}
+  .presskit-btn{font-size:0.85rem;padding:0.6rem 1.25rem;margin-top:1.25rem}
   .hero-social-links{margin-top:0.75rem}
   .hero-social-btn{width:44px;height:44px}
   .scroll-indicator{bottom:0.5rem}
@@ -776,4 +777,274 @@ body{
 @media(min-width:1200px){
   .hero-logo{height:220px}
   .container{max-width:1000px}
+}
+
+/* ─── Press & Production Kit Styles ──────────────────── */
+
+.presskit-page {
+  padding: 2rem 0;
+  min-height: 100vh;
+}
+
+.presskit-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.back-link-container {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.back-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.back-link:hover,
+.back-link:focus {
+  background: rgba(0, 212, 255, 0.1);
+  outline: none;
+}
+
+.presskit-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+  justify-content: center;
+}
+
+.nav-link {
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  transition: all var(--dur-fast) var(--ease-out);
+  font-size: 0.9rem;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  background: rgba(0, 212, 255, 0.1);
+  outline: none;
+}
+
+.presskit-section {
+  margin-bottom: 3rem;
+}
+
+.presskit-subsection {
+  margin-bottom: 2rem;
+}
+
+.presskit-section h2,
+.presskit-subsection h3,
+.presskit-subsection h4 {
+  color: var(--accent);
+  margin-top: 0;
+}
+
+.presskit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.presskit-table th,
+.presskit-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--accent);
+}
+
+.presskit-table th {
+  background: rgba(0, 212, 255, 0.1);
+  font-weight: 600;
+}
+
+.presskit-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.presskit-table tbody tr:hover {
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.presskit-list {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.presskit-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.monitor-table-container {
+  overflow-x: auto;
+}
+
+.input-table-container {
+  overflow-x: auto;
+}
+
+.stage-subsection {
+  margin-bottom: 1.5rem;
+}
+
+.presskit-tbd {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.tbd-badge {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.presskit-downloads-grid {
+  margin: 1.5rem 0;
+}
+
+.presskit-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+
+.presskit-download-btn:hover,
+.presskit-download-btn:focus {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.25);
+  outline: none;
+}
+
+.footer-presskit-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  display: inline-block;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.footer-presskit-link:hover,
+.footer-presskit-link:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+.contact-presskit-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  display: inline-block;
+  transition: all var(--dur-fast) var(--ease-out);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+}
+
+.contact-presskit-link:hover,
+.contact-presskit-link:focus {
+  background: rgba(0, 212, 255, 0.1);
+  outline: none;
+}
+
+/* Responsive table styles for mobile */
+@media (max-width: 768px) {
+  .presskit-table,
+  .presskit-table thead,
+  .presskit-table tbody,
+  .presskit-table th,
+  .presskit-table td,
+  .presskit-table tr {
+    display: block;
+  }
+
+  .presskit-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .presskit-table tr {
+    border: 1px solid var(--accent);
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .presskit-table td {
+    border: none;
+    position: relative;
+    padding: 0.75rem 0.75rem 0.75rem 40%;
+  }
+
+  .presskit-table td:before {
+    content: attr(data-label) ": ";
+    position: absolute;
+    left: 0.75rem;
+    width: 35%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  
+  .presskit-navigation {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .nav-link {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .presskit-page {
+    padding: 1rem 0;
+  }
+  
+  .presskit-tbd {
+    padding: 1.5rem 1rem;
+  }
+  
+  .presskit-table td {
+    padding: 0.75rem 0.75rem 0.75rem 50%;
+  }
+
+  .presskit-table td:before {
+    width: 45%;
+  }
 }

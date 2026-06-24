@@ -66,6 +66,12 @@ Every element must justify its existence. If it doesn't communicate meaning, it 
 - **Shadows are soft and minimal.** One soft shadow token; no orange glow.
 - **Single CTA emphasis per view.** The primary CTA uses a filled accent; all
   other interactive elements are quieter (text + underline).
+- **Ghost/outline button hover pattern:** secondary buttons (press kit, download
+  links, social icons) use `color: var(--text-muted)` + `border: 1px solid
+  var(--border-subtle)` at rest, and transition to `color: var(--accent)` +
+  `border-color: var(--accent)` on hover/focus. No background fill, no box-shadow
+  glow. This keeps the accent sparingly present as a *reveal* rather than a
+  permanent fixture.
 
 ## Typography & Spacing
 

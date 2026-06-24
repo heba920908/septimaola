@@ -103,6 +103,14 @@ export default function Contact() {
           >
             Ciudad de México, México
           </motion.p>
+          
+          <motion.a
+            href="#/press-kit"
+            className="contact-presskit-link"
+            variants={itemVariants}
+          >
+            Para medios y producción → Press & Production Kit
+          </motion.a>
         </motion.div>
       </div>
     </section>

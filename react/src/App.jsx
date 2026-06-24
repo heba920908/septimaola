@@ -6,9 +6,11 @@ import Members from './components/Members'
 import Discography from './components/Discography'
 import Gallery from './components/Gallery'
 import Contact from './components/Contact'
+import PressKit from './components/presskit/PressKit'
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [currentRoute, setCurrentRoute] = useState('')
   const navRef = useRef(null)
   const menuToggleRef = useRef(null)
   const lastFocusedElement = useRef(null)
@@ -85,6 +87,19 @@ export default function App() {
       }
     }
 
+    // Hash change handler for routing
+    const handleHashChange = () => {
+      const hash = window.location.hash
+      if (hash.startsWith('#/')) {
+        setCurrentRoute(hash.substring(2))
+      } else {
+        setCurrentRoute('')
+      }
+    }
+
+    // Initialize route on first load
+    handleHashChange()
+
     if (menuOpen) {
       // Save current focus
       lastFocusedElement.current = document.activeElement
@@ -107,7 +122,13 @@ export default function App() {
       }
     }
 
+    // Add event listeners
+    window.addEventListener('hashchange', handleHashChange)
+    document.addEventListener('click', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+
     return () => {
+      window.removeEventListener('hashchange', handleHashChange)
       document.removeEventListener('click', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = ''
@@ -143,23 +164,28 @@ export default function App() {
           onTouchEnd={handleTouchEnd}
         >
           <a href="#inicio" onClick={closeMenu}>Inicio</a>
-          <a href="#noticias" onClick={closeMenu}>Noticias</a>
-          <a href="#biografia" onClick={closeMenu}>Nosotros</a>
-          <a href="#integrantes" onClick={closeMenu}>Banda</a>
-          <a href="#musica" onClick={closeMenu}>Música</a>
-          <a href="#galeria" onClick={closeMenu}>Galería</a>
           <a href="#contacto" onClick={closeMenu}>Contacto</a>
+          <a href="#noticias" onClick={closeMenu}>Noticias</a>
+          <a href="#musica" onClick={closeMenu}>Música</a>
+          <a href="#integrantes" onClick={closeMenu}>Banda</a>
+          <a href="#galeria" onClick={closeMenu}>Galería</a>
         </nav>
       </header>
 
       <main>
-        <Hero />
-        <News />
-        <Biografia />
-        <Members />
-        <Discography />
-        <Gallery />
-        <Contact />
+        {currentRoute === 'press-kit' ? (
+          <PressKit />
+        ) : (
+          <>
+            <Hero />
+            <Contact />
+            <News />
+            <Discography />
+            <Members />
+            <Gallery />
+            <Biografia />
+          </>
+        )}
       </main>
 
       <footer className="site-footer">
@@ -201,6 +227,7 @@ export default function App() {
             </svg>
           </a>
         </div>
+        <a href="#/press-kit" className="footer-presskit-link">Press &amp; Production Kit</a>
         <small>© {new Date().getFullYear()} SÉPTIMA OLA — CIUDAD DE MÉXICO</small>
       </footer>
     </div>
