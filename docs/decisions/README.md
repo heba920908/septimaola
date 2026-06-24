@@ -45,3 +45,5 @@ What are the resulting effects — positive, negative, and neutral?
 | [0002](0002-local-dev-npm-vite.md) | npm/npx-first local development for React press kit | Accepted |
 | [0003](0003-minimalist-redesign.md) | Bold minimalist redesign of the React press kit | Proposed |
 | [0004](0004-build-time-image-fetch.md) | Build-time image fetch from Google Drive | Proposed |
+| [0005](0005-mobile-delightful-experience.md) | Delightful mobile browser experience for the React press kit | Proposed |
+| [0006](0006-press-production-kit.md) | Press & Production Kit as an independent information surface | Proposed |
