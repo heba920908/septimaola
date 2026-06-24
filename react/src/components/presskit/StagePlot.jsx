@@ -24,6 +24,82 @@ const itemVariants = {
   },
 }
 
+// Stage position data aligned with SKILL.md canonical placement
+const stagePositions = [
+  { id: 'arthur', name: 'Arthur', role: 'Bajo', emoji: '🎸', zone: 'left' },
+  { id: 'sandy', name: 'Sandy', role: 'Voz Principal', emoji: '🎹', zone: 'left' },
+  { id: 'alfred', name: 'Alfred Herrera', role: 'Guitarra / Voz Principal', emoji: '🎸', zone: 'center-front' },
+  { id: 'lemanu', name: 'lemanu', role: 'Batería', emoji: '🥁', zone: 'rear-center' },
+  { id: 'levisax', name: 'Levi\'Sax', role: 'Saxofón', emoji: '🎷', zone: 'right' },
+  { id: 'rodrigo', name: 'Rodrigo Mera', role: 'Violín', emoji: '🎻', zone: 'right' },
+]
+
+function StagePerformerCard({ performer }) {
+  return (
+    <motion.div
+      className="stage-performer"
+      variants={itemVariants}
+      whileHover={{ scale: 1.05, y: -4 }}
+    >
+      <div className="stage-performer-emoji">{performer.emoji}</div>
+      <div className="stage-performer-name">{performer.name}</div>
+      <div className="stage-performer-role">{performer.role}</div>
+    </motion.div>
+  )
+}
+
+function StageDiagram() {
+  const leftPerformers = stagePositions.filter(p => p.zone === 'left')
+  const centerFront = stagePositions.filter(p => p.zone === 'center-front')
+  const rearCenter = stagePositions.filter(p => p.zone === 'rear-center')
+  const rightPerformers = stagePositions.filter(p => p.zone === 'right')
+
+  return (
+    <motion.div className="stage-diagram" variants={itemVariants}>
+      <div className="stage-frame">
+        {/* Stage Left */}
+        <div className="stage-zone stage-left">
+          <div className="stage-zone-label">Lado Izquierdo</div>
+          <div className="stage-performer-list">
+            {leftPerformers.map(p => <StagePerformerCard key={p.id} performer={p} />)}
+          </div>
+        </div>
+
+        {/* Center column: rear (drums) + front (guitar) */}
+        <div className="stage-zone stage-center">
+          <div className="stage-rear">
+            <div className="stage-zone-label">Trasera Central</div>
+            <div className="stage-performer-list">
+              {rearCenter.map(p => <StagePerformerCard key={p.id} performer={p} />)}
+            </div>
+          </div>
+          <div className="stage-front">
+            <div className="stage-zone-label">Centro Frontal</div>
+            <div className="stage-performer-list">
+              {centerFront.map(p => <StagePerformerCard key={p.id} performer={p} />)}
+            </div>
+          </div>
+        </div>
+
+        {/* Stage Right */}
+        <div className="stage-zone stage-right">
+          <div className="stage-zone-label">Lado Derecho</div>
+          <div className="stage-performer-list">
+            {rightPerformers.map(p => <StagePerformerCard key={p.id} performer={p} />)}
+          </div>
+        </div>
+      </div>
+
+      {/* Audience/FOH indicator */}
+      <motion.div className="stage-audience" variants={itemVariants}>
+        <div className="stage-audience-arrow">↓</div>
+        <div className="stage-audience-label">Audiencia — FOH (~20 m)</div>
+        <div className="stage-audience-line"></div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export default function StagePlot() {
   const stageOrientation = [
     'La audiencia está frente al escenario.',
@@ -86,7 +162,10 @@ export default function StagePlot() {
       viewport={{ once: true, margin: '-100px' }}
     >
       <motion.h3 variants={itemVariants}>Diagrama del Escenario</motion.h3>
-      
+
+      {/* Visual Stage Diagram */}
+      <StageDiagram />
+
       <motion.div className="stage-subsection" variants={itemVariants}>
         <h4>Orientación del Escenario</h4>
         <ul className="presskit-list">
@@ -95,7 +174,7 @@ export default function StagePlot() {
           ))}
         </ul>
       </motion.div>
-      
+
       <motion.div className="stage-subsection" variants={itemVariants}>
         <h4>Ubicación Preferida en el Escenario</h4>
         <ul className="presskit-list">
@@ -104,7 +183,7 @@ export default function StagePlot() {
           ))}
         </ul>
       </motion.div>
-      
+
       <motion.div className="stage-subsection" variants={itemVariants}>
         <h4>Distribución de Mezclas de Monitores</h4>
         <div className="monitor-table-container">
@@ -128,7 +207,7 @@ export default function StagePlot() {
           </table>
         </div>
       </motion.div>
-      
+
       <motion.div className="stage-subsection" variants={itemVariants}>
         <h4>Mapeo de Entradas a Posiciones (Referencia)</h4>
         <ul className="presskit-list">
@@ -137,7 +216,7 @@ export default function StagePlot() {
           ))}
         </ul>
       </motion.div>
-      
+
       <motion.div className="stage-subsection" variants={itemVariants}>
         <h4>Notas Técnicas</h4>
         <ul className="presskit-list">

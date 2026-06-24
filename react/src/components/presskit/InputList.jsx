@@ -109,7 +109,7 @@ export default function InputList() {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
     >
-      <motion.h3 variants={itemVariants}>Lista de Entradas</motion.h3>
+      <motion.h3 variants={itemVariants}>Input List / Lista de Canales</motion.h3>
       
       <motion.div className="input-table-container" variants={itemVariants}>
         <table className="presskit-table">

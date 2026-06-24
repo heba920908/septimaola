@@ -112,7 +112,7 @@ export default function Hero() {
           El sonido de tod@s
         </motion.p>
         <motion.p className="lead" variants={itemVariants}>
-          Reggae · Ska · Rocksteady desde las raíces hasta el horizonte
+          Reggae · Ska · Rocksteady · Jazz 
         </motion.p>
 
         <ShareButton />
@@ -123,7 +123,7 @@ export default function Hero() {
           variants={itemVariants}
         >
           <a
-            href="tel:+525555555555"
+            href="tel:+525518094658"
             className="hero-cta-btn"
             aria-label="Llamar"
           >

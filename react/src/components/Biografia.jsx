@@ -46,7 +46,13 @@ export default function Biografia() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.p className="impact-phrase" variants={itemVariants}>
-            «Donde el <strong>reggae jamaicano</strong> encuentra el <strong>corazón latino</strong>»
+            «En una era donde el mundo parece más dividido que nunca <strong>Séptima Ola</strong> emerge como una <strong>respuesta</strong>»
+          </motion.p>
+
+          <motion.p className="minimal-text" variants={itemVariants}>
+            Séptima Ola combina reggae, ska y rocksteady para crear un sonido distintivo con melodías
+            pegajosas, ritmos bailables y letras conscientes enfocadas en el amor, la unidad y la
+            justicia social.
           </motion.p>
 
           <motion.p className="minimal-text" variants={itemVariants}>
@@ -55,7 +61,7 @@ export default function Biografia() {
           </motion.p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="vision-mission-minimal"
           variants={containerVariants}
           initial="hidden"
@@ -63,12 +69,13 @@ export default function Biografia() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.div className="vision-card" variants={itemVariants}>
-            <h3>Visión</h3>
-            <p>Ser la voz reggae más auténtica de México, llevando mensajes de paz y justicia social a escenarios globales.</p>
+            <h3>Nuestro Norte</h3>
+            <p>Sonidos hechos en México para corazones inquietos que buscan movimiento e inspiración.</p>
           </motion.div>
           <motion.div className="mission-card" variants={itemVariants}>
-            <h3>Misión</h3>
-            <p>Crear música que conecte el alma mexicana con el espíritu universal del reggae.</p>
+            <h3>Se parte de la ola</h3>
+            <p> Ven, súbete a la ola nacida de nuestra tierra y que se expande sin
+            límites en una fusión de ritmos.</p>
           </motion.div>
         </motion.div>
       </div>

@@ -27,11 +27,11 @@ const itemVariants = {
 export default function CrewList() {
   const crewMembers = [
     { name: 'Alfred Herrera', role: 'Guitarra / stage manager' },
-    { name: 'Arthur', role: 'Bajo electrico / stage manager' },
+    { name: 'Sandy Robinsuell', role: 'Vocalista / stage manager' },
     { name: 'Levi\'Sax', role: 'Sax tenor / stage manager' },
     { name: 'Rodrigo Mera', role: 'Violinista y Arreglista / stage manager' },
-    { name: 'Sandy Robinsuell', role: 'Vocalista / stage manager' },
-    { name: 'lemanu', role: 'Batería / stage manager' }
+    { name: 'Lemanu', role: 'Batería / stage manager' },
+    { name: 'Arturo Hernandez', role: 'Bajo electrico / stage manager' },
   ]
 
   return (
@@ -43,7 +43,7 @@ export default function CrewList() {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
     >
-      <motion.h3 variants={itemVariants}>Lista de Personal</motion.h3>
+      <motion.h3 variants={itemVariants}>Crew list / Equipo de trabajo</motion.h3>
       
       <motion.div className="crew-table-container" variants={itemVariants}>
         <table className="presskit-table">
