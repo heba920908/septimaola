@@ -1170,23 +1170,100 @@ body{
     margin-bottom: 1rem;
     border-radius: 8px;
     overflow: hidden;
+    background: var(--surface);
   }
 
   .presskit-table td {
     border: none;
+    border-bottom: 1px solid var(--border-subtle);
     position: relative;
-    padding: 0.75rem 0.75rem 0.75rem 40%;
+    padding: 0.75rem 0.75rem 0.75rem 35%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .presskit-table td:last-child {
+    border-bottom: none;
   }
 
   .presskit-table td:before {
-    content: attr(data-label) ": ";
+    content: attr(data-label);
     position: absolute;
     left: 0.75rem;
-    width: 35%;
+    width: 30%;
     padding-right: 10px;
-    white-space: nowrap;
     font-weight: 600;
     color: var(--accent);
+    font-size: 0.85rem;
+  }
+
+  /* Crew list - 2 column card style */
+  .crew-table-container .presskit-table td {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .crew-table-container .presskit-table td:before {
+    position: static;
+    width: auto;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+
+  .crew-table-container .presskit-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 0;
+  }
+
+  .crew-table-container .presskit-table td:first-child {
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: none;
+  }
+
+  /* Input list - card with channel as header */
+  .input-table-container .presskit-table tr {
+    position: relative;
+    padding-top: 2.5rem;
+  }
+
+  .input-table-container .presskit-table td[data-label="Canal"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 212, 255, 0.1);
+    border-bottom: 1px solid var(--accent);
+    padding: 0.5rem 0.75rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    justify-content: center;
+  }
+
+  .input-table-container .presskit-table td[data-label="Canal"]:before {
+    display: none;
+  }
+
+  .input-table-container .presskit-table td {
+    padding: 0.6rem 0.75rem 0.6rem 35%;
+    font-size: 0.9rem;
+  }
+
+  .input-table-container .presskit-table td:before {
+    width: 32%;
+    font-size: 0.8rem;
+  }
+
+  /* Monitor mix table */
+  .monitor-table-container .presskit-table td[data-label="Mix"] {
+    background: rgba(0, 212, 255, 0.1);
+    font-weight: 600;
   }
   
   .presskit-navigation {
@@ -1207,12 +1284,40 @@ body{
   .presskit-tbd {
     padding: 1.5rem 1rem;
   }
-  
+
+  /* Crew list - stack on very small screens */
+  .crew-table-container .presskit-table tr {
+    grid-template-columns: 1fr;
+  }
+
+  .crew-table-container .presskit-table td:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .crew-table-container .presskit-table td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  /* Input list adjustments */
+  .input-table-container .presskit-table td {
+    padding: 0.6rem 0.75rem 0.6rem 40%;
+    font-size: 0.85rem;
+  }
+
+  .input-table-container .presskit-table td:before {
+    width: 37%;
+    font-size: 0.75rem;
+  }
+
+  /* General table adjustments */
   .presskit-table td {
-    padding: 0.75rem 0.75rem 0.75rem 50%;
+    padding: 0.6rem 0.75rem 0.6rem 45%;
   }
 
   .presskit-table td:before {
-    width: 45%;
+    width: 40%;
+    font-size: 0.8rem;
   }
 }

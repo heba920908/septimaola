@@ -30,8 +30,10 @@ export default function CrewList() {
     { name: 'Sandy Robinsuell', role: 'Vocalista / stage manager' },
     { name: 'Levi\'Sax', role: 'Sax tenor / stage manager' },
     { name: 'Rodrigo Mera', role: 'Violinista y Arreglista / stage manager' },
-    { name: 'Lemanu', role: 'Batería / stage manager' },
+    { name: 'Le Manu', role: 'Batería / stage manager' },
     { name: 'Arturo Hernandez', role: 'Bajo electrico / stage manager' },
+    { name: 'Itzel Calzada', role: 'Staff Tecnico / Fotografia' },
+    { name: 'Mirna Mera', role: 'Staff Tecnico / Fotografia' },
   ]
 
   return (
@@ -56,8 +58,8 @@ export default function CrewList() {
           <tbody>
             {crewMembers.map((member, index) => (
               <tr key={index}>
-                <td>{member.name}</td>
-                <td>{member.role}</td>
+                <td data-label="Nombre">{member.name}</td>
+                <td data-label="Rol">{member.role}</td>
               </tr>
             ))}
           </tbody>

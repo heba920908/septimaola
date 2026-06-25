@@ -126,12 +126,12 @@ export default function InputList() {
           <tbody>
             {inputChannels.map((channel, index) => (
               <tr key={index}>
-                <td>{channel.channel}</td>
-                <td>{channel.instrument}</td>
-                <td>{channel.micDi}</td>
-                <td>{channel.aux}</td>
-                <td>{channel.equipment}</td>
-                <td>{channel.notes}</td>
+                <td data-label="Canal">{channel.channel}</td>
+                <td data-label="Instrumento">{channel.instrument}</td>
+                <td data-label="Mic/DI">{channel.micDi}</td>
+                <td data-label="Aux">{channel.aux}</td>
+                <td data-label="Equipo">{channel.equipment}</td>
+                <td data-label="Notas">{channel.notes}</td>
               </tr>
             ))}
           </tbody>

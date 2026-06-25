@@ -195,15 +195,15 @@ export default function StagePlot() {
                 <th>Usuarios Principales</th>
               </tr>
             </thead>
-            <tbody>
-              {monitorMixLayout.map((mix, index) => (
-                <tr key={index}>
-                  <td>{mix.mix}</td>
-                  <td>{mix.channels}</td>
-                  <td>{mix.users}</td>
-                </tr>
-              ))}
-            </tbody>
+          <tbody>
+            {monitorMixLayout.map((mix, index) => (
+              <tr key={index}>
+                <td data-label="Mix">{mix.mix}</td>
+                <td data-label="Canales">{mix.channels}</td>
+                <td data-label="Usuarios">{mix.users}</td>
+              </tr>
+            ))}
+          </tbody>
           </table>
         </div>
       </motion.div>
