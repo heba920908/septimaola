@@ -2,6 +2,15 @@
 
 A Vite + React frontend for Séptima Ola's press kit. Content and UI in Spanish.
 
+## URLs
+
+The site is deployed to multiple URLs:
+
+- **Primary (custom domain):** https://septimaola.com / https://www.septimaola.com
+- **Secondary (GitHub Pages):** https://heba920908.github.io/septimaola/
+
+The build uses relative asset paths (`./`) so the same build works at both locations.
+
 ## News (Noticias)
 
 Noticias now uses the official Facebook Page Plugin iframe and displays the
