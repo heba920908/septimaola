@@ -101,6 +101,44 @@ Each file follows a strict template with sections: Quick Chord Reference, Chord 
 - To update `Members.jsx` from bios: use `.github/prompts/react-update.prompt.md`
 - To update `slides.tex` from bios: use `.github/agents/presskit-updater.agent.md`
 
+### Shared KB Skill For Content Updates
+
+For any prompt that requests content updates for press-kit information (band
+description, member profile details, technical rider, or channel/input list),
+use the shared skill:
+
+- `.claude/skills/septimaola-common/SKILL.md`
+
+This skill is the canonical documentation layer for copy updates consumed by
+`react/` and/or `latex/`.
+
+### Golden Language Rule
+
+For public-facing artifacts, default language is Spanish:
+
+- `react/` content must be authored in Spanish for the Mexico audience.
+- `latex/` press-kit content must be authored in Spanish for the Mexico
+	audience.
+
+English is acceptable for AI-rig/internal guidance files, including:
+
+- `CLAUDE.md`
+- `AGENTS.md`
+- `.copilot` prompts/instructions
+- `.claude` skills and operational documentation
+
+Required behavior for update prompts:
+
+- Identify if the target is `react/`, `latex/`, or both.
+- Reuse canonical facts from the shared skill and avoid inventing new data.
+- Keep web copy concise and PDF copy editorial when both are requested.
+- Use Spanish for `react/` and `latex/` unless the user explicitly requests a
+  different language.
+- If process guidance changes, synchronize related instruction docs in the same
+	update pass, including `CLAUDE.md` and `AGENTS.md` when present.
+
+For GitHub Copilot-specific operating notes, also maintain `AGENTS.md`.
+
 ## AI Agent (`/ai/press_kit_agent`)
 
 Python multi-agent system using Google ADK. Requires `.env` with `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `MODEL`, `IMAGE_MODEL`. Three agents: band background answerer → slide content writer → image generation (Vertex AI Imagen, stored in GCS).

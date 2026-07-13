@@ -2,6 +2,15 @@
 
 A Vite + React frontend for Séptima Ola's press kit. Content and UI in Spanish.
 
+## URLs
+
+The site is deployed to multiple URLs:
+
+- **Primary (custom domain):** https://septimaola.com / https://www.septimaola.com
+- **Secondary (GitHub Pages):** https://heba920908.github.io/septimaola/
+
+The build uses relative asset paths (`./`) so the same build works at both locations.
+
 ## News (Noticias)
 
 Noticias now uses the official Facebook Page Plugin iframe and displays the
@@ -35,6 +44,7 @@ Notes:
 
 - `npm run dev` runs Vite (equivalent to `npx vite`) with HMR enabled.
 - Source changes under `src/` reload automatically.
+- **Images are fetched automatically** before the dev server starts via the `predev` hook. On first run, band photos download from Google Drive to `public/images/`. If images are missing, run `npm run fetch:images` manually.
 
 ## Optional Container Fallback (Podman)
 
