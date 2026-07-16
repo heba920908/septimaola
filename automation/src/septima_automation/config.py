@@ -72,8 +72,8 @@ HASHTAGS: List[str] = [
 AI_PROVIDER_DEFAULT = "deepseek"
 
 # Deepseek configuration
-DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
-DEEPSEEK_MODEL = "deepseek-chat"
+DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+DEEPSEEK_MODEL = "deepseek-v4-flash"
 
 # Codemie configuration
 # All values are read from environment variables; these are just doc references.

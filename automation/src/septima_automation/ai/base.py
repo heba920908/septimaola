@@ -27,22 +27,6 @@ class AIProvider(ABC):
         """
         pass
 
-    def _build_prompt(self, song_title: str, song_author: str) -> str:
-        """Shared prompt template used by all providers."""
-        return (
-            f"Genera un mensaje del día para Séptima Ola, una banda de "
-            f"reggae/ska/rocksteady de La Raza, Ciudad de México.\n\n"
-            f"Contexto:\n"
-            f'- Canción destacada: "{song_title}" por {song_author}\n\n'
-            f"Requisitos:\n"
-            f"- El mensaje debe ser inspirador, positivo y relacionado con la música\n"
-            f"- Longitud: 2-3 oraciones\n"
-            f"- Tono: cercano, auténtico, con groove\n"
-            f"- Incluye un emoji musical apropiado\n"
-            f"- Idioma: español\n\n"
-            f"Genera solo el mensaje, sin encabezados ni formato adicional."
-        )
-
     @abstractmethod
     async def close(self) -> None:
         """Release any held resources (HTTP clients, tokens, etc.)."""

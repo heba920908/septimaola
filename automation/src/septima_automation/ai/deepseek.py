@@ -3,21 +3,15 @@
 import os
 from typing import Optional
 
-import httpx
+from openai import AsyncOpenAI
 
 from .base import AIProvider
-from ..config import DEEPSEEK_API_URL, DEEPSEEK_MODEL
-
-SYSTEM_PROMPT = (
-    "Eres un asistente creativo para Séptima Ola, "
-    "una banda de reggae/ska/rocksteady de La Raza, "
-    "Ciudad de México. Generas mensajes inspiradores "
-    "y auténticos para redes sociales."
-)
+from .prompts import SYSTEM_PROMPT, build_user_prompt
+from ..config import DEEPSEEK_BASE_URL, DEEPSEEK_MODEL
 
 
 class DeepseekClient(AIProvider):
-    """AI provider backed by the Deepseek API.
+    """AI provider backed by the Deepseek API via the OpenAI-compatible SDK.
 
     Authentication: Bearer API key via DEEPSEEK_API_KEY env var.
 
@@ -31,7 +25,10 @@ class DeepseekClient(AIProvider):
                 "DEEPSEEK_API_KEY not set. "
                 "Provide it via environment variable or constructor argument."
             )
-        self._client = httpx.AsyncClient(timeout=30.0)
+        self._client = AsyncOpenAI(
+            api_key=self.api_key,
+            base_url=DEEPSEEK_BASE_URL,
+        )
 
     async def generate_message(
         self,
@@ -39,28 +36,19 @@ class DeepseekClient(AIProvider):
         song_author: str,
     ) -> str:
         """Generate a message using Deepseek chat completion API."""
-        response = await self._client.post(
-            DEEPSEEK_API_URL,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": DEEPSEEK_MODEL,
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {
-                        "role": "user",
-                        "content": self._build_prompt(song_title, song_author),
-                    },
-                ],
-                "temperature": 0.8,
-                "max_tokens": 150,
-            },
+        response = await self._client.chat.completions.create(
+            model=DEEPSEEK_MODEL,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": build_user_prompt(song_title, song_author),
+                },
+            ],
+            temperature=0.5,
+            max_tokens=150,
         )
-        response.raise_for_status()
-        data = response.json()
-        return data["choices"][0]["message"]["content"].strip()
+        return response.choices[0].message.content.strip()
 
     async def close(self) -> None:
-        await self._client.aclose()
+        await self._client.close()
