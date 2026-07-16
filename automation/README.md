@@ -1,0 +1,203 @@
+# Séptima Ola - Daily Social Media Automation
+
+Automated daily posting pipeline for Séptima Ola's social media presence. Generates AI-powered messages with rotating images and 15-second song clips, publishing to Facebook and Instagram.
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) package manager
+- ffmpeg (for video generation)
+
+### Local Setup
+
+1. **Clone and enter the automation directory:**
+```bash
+cd automation
+```
+
+2. **Install dependencies with uv:**
+```bash
+uv sync
+```
+
+3. **Create your environment file:**
+```bash
+cp .env.example .env
+# Edit .env with your actual credentials
+```
+
+4. **Run the daily post script:**
+```bash
+uv run daily-post
+# Or directly:
+uv run src/septima_automation/daily_post.py
+```
+
+## Credentials Setup
+
+### Deepseek AI
+
+1. Visit [Deepseek Platform](https://platform.deepseek.com/)
+2. Create an account and sign in
+3. Navigate to "API Keys" section
+4. Create a new API key
+5. Copy the key to your `.env` file as `DEEPSEEK_API_KEY`
+
+### Facebook
+
+1. Go to [Facebook Developers](https://developers.facebook.com/)
+2. Create a new app:
+   - Select "Business" as app type
+   - Choose "Manage Pages and Ads"
+3. Add products to your app:
+   - **Facebook Login** (not needed for this use case)
+   - **Graph API** (included by default)
+4. Get your credentials:
+   - **Page ID**: Go to your Facebook Page → Settings → Page Info → Page ID
+   - **Access Token**: 
+     - Go to [Graph API Explorer](https://developers.facebook.com/tools/explorer/)
+     - Select your app from the dropdown
+     - Select "Get Token" → "Get Page Access Token"
+     - Choose your page and grant `pages_manage_posts` permission
+     - Copy the token to `FACEBOOK_ACCESS_TOKEN`
+5. Add credentials to `.env`:
+```bash
+FACEBOOK_PAGE_ID=your_page_id
+FACEBOOK_ACCESS_TOKEN=your_access_token
+```
+
+### Instagram
+
+1. Connect Instagram to Facebook:
+   - Go to your Facebook Page → Settings → Instagram
+   - Click "Connect Account" and follow the steps
+   - Convert to Business or Creator account if prompted
+2. Get your Instagram Business Account ID:
+   - Go to [Graph API Explorer](https://developers.facebook.com/tools/explorer/)
+   - Query: `GET /me/accounts`
+   - Find your page, look for `instagram_business_account` → `id`
+3. Grant permissions:
+   - `instagram_basic`
+   - `instagram_content_publish`
+   - `pages_read_engagement`
+4. Add to `.env`:
+```bash
+INSTAGRAM_ACCOUNT_ID=your_instagram_business_account_id
+```
+
+### GitHub Secrets (for CI/CD)
+
+Add these secrets to your GitHub repository:
+
+1. Go to Settings → Secrets and variables → Actions
+2. Add new repository secrets:
+   - `DEEPSEEK_API_KEY`
+   - `FACEBOOK_PAGE_ID`
+   - `FACEBOOK_ACCESS_TOKEN`
+   - `INSTAGRAM_ACCOUNT_ID`
+
+## Configuration
+
+### Image Assets
+
+Edit `src/septima_automation/config.py` - `IMAGES_CONFIG`:
+
+```python
+IMAGES_CONFIG = [
+    {"slug": "alfred", "drive_id": "1NLX...", "category": "members"},
+    {"slug": "la_estacion", "drive_id": "1ABC...", "category": "promo"},
+    # Add your Google Drive image IDs
+]
+```
+
+### Audio Assets
+
+Edit `src/septima_automation/config.py` - `AUDIO_CONFIG`:
+
+```python
+AUDIO_CONFIG = [
+    {
+        "slug": "la_estacion",
+        "drive_id": "1XYZ...",  # Google Drive file ID for 15s .wav
+        "title": "La Estación",
+        "author": "Séptima Ola"
+    },
+    # Add your songs
+]
+```
+
+### Hashtags
+
+Edit `HASHTAGS` in `config.py`:
+
+```python
+HASHTAGS = ["#SéptimaOla", "#Reggae", "#Ska", "#Rocksteady", "#MusicaMexicana"]
+```
+
+## How It Works
+
+1. **Select Random Assets**: Picks a random image and random 15-second audio clip
+2. **Generate Message**: Sends prompt to Deepseek API for Spanish message of the day
+3. **Create Video**: Uses ffmpeg to combine image + audio into 15-second video
+4. **Publish**: Uploads video to Facebook and Instagram with AI-generated caption
+
+## Testing Locally
+
+Run with verbose logging:
+```bash
+uv run daily-post --verbose
+```
+
+Dry run (generate but don't publish):
+```bash
+uv run daily-post --dry-run
+```
+
+## CI/CD
+
+The workflow runs daily at 9 AM UTC (3 AM Mexico City time):
+
+```yaml
+on:
+  schedule:
+    - cron: '0 9 * * *'
+```
+
+Manual trigger available via GitHub Actions "Run workflow" button.
+
+## Troubleshooting
+
+### ffmpeg not found
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install ffmpeg
+```
+
+**macOS:**
+```bash
+brew install ffmpeg
+```
+
+**Windows:**
+Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH.
+
+### API Rate Limits
+
+- **Deepseek**: Check your tier limits at platform.deepseek.com
+- **Facebook**: Default rate limits apply; script includes basic retry logic
+- **Instagram**: Content publishing has additional restrictions
+
+### Video upload fails
+
+Ensure your video meets requirements:
+- Duration: exactly 15 seconds
+- Format: MP4 (H.264 codec)
+- Size: Under 8MB for Instagram
+
+## License
+
+Private - For Séptima Ola internal use only.
