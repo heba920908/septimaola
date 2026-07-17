@@ -49,3 +49,4 @@ What are the resulting effects — positive, negative, and neutral?
 | [0006](0006-press-production-kit.md) | Press & Production Kit as an independent information surface | Accepted |
 | [0007](0007-visual-stage-plot.md) | Visual stage plot diagram | Accepted |
 | [0008](0008-daily-social-automation.md) | Daily social media automation with uv and Deepseek | Proposed |
+| [0009](0009-privacy-notice-surface.md) | Aviso de Privacidad como superficie informativa independiente | Proposed |
