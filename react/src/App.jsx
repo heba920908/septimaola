@@ -7,6 +7,7 @@ import Discography from './components/Discography'
 import Gallery from './components/Gallery'
 import Contact from './components/Contact'
 import PressKit from './components/presskit/PressKit'
+import PrivacyNotice from './components/privacy/PrivacyNotice'
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -175,6 +176,8 @@ export default function App() {
       <main>
         {currentRoute === 'press-kit' ? (
           <PressKit />
+        ) : currentRoute === 'privacy-notice' ? (
+          <PrivacyNotice />
         ) : (
           <>
             <Hero />
@@ -228,6 +231,7 @@ export default function App() {
           </a>
         </div>
         <a href="#/press-kit" className="footer-presskit-link">Press &amp; Production Kit</a>
+        <a href="#/privacy-notice" className="footer-legal-link">Aviso de Privacidad</a>
         <small>© {new Date().getFullYear()} SÉPTIMA OLA — CIUDAD DE MÉXICO</small>
       </footer>
     </div>

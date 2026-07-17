@@ -16,6 +16,7 @@ from typing import Optional
 import httpx
 
 from .base import AIProvider
+from .prompts import build_user_prompt
 
 
 class CodemieClient(AIProvider):
@@ -146,7 +147,7 @@ class CodemieClient(AIProvider):
                 "Content-Type": "application/json",
             },
             json={
-                "text": self._build_prompt(song_title, song_author),
+                "text": build_user_prompt(song_title, song_author),
             },
         )
         response.raise_for_status()

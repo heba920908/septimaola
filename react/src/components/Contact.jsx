@@ -111,6 +111,14 @@ export default function Contact() {
           >
             Para medios y producción → Press & Production Kit
           </motion.a>
+
+          <motion.a
+            href="#/privacy-notice"
+            className="contact-privacy-link"
+            variants={itemVariants}
+          >
+            Consulta nuestro Aviso de Privacidad
+          </motion.a>
         </motion.div>
       </div>
     </section>
