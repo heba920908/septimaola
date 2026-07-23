@@ -193,8 +193,51 @@ Manual trigger available via GitHub Actions "Run workflow" button.
 
 ## Video Generation
 
+### Batch Video Generation Script
+
+Use the included `generate_videos.sh` script to create multiple short videos from random images and sequential audio segments.
+
+**Usage:**
+```bash
+./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE]
+```
+
+**Arguments:**
+- `OUTPUT_DIR` - Directory to save generated videos (default: `./output`)
+- `COUNT` - Number of videos to generate (default: `10`)
+- `IMAGES_DIR` - Directory containing source images (default: `./.images`)
+- `AUDIO_FILE` - Path to long audio file (default: `./audio.mp3`)
+
+**Examples:**
+```bash
+# Generate 10 videos using defaults
+./generate_videos.sh
+
+# Generate 20 videos to a custom directory
+./generate_videos.sh ./videos 20
+
+# Full custom configuration
+./generate_videos.sh ./output 15 ./photos ./music/podcast.mp3
+```
+
+**Requirements:**
+- `ffmpeg` installed
+- `uuidgen` installed
+- Image directory with .jpg, .jpeg, .png, or .webp files
+- Audio file at least 10 seconds long
+
+### Manual Video Generation
+
+Generate a short video from an image and audio using ffmpeg directly:
+
 ```shell
 ffmpeg -loop 1 -i image.jpg -ss 00:00:30 -i audio.mp3 -c:v mpeg4 -vf "scale=-2:720,format=yuv420p" -b:v 1200k -c:a aac -b:a 128k -t 10 "$(uuidgen).mp4"
+```
+
+To add text to the video:
+
+```shell
+ffmpeg -i input.mp4 -vf "drawtext=text='Track: My Original Song Name':fontcolor=white:fontsize=36:box=1:boxcolor=black@0.5:x=40:y=h-120" -codec:a copy output.mp4
 ```
 
 ## License
