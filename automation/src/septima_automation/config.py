@@ -21,9 +21,12 @@ class VideoAsset:
 
 # Video assets - direct video files from Google Drive
 VIDEOS_CONFIG: List[VideoAsset] = [
-    VideoAsset("despertar_1", "1SqddSXFgL1Rr4yxMy2hccXFxHxAKua6L", "Despertar", "Septima Ola")
-    # VideoAsset("la_estacion", "DRIVE_ID_HERE", "La Estación", "Séptima Ola"),
-    # VideoAsset("aguita_de_coco", "DRIVE_ID_HERE", "Agüita de Coco", "Séptima Ola"),
+    VideoAsset("despertar_1", "1SqddSXFgL1Rr4yxMy2hccXFxHxAKua6L", "Despertar", "Septima Ola"),
+    VideoAsset("tqm_1", "1oyclVh9WyKYGNWJUgbUi3x9-Es7QKhd4", "Tqm", "Septima Ola"),
+    VideoAsset("ventana_1", "12bxqKGA5LUEMaPmwV2rL4PSZluQ377bV", "Desde Mi Ventana", "Séptima Ola"),
+    VideoAsset("arenga_1", "1BIRUvp6Oi1SUs49wm8nLWzndsmz8hDZl", "Arenga", "Séptima Ola"),
+    VideoAsset("tqm_2", "1u_f6lXk2-IROknLaFb0QbdEjtqzK-eHR", "Tqm", "Séptima Ola"),
+    VideoAsset("tqm_3", "16cTaAnPikBIroO9x3jW2Rfrrf442jjZ4", "Tqm", "Séptima Ola"),
     # VideoAsset("salsa_callejera", "DRIVE_ID_HERE", "Salsa Callejera", "Séptima Ola"),
 ]
 

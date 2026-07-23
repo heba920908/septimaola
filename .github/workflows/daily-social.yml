@@ -2,8 +2,8 @@ name: Daily Social Media Post
 
 on:
   schedule:
-    # Run daily at 9 AM UTC (3 AM Mexico City time)
-    - cron: '0 9 * * *'
+    # Run Tuesdays and Thursdays at 12 UTC (6 AM Mexico City time)
+    - cron: '0 12 * * 2,4'
   workflow_dispatch:
     inputs:
       dry_run:

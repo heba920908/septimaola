@@ -87,18 +87,29 @@ echo "Clip duration:    ${CLIP_DURATION}s"
 echo "======================================"
 echo ""
 
+# Randomly vary one or two of the main colorchannelmixer coefficients
+randomize_value() {
+    local base="$1"
+    local spread="$2"
+    local value
+
+    value=$(awk -v base="$base" -v spread="$spread" 'BEGIN {
+        value = base + (rand() * 2 - 1) * spread
+        if (value < 0.10) value = 0.10
+        if (value > 0.95) value = 0.95
+        printf "%.3f", value
+    }')
+
+    printf '%s' "$value"
+}
+
 # Generate videos sequentially
 for ((i = 0; i < COUNT; i++)); do
     # Cycle through images randomly
     IMAGE="${IMAGES[$((i % ${#IMAGES[@]}))]}"
 
-    # Calculate sequential start time
-    START_TIME=$((i * CLIP_DURATION))
-
-    # Loop back if we exceed audio length
-    if [[ $START_TIME -gt $MAX_START ]]; then
-        START_TIME=$((START_TIME % (MAX_START + 1)))
-    fi
+    # Pick a random start time that keeps the clip inside the audio duration
+    START_TIME=$((RANDOM % (MAX_START + 1)))
 
     # Format start time for ffmpeg
     START_FORMATTED=$(printf "%02d:%02d:%02d" $((START_TIME / 3600)) $(((START_TIME % 3600) / 60)) $((START_TIME % 60)))
@@ -109,11 +120,45 @@ for ((i = 0; i < COUNT; i++)); do
     echo "  Image: $IMAGE"
     echo "  Audio start: ${START_FORMATTED} (second $START_TIME)"
 
+    RR="0.393"
+    RG="0.769"
+    GG="0.686"
+    BB="0.131"
+    AFFECTED_COUNT=$((RANDOM % 2 + 1))
+    SELECTED_PARAMS=()
+
+    for ((j = 0; j < AFFECTED_COUNT; j++)); do
+        while :; do
+            PARAM_INDEX=$((RANDOM % 4))
+            PARAM=""
+            case "$PARAM_INDEX" in
+                0) PARAM="RR" ;;
+                1) PARAM="RG" ;;
+                2) PARAM="GG" ;;
+                3) PARAM="BB" ;;
+            esac
+
+            if [[ " ${SELECTED_PARAMS[*]} " != *" $PARAM "* ]]; then
+                SELECTED_PARAMS+=("$PARAM")
+                break
+            fi
+        done
+
+        case "$PARAM" in
+            RR) RR=$(randomize_value "$RR" 0.08) ;;
+            RG) RG=$(randomize_value "$RG" 0.08) ;;
+            GG) GG=$(randomize_value "$GG" 0.08) ;;
+            BB) BB=$(randomize_value "$BB" 0.08) ;;
+        esac
+    done
+
+    FILTER_STRING="colorchannelmixer=${RR}:${RG}:0.189:0:0.349:${GG}:0.168:0:0.272:0.534:${BB}"
+
     ffmpeg -hide_banner -loglevel error \
         -loop 1 -i "$IMAGE" \
         -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
         -c:v mpeg4 \
-        -vf "scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
+        -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
         -b:v "$VIDEO_BITRATE" \
         -c:a aac \
         -b:a "$AUDIO_BITRATE" \
