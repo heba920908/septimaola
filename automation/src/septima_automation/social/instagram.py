@@ -46,38 +46,81 @@ class InstagramPublisher(SocialPublisher):
         self,
         video_path: Path,
         caption: str,
+        video_url: Optional[str] = None,
     ) -> Optional[str]:
         """Publish video to Instagram.
 
         Instagram requires a 2-step process:
-        1. Create a media container
-        2. Publish the container
+        1. Create a media container using a publicly accessible video URL
+        2. Wait for the video processing to complete (poll status)
+        3. Publish the container
 
         Args:
-            video_path: Path to video file
+            video_path: Path to video file (not used, Instagram requires public URL)
             caption: Post caption
+            video_url: Publicly accessible video URL (e.g. Google Drive direct download URL)
 
         Returns:
             Post ID if successful
         """
-        # For Instagram, we need to host the video publicly
-        # In production, upload to a temporary hosting or use Facebook's resumable upload
-        # For this implementation, we'll use a simplified approach
+        if not video_url:
+            raise ValueError(
+                "Instagram publishing requires a publicly accessible video_url."
+            )
 
         # Step 1: Create media container
-        # Note: This requires a publicly accessible video URL
-        # In a real implementation, you'd need to upload the video first
-
-        # For now, return None as placeholder
-        # Real implementation would:
-        # 1. Upload video to a public URL (or use Facebook's resumable upload)
-        # 2. Create container: POST /{ig-user-id}/media
-        # 3. Publish: POST /{ig-user-id}/media_publish
-
-        raise NotImplementedError(
-            "Instagram publishing requires a publicly accessible video URL. "
-            "Consider using Facebook's resumable upload or host video temporarily."
+        # POST /{ig-user-id}/media
+        response = await self.client.post(
+            f"{self.BASE_URL}/{self.account_id}/media",
+            data={
+                "media_type": "REELS",
+                "video_url": video_url,
+                "caption": caption,
+                "access_token": self.access_token,
+            },
         )
+        response.raise_for_status()
+        container_id = response.json().get("id")
+        if not container_id:
+            raise ValueError("Failed to create Instagram media container")
+
+        # Step 2: Poll container status
+        # Poll every 5 seconds for up to 2 minutes
+        import asyncio
+
+        max_attempts = 24
+        for attempt in range(max_attempts):
+            await asyncio.sleep(5)
+            status_resp = await self.client.get(
+                f"{self.BASE_URL}/{container_id}",
+                params={
+                    "fields": "status_code",
+                    "access_token": self.access_token,
+                },
+            )
+            status_resp.raise_for_status()
+            status_code = status_resp.json().get("status_code")
+
+            if status_code == "FINISHED":
+                break
+            elif status_code == "ERROR":
+                raise ValueError(
+                    f"Instagram video processing failed: {status_resp.json()}"
+                )
+        else:
+            raise TimeoutError("Timed out waiting for Instagram video processing")
+
+        # Step 3: Publish container
+        # POST /{ig-user-id}/media_publish
+        publish_resp = await self.client.post(
+            f"{self.BASE_URL}/{self.account_id}/media_publish",
+            data={
+                "creation_id": container_id,
+                "access_token": self.access_token,
+            },
+        )
+        publish_resp.raise_for_status()
+        return publish_resp.json().get("id")
 
     async def close(self):
         await self.client.aclose()

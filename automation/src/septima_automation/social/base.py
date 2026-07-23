@@ -13,12 +13,14 @@ class SocialPublisher(ABC):
         self,
         video_path: Path,
         caption: str,
+        video_url: Optional[str] = None,
     ) -> Optional[str]:
         """Publish video with caption.
 
         Args:
             video_path: Path to video file
             caption: Post caption text
+            video_url: Optional direct URL of the video (useful for platforms like Instagram)
 
         Returns:
             Published post ID/URL if successful

@@ -8,12 +8,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from .ai.factory import create_provider
-from .config import AUDIO_CONFIG
+from .config import VIDEOS_CONFIG
 from .message_generator import MessageGenerator
-from .selectors import select_daily_assets
+from .selectors import select_random_video
 from .social.facebook import FacebookPublisher
 from .social.instagram import InstagramPublisher
-from .video_generator import VideoGenerator
+from .video_downloader import VideoDownloader
 
 
 def parse_args() -> argparse.Namespace:
@@ -62,22 +62,21 @@ async def main() -> int:
     env_path = Path(__file__).parent.parent.parent / ".env"
     load_dotenv(env_path)
 
-    # Check audio assets are configured
-    if not AUDIO_CONFIG:
-        print("ERROR: No audio assets in AUDIO_CONFIG (config.py)", file=sys.stderr)
-        print("Add Google Drive IDs for 15s audio clips first.", file=sys.stderr)
+    # Check video assets are configured
+    if not VIDEOS_CONFIG:
+        print("ERROR: No video assets in VIDEOS_CONFIG (config.py)", file=sys.stderr)
+        print("Add Google Drive IDs for videos first.", file=sys.stderr)
         return 1
 
     try:
-        # Select random assets
+        # Select random video
         if args.verbose:
-            print("Selecting random assets...")
+            print("Selecting random video...")
 
-        image, audio = select_daily_assets()
+        video = select_random_video()
 
         if args.verbose:
-            print(f"  Image : {image.slug} ({image.category})")
-            print(f"  Audio : {audio.title} by {audio.author}")
+            print(f"  Video : {video.slug} - {video.title} by {video.author}")
 
         # Generate AI message
         provider_name = args.provider or None  # factory reads AI_PROVIDER env if None
@@ -91,22 +90,19 @@ async def main() -> int:
         async with create_provider(provider_name) as ai:
             message_gen = MessageGenerator(ai)
             caption = await message_gen.generate_post(
-                song_title=audio.title,
-                song_author=audio.author,
+                song_title=video.title,
+                song_author=video.author,
             )
 
         if args.verbose:
             print(f"\nCaption:\n{caption}\n")
 
-        # Generate video
+        # Download video
         if args.verbose:
-            print("Generating video with ffmpeg...")
+            print("Downloading video from Google Drive...")
 
-        async with VideoGenerator() as video_gen:
-            video_path = await video_gen.generate(
-                image_url=image.public_url,
-                audio_url=audio.public_url,
-            )
+        async with VideoDownloader() as downloader:
+            video_path = await downloader.download(url=video.public_url)
 
         if args.verbose:
             print(f"Video: {video_path}")
@@ -115,6 +111,8 @@ async def main() -> int:
             print("\nDRY RUN — not publishing.")
             print(f"Video  : {video_path}")
             print(f"Caption:\n{caption}")
+            # Clean up downoladed video during dry run too
+            video_path.unlink(missing_ok=True)
             return 0
 
         # Publish concurrently to all configured platforms
@@ -122,11 +120,19 @@ async def main() -> int:
 
         async def publish_facebook() -> None:
             async with FacebookPublisher() as fb:
-                results["facebook"] = await fb.publish(video_path, caption)
+                results["facebook"] = await fb.publish(
+                    video_path=video_path,
+                    caption=caption,
+                    video_url=video.public_url,
+                )
 
         async def publish_instagram() -> None:
             async with InstagramPublisher() as ig:
-                results["instagram"] = await ig.publish(video_path, caption)
+                results["instagram"] = await ig.publish(
+                    video_path=video_path,
+                    caption=caption,
+                    video_url=video.public_url,
+                )
 
         tasks = []
         if not args.skip_facebook:
@@ -145,8 +151,8 @@ async def main() -> int:
 
         # Summary
         print("\n=== Daily Post Summary ===")
-        print(f"Image    : {image.slug}")
-        print(f"Audio    : {audio.title}")
+        print(f"Video    : {video.slug}")
+        print(f"Title    : {video.title}")
         print(f"Facebook : {results.get('facebook', 'SKIPPED')}")
         print(f"Instagram: {results.get('instagram', 'SKIPPED') or 'Not implemented'}")
 

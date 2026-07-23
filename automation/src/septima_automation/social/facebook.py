@@ -46,12 +46,14 @@ class FacebookPublisher(SocialPublisher):
         self,
         video_path: Path,
         caption: str,
+        video_url: Optional[str] = None,
     ) -> Optional[str]:
         """Publish video to Facebook Page.
 
         Args:
             video_path: Path to video file
             caption: Post caption
+            video_url: Optional direct URL of the video (ignored for Facebook)
 
         Returns:
             Post ID if successful

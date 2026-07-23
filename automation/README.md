@@ -1,6 +1,6 @@
 # Séptima Ola - Daily Social Media Automation
 
-Automated daily posting pipeline for Séptima Ola's social media presence. Generates AI-powered messages with rotating images and 15-second song clips, publishing to Facebook and Instagram.
+Automated daily posting pipeline for Séptima Ola's social media presence. Generates AI-powered messages with rotating pre-made video assets downloaded from Google Drive, publishing to Facebook and Instagram.
 
 ## Quick Start
 
@@ -8,7 +8,6 @@ Automated daily posting pipeline for Séptima Ola's social media presence. Gener
 
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/) package manager
-- ffmpeg (for video generation)
 
 ### Local Setup
 
@@ -100,31 +99,19 @@ Add these secrets to your GitHub repository:
 
 ## Configuration
 
-### Image Assets
+### Video Assets
 
-Edit `src/septima_automation/config.py` - `IMAGES_CONFIG`:
-
-```python
-IMAGES_CONFIG = [
-    {"slug": "alfred", "drive_id": "1NLX...", "category": "members"},
-    {"slug": "la_estacion", "drive_id": "1ABC...", "category": "promo"},
-    # Add your Google Drive image IDs
-]
-```
-
-### Audio Assets
-
-Edit `src/septima_automation/config.py` - `AUDIO_CONFIG`:
+Edit `src/septima_automation/config.py` - `VIDEOS_CONFIG`:
 
 ```python
-AUDIO_CONFIG = [
+VIDEOS_CONFIG = [
     {
         "slug": "la_estacion",
-        "drive_id": "1XYZ...",  # Google Drive file ID for 15s .wav
+        "drive_id": "1XYZ...",  # Google Drive direct download ID for the video
         "title": "La Estación",
         "author": "Séptima Ola"
     },
-    # Add your songs
+    # Add your video clips
 ]
 ```
 
@@ -138,9 +125,9 @@ HASHTAGS = ["#SéptimaOla", "#Reggae", "#Ska", "#Rocksteady", "#MusicaMexicana"]
 
 ## How It Works
 
-1. **Select Random Assets**: Picks a random image and random 15-second audio clip
+1. **Select Random Asset**: Picks a random pre-made video asset from `VIDEOS_CONFIG`
 2. **Generate Message**: Sends prompt to Deepseek API for Spanish message of the day
-3. **Create Video**: Uses ffmpeg to combine image + audio into 15-second video
+3. **Download Video**: Downloads the video file using `httpx` to a temporary directory
 4. **Publish**: Uploads video to Facebook and Instagram with AI-generated caption
 
 ## Testing Locally
@@ -169,34 +156,11 @@ Manual trigger available via GitHub Actions "Run workflow" button.
 
 ## Troubleshooting
 
-### ffmpeg not found
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install ffmpeg
-```
-
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Windows:**
-Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH.
-
 ### API Rate Limits
 
 - **Deepseek**: Check your tier limits at platform.deepseek.com
 - **Facebook**: Default rate limits apply; script includes basic retry logic
 - **Instagram**: Content publishing has additional restrictions
-
-### Video upload fails
-
-Ensure your video meets requirements:
-- Duration: exactly 15 seconds
-- Format: MP4 (H.264 codec)
-- Size: Under 8MB for Instagram
 
 ## Video Generation
 

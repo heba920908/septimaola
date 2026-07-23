@@ -11,7 +11,7 @@ promote new content. Manual posting is time-consuming and inconsistent. We need
 an automated pipeline that:
 
 1. Generates fresh, engaging content daily using AI
-2. Features a rotating selection of band photos and music snippets
+2. Features a rotating selection of pre-made band videos
 3. Publishes simultaneously to Facebook and Instagram
 4. Runs on a predictable schedule without manual intervention
 
@@ -28,7 +28,7 @@ cron workflow and publishes a video post daily to Facebook and Instagram.
 | Language | Python 3.11+ | Async support, rich ecosystem |
 | Package manager | `uv` | Fast installs, locked reproducible envs |
 | AI provider | Deepseek (`deepseek-chat`) | Free tier available, OpenAI-compatible API |
-| Video generation | `ffmpeg` via subprocess | Broad codec support, available on CI runners |
+| Video download | Direct download via `httpx` | Fast, asynchronous download of public Google Drive files |
 | Social platforms | Facebook Graph API v18.0, Instagram Graph API | Official APIs |
 | Scheduling | GitHub Actions cron (`0 9 * * *`) | Free for public repos, no extra infra |
 | Secrets | GitHub Secrets (CI), `dotenv` (local) | Secure and standard |
@@ -46,8 +46,8 @@ automation/
 │   ├── __init__.py
 │   ├── config.py               # Asset manifests and constants
 │   ├── ai_client.py            # Deepseek HTTP client
-│   ├── selectors.py            # Random image/audio pickers
-│   ├── video_generator.py      # ffmpeg wrapper
+│   ├── selectors.py            # Random video picker
+│   ├── video_downloader.py     # Google Drive file downloader
 │   ├── message_generator.py    # Post text builder
 │   ├── daily_post.py           # CLI entry point (uv run daily-post)
 │   └── social/
@@ -67,7 +67,6 @@ requires-python = ">=3.11"
 dependencies = [
     "httpx>=0.27.0",        # Async HTTP client
     "python-dotenv>=1.0.0", # .env loading
-    "ffmpeg-python>=0.2.0", # ffmpeg subprocess wrapper
 ]
 
 [project.scripts]
@@ -86,7 +85,7 @@ dev = [
 ```bash
 # Local — from automation/ directory
 uv run daily-post                        # Full run
-uv run daily-post --dry-run --verbose    # Generate only, no publishing
+uv run daily-post --dry-run --verbose    # Generate and download only, no publishing
 uv run daily-post --skip-instagram       # Facebook only
 uv run src/septima_automation/daily_post.py  # Direct module invocation
 
@@ -96,23 +95,12 @@ uv run pytest tests/
 
 ### Asset Configuration (`config.py`)
 
-Assets are declared as typed dataclasses. Public URLs are constructed
+Assets are declared as typed dataclasses. Public direct download URLs are constructed
 programmatically from `drive_id` so they never need to be hardcoded.
 
 ```python
 @dataclass
-class ImageAsset:
-    slug: str
-    drive_id: str
-    category: str   # "members" | "gallery" | "promo"
-
-    @property
-    def public_url(self) -> str:
-        # Google Drive image CDN — same pattern as react/scripts/fetch-images.mjs
-        return f"https://lh3.googleusercontent.com/d/{self.drive_id}"
-
-@dataclass
-class AudioAsset:
+class VideoAsset:
     slug: str
     drive_id: str
     title: str
@@ -120,14 +108,11 @@ class AudioAsset:
 
     @property
     def public_url(self) -> str:
-        # Google Drive direct download
+        # Google Drive direct download URL
         return f"https://drive.google.com/uc?export=download&id={self.drive_id}"
 ```
 
-`IMAGES_CONFIG` mirrors the IDs in `react/scripts/fetch-images.mjs` (members +
-gallery). `AUDIO_CONFIG` holds 15-second `.wav` clips — the list is initially
-commented-out and must be populated with real Google Drive file IDs before the
-script can run.
+`VIDEOS_CONFIG` holds pre-made band videos — the list must be populated with real Google Drive file IDs before the script can run.
 
 Additional constants in `config.py`:
 
@@ -137,12 +122,6 @@ HASHTAGS = ["#SéptimaOla", "#Reggae", "#Ska", "#Rocksteady",
 
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_MODEL   = "deepseek-chat"
-
-VIDEO_DURATION = 15    # seconds (Instagram feed video limit)
-VIDEO_WIDTH    = 1080  # px — square format
-VIDEO_HEIGHT   = 1080  # px
-VIDEO_FPS      = 30
-VIDEO_CODEC    = "libx264"
 ```
 
 ### AI Message Generation (`ai_client.py`)
@@ -179,28 +158,11 @@ Canción destacada: {song_title} ({song_author})
 
 A random subset of 4 hashtags is drawn per post for variety.
 
-### Video Generation (`video_generator.py`)
+### Video Downloader (`video_downloader.py`)
 
-`VideoGenerator` downloads image and audio to temp files, then calls ffmpeg via
-`subprocess.run(..., check=True)`.
+`VideoDownloader` downloads the selected video asset from Google Drive using its direct download URL to a temporary file, using `httpx.AsyncClient`.
 
-ffmpeg command breakdown:
-```
-ffmpeg -y
-  -loop 1 -i <image.jpg>          # Loop static image as video source
-  -i <audio.wav>                   # Audio input
-  -c:v libx264 -preset fast        # H.264 video, fast encode
-  -pix_fmt yuv420p                 # Required for Instagram compatibility
-  -r 30                            # 30 fps
-  -t 15                            # Hard-trim to 15 seconds
-  -vf "scale=1080:1080:force_original_aspect_ratio=decrease,
-       pad=1080:1080:(ow-iw)/2:(oh-ih)/2"   # Scale + letterbox to 1080×1080
-  -c:a aac -b:a 128k               # AAC audio at 128 kbps
-  -shortest                        # End at shorter stream
-  <output.mp4>
-```
-
-Temp files (image, audio) are deleted after encoding regardless of outcome.
+Temporary files are deleted after publishing regardless of outcome.
 Output is written to `tempfile.gettempdir()` by default.
 
 ### Facebook Publishing (`social/facebook.py`)
@@ -220,35 +182,29 @@ POST https://graph.facebook.com/v18.0/{page_id}/videos
 `InstagramPublisher` uses the Instagram Graph API 2-step flow:
 
 1. `POST /{ig-user-id}/media` — create a media container with a publicly
-   accessible video URL and the caption
-2. `POST /{ig-user-id}/media_publish` — publish the container
+   accessible video URL and the caption. The direct download URL of the Google Drive video file is passed as the `video_url` parameter.
+2. Poll container status: Check `/container_id` until `status_code` equals `FINISHED`.
+3. `POST /{ig-user-id}/media_publish` — publish the container
 
 Required permissions: `instagram_basic`, `instagram_content_publish`,
 `pages_read_engagement`.
-
-> **Current status**: The Instagram publisher raises `NotImplementedError`
-> until a publicly accessible video hosting step is added. In practice the
-> video must be reachable by Instagram's servers during container creation.
-> The recommended path is to upload the local file to a temporary URL
-> (e.g., presigned S3, Cloudinary free tier, or a brief Facebook CDN link)
-> before calling the Instagram container endpoint.
 
 ### Pipeline Flow (`daily_post.py`)
 
 ```
 load_dotenv()
 │
-├─ select_daily_assets()         # Random ImageAsset + AudioAsset
+├─ select_random_video()         # Random VideoAsset
 │
 ├─ DeepseekClient.generate_message()  # AI caption
 │
 ├─ MessageGenerator.generate_post()   # Format full caption
 │
-├─ VideoGenerator.generate()          # Download assets → ffmpeg → MP4
+├─ VideoDownloader.download()         # Download MP4 from Google Drive
 │
 └─ asyncio.gather() — publish concurrently
-    ├─ FacebookPublisher.publish(video, caption)
-    └─ InstagramPublisher.publish(video, caption)
+    ├─ FacebookPublisher.publish(video_path, caption)
+    └─ InstagramPublisher.publish(video_path, caption, video_url)
 
 video_path.unlink()   # Cleanup temp video
 print summary
@@ -260,7 +216,7 @@ published successfully.
 
 CLI flags:
 ```
---dry-run         Generate content and video; skip publishing
+--dry-run         Generate content and download video; skip publishing
 --verbose         Print step-by-step progress
 --skip-facebook   Omit Facebook step
 --skip-instagram  Omit Instagram step
@@ -313,28 +269,23 @@ Secrets are injected as env vars in the final step:
 - **Reproducible**: `uv.lock` guarantees identical packages locally and in CI
 - **Extensible**: New platforms require only a new `SocialPublisher` subclass
 - **Cost-effective**: Deepseek free tier; GitHub Actions free on public repos
+- **Resource efficient**: No video encoding/rendering is done on local or CI machines; pre-made video is downloaded and directly published.
 
 ### Negative
 
 - **External service dependencies**: Deepseek, Google Drive, Facebook/Instagram APIs
   all introduce availability risk
-- **Instagram video hosting gap**: Instagram requires a public URL for video
-  container creation; a hosting step is not yet implemented
-- **Audio clips must be pre-prepared**: 15-second `.wav` clips need to be uploaded
-  to Google Drive and their IDs added to `AUDIO_CONFIG` before the script can run
+- **Videos must be pre-prepared**: Pre-made video files need to be uploaded
+  to Google Drive and their IDs added to `VIDEOS_CONFIG` before the script can run
 - **Facebook token expiry**: Page access tokens expire; long-lived tokens must be
   refreshed periodically (typically every 60 days)
-- **ffmpeg on CI**: Requires `apt-get install ffmpeg` on each run (~15s overhead)
 
 ### Neutral
 
 - **Spanish-only content**: Aligns with primary audience (Mexico)
-- **Square 1080×1080 video**: Optimised for Instagram feed; Facebook also
-  supports this format without cropping
 
 ## Future Enhancements
 
-- Resolve Instagram video hosting gap (presigned URL or Cloudinary upload)
 - Add YouTube Shorts / TikTok publishing (new `SocialPublisher` subclasses)
 - Implement Facebook token auto-refresh
 - Add engagement analytics tracking
