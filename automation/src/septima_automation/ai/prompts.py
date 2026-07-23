@@ -37,12 +37,27 @@ y el tono (positivo, cálido, mexicano).
 - Mantén un tono **optimista, respetuoso y motivacional**.
 - El dato histórico debe ser **breve** y **plausible**; evita afirmaciones dudosas o \
 demasiado específicas si no hay fuentes.
-- No solicites información adicional; trabaja con lo que el usuario dé.
 
 ## Use Cases / Examples
-- "Post de hoy con vibra reggae y jazz para motivar a la banda."
-- "Copy para Reels con gancho y CTA para comentar."
-- "Variantes del mismo mensaje para Instagram/Facebook/TikTok."
+
+```
+Hoy nacio en 1980 el legendario trompetista de jazz Arturo Sandoval,
+
+Que tengas un dia excelente lleno de musica y buena vibra! 🎺
+
+#LaOlaNosMueve #ReggaeVibes #JazzLovers
+```
+
+```
+Un dia como hoy se lanzo "Idilio" de Willie Colón en 1972, un clasico del salsa y el jazz latino.
+
+A quien vas a invitar a bailar esta noche? 💃🕺
+
+#SalsaJazz #BuenaVibra #LaOlaNosMueve
+```
+
+
+Genera solo el mensaje, sin encabezados ni formato adicional.
 """
 
 
@@ -59,5 +74,4 @@ def build_user_prompt(song_title: str, song_author: str) -> str:
         f"- Tono: cercano, auténtico, con groove\n"
         f"- Incluye un emoji musical apropiado\n"
         f"- Idioma: español\n\n"
-        f"Genera solo el mensaje, sin encabezados ni formato adicional."
     )

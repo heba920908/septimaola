@@ -9,6 +9,7 @@ Authentication flow:
 API reference: https://docs.codemie.ai/user-guide/api/
 """
 
+import logging
 import os
 import time
 from typing import Optional
@@ -17,6 +18,8 @@ import httpx
 
 from .base import AIProvider
 from .prompts import build_user_prompt
+
+logger = logging.getLogger(__name__)
 
 
 class CodemieClient(AIProvider):
@@ -93,6 +96,7 @@ class CodemieClient(AIProvider):
 
     async def _fetch_token(self) -> str:
         """Request a new access token via client_credentials grant."""
+        logger.debug("Fetching Codemie access token...")
         response = await self._http.post(
             self._token_endpoint,
             headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -108,6 +112,7 @@ class CodemieClient(AIProvider):
         self._access_token = payload["access_token"]
         expires_in: int = payload.get("expires_in", 28500)
         self._token_expires_at = time.monotonic() + expires_in
+        logger.debug(f"Token acquired (expires in {expires_in}s)")
 
         return self._access_token
 
@@ -117,6 +122,7 @@ class CodemieClient(AIProvider):
             self._access_token is None
             or time.monotonic() >= self._token_expires_at - self._TOKEN_REFRESH_BUFFER
         ):
+            logger.debug("Token expired or missing; refreshing...")
             await self._fetch_token()
         return self._access_token  # type: ignore[return-value]
 
@@ -134,6 +140,7 @@ class CodemieClient(AIProvider):
         The prompt is sent as the `text` field. The response is extracted
         from the `generated` field of the JSON response.
         """
+        logger.debug(f"Calling Codemie assistant for: {song_title} by {song_author}")
         token = await self._get_token()
 
         url = self.base_url + self._ASSISTANT_PATH.format(
@@ -152,7 +159,9 @@ class CodemieClient(AIProvider):
         )
         response.raise_for_status()
         data = response.json()
-        return data["generated"].strip()
+        message = data["generated"].strip()
+        logger.debug(f"Codemie response received ({len(message)} chars)")
+        return message
 
     async def close(self) -> None:
         await self._http.aclose()

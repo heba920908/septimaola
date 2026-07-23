@@ -21,7 +21,7 @@ class VideoAsset:
 
 # Video assets - direct video files from Google Drive
 VIDEOS_CONFIG: List[VideoAsset] = [
-    # TODO: Populate with actual Google Drive IDs for videos
+    VideoAsset("despertar_1", "1SqddSXFgL1Rr4yxMy2hccXFxHxAKua6L", "Despertar", "Septima Ola")
     # VideoAsset("la_estacion", "DRIVE_ID_HERE", "La Estación", "Séptima Ola"),
     # VideoAsset("aguita_de_coco", "DRIVE_ID_HERE", "Agüita de Coco", "Séptima Ola"),
     # VideoAsset("salsa_callejera", "DRIVE_ID_HERE", "Salsa Callejera", "Séptima Ola"),
@@ -56,5 +56,5 @@ DEEPSEEK_MODEL = "deepseek-v4-flash"
 # CODEMIE_ASSISTANT_ID  - UUID of the Codemie assistant to call
 
 # Facebook/Instagram API
-FACEBOOK_API_VERSION = "v18.0"
+FACEBOOK_API_VERSION = "v25.0"
 FACEBOOK_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"

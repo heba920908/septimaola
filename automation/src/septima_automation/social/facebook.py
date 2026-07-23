@@ -1,5 +1,6 @@
 """Facebook Graph API publisher."""
 
+import logging
 import os
 from pathlib import Path
 from typing import Optional
@@ -8,11 +9,14 @@ import httpx
 
 from .base import SocialPublisher
 
+logger = logging.getLogger(__name__)
+
 
 class FacebookPublisher(SocialPublisher):
     """Publish to Facebook using Graph API."""
 
-    BASE_URL = "https://graph.facebook.com/v18.0"
+    BASE_URL = "https://graph.facebook.com/v25.0"
+    API_VERSION = "v25.0"
 
     def __init__(
         self,
@@ -42,6 +46,20 @@ class FacebookPublisher(SocialPublisher):
         except Exception:
             return False
 
+    async def _resolve_target(self) -> tuple[str, str]:
+        page_id, page_token, _ = await self.resolve_account_context(
+            self.client,
+            self.access_token,
+            page_id=self.page_id,
+            api_version=self.API_VERSION,
+        )
+
+        if page_id and page_token:
+            self.page_id = page_id
+            return page_id, page_token
+
+        return self.page_id or "", self.access_token
+
     async def publish(
         self,
         video_path: Path,
@@ -58,12 +76,13 @@ class FacebookPublisher(SocialPublisher):
         Returns:
             Post ID if successful
         """
-        # Step 1: Initiate upload session
+        target_page_id, target_token = await self._resolve_target()
+        logger.info(f"Publishing to Facebook (page={target_page_id})...")
         with open(video_path, "rb") as video_file:
             response = await self.client.post(
-                f"{self.BASE_URL}/{self.page_id}/videos",
+                f"{self.BASE_URL}/{target_page_id}/videos",
                 data={
-                    "access_token": self.access_token,
+                    "access_token": target_token,
                     "description": caption,
                     "published": "true",
                 },
@@ -78,7 +97,9 @@ class FacebookPublisher(SocialPublisher):
 
         response.raise_for_status()
         data = response.json()
-        return data.get("id")
+        post_id = data.get("id")
+        logger.info(f"✓ Facebook post published: {post_id}")
+        return post_id
 
     async def close(self):
         await self.client.aclose()

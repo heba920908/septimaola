@@ -53,19 +53,48 @@ uv run src/septima_automation/daily_post.py
 3. Add products to your app:
    - **Facebook Login** (not needed for this use case)
    - **Graph API** (included by default)
-4. Get your credentials:
+4. Add the following app credentials to `.env` for bootstrap/validation:
+```bash
+FACEBOOK_APP_CLIENT_ID=your_app_client_id
+FACEBOOK_APP_CLIENT_SECRET=your_app_client_secret
+```
+5. Get your publishing credentials:
    - **Page ID**: Go to your Facebook Page → Settings → Page Info → Page ID
-   - **Access Token**: 
-     - Go to [Graph API Explorer](https://developers.facebook.com/tools/explorer/)
-     - Select your app from the dropdown
-     - Select "Get Token" → "Get Page Access Token"
-     - Choose your page and grant `pages_manage_posts` permission
-     - Copy the token to `FACEBOOK_ACCESS_TOKEN`
-5. Add credentials to `.env`:
+   - **Page Access Token**: Use a long-lived Page token for publishing
+
+#### Issuing a long-lived Page access token
+
+The automation needs a Page Access Token, not just an app secret. The recommended flow is:
+
+1. In [Graph API Explorer](https://developers.facebook.com/tools/explorer/), select your app.
+2. Generate a short-lived user token and grant the required permissions:
+   - `pages_manage_posts`
+   - `pages_read_engagement`
+   - `instagram_basic`
+   - `instagram_content_publish`
+3. Exchange the short-lived user token for a long-lived user token:
+```bash
+GET https://graph.facebook.com/v18.0/oauth/access_token?\
+  client_id=YOUR_APP_ID\
+  &client_secret=YOUR_APP_SECRET\
+  &grant_type=fb_exchange_token\
+  &fb_exchange_token=SHORT_LIVED_USER_TOKEN
+```
+4. Request the Page token from your user account:
+```bash
+GET https://graph.facebook.com/v18.0/me/accounts?\
+  fields=id,name,access_token\
+  &access_token=LONG_LIVED_USER_TOKEN
+```
+5. Copy the `access_token` for your target Page to `FACEBOOK_ACCESS_TOKEN`.
+
+6. Add the final values to `.env`:
 ```bash
 FACEBOOK_PAGE_ID=your_page_id
-FACEBOOK_ACCESS_TOKEN=your_access_token
+FACEBOOK_ACCESS_TOKEN=your_page_access_token
 ```
+
+> Note: the `client_credentials` flow can mint an app token, but the automation still needs a Page Access Token with the required page permissions to publish successfully.
 
 ### Instagram
 

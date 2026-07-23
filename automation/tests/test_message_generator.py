@@ -76,6 +76,31 @@ class TestGeneratePostFormat:
             "Pressure Drop", "Toots and the Maytals"
         )
 
+    @pytest.mark.asyncio
+    async def test_generate_post_falls_back_when_provider_errors(self):
+        """A provider exception should still produce a usable post."""
+        mock_provider = MagicMock()
+        mock_provider.generate_message = AsyncMock(side_effect=RuntimeError("Insufficient Balance"))
+        gen = MessageGenerator(ai_provider=mock_provider)
+
+        post = await gen.generate_post("Despertar", "Septima Ola")
+
+        assert "Despertar" in post
+        assert "Septima Ola" in post
+        assert post.startswith("Ritmo, energía y sabor")
+
+    @pytest.mark.asyncio
+    async def test_generate_post_uses_local_message_when_skip_ai_enabled(self):
+        """When skip_ai is True, the provider is not called and a local message is used."""
+        mock_provider = MagicMock()
+        mock_provider.generate_message = AsyncMock(return_value="should-not-run")
+        gen = MessageGenerator(ai_provider=mock_provider)
+
+        post = await gen.generate_post("Despertar", "Septima Ola", skip_ai=True)
+
+        assert post.startswith("Ritmo, energía y sabor")
+        mock_provider.generate_message.assert_not_awaited()
+
 
 class TestSelectHashtags:
     """Test the internal _select_hashtags helper directly."""

@@ -1,11 +1,14 @@
 """Video downloader utility for downloading assets from Google Drive."""
 
+import logging
 import os
 import tempfile
 from pathlib import Path
 from typing import Optional
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 
 class VideoDownloader:
@@ -30,11 +33,14 @@ class VideoDownloader:
             filename = f"daily_post_{os.urandom(4).hex()}.mp4"
 
         output_path = self.output_dir / filename
+        logger.debug(f"Downloading from: {url[:80]}...")
 
         response = await self.http_client.get(url)
         response.raise_for_status()
 
         output_path.write_bytes(response.content)
+        size_mb = output_path.stat().st_size / (1024 * 1024)
+        logger.debug(f"Downloaded {filename} ({size_mb:.1f} MB)")
         return output_path
 
     async def close(self):

@@ -1,9 +1,12 @@
 """Random selectors for video assets."""
 
+import logging
 import random
 from typing import List, Optional
 
 from .config import VideoAsset, VIDEOS_CONFIG
+
+logger = logging.getLogger(__name__)
 
 
 def select_random_video(
@@ -20,12 +23,15 @@ def select_random_video(
     Raises:
         ValueError: If no videos available
     """
-    candidates = videos or VIDEOS_CONFIG
+    candidates = videos if videos is not None else VIDEOS_CONFIG
 
     if not candidates:
+        logger.error("No video assets configured in VIDEOS_CONFIG")
         raise ValueError(
             "No video assets configured. "
             "Please add video assets to VIDEOS_CONFIG in config.py"
         )
 
-    return random.choice(candidates)
+    selected = random.choice(candidates)
+    logger.debug(f"Selected video: {selected.slug} ({len(candidates)} available)")
+    return selected

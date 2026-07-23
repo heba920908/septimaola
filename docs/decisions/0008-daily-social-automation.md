@@ -227,12 +227,48 @@ CLI flags:
 | Variable | Used by | Description |
 |----------|---------|-------------|
 | `DEEPSEEK_API_KEY` | `ai_client.py` | Deepseek platform API key |
+| `FACEBOOK_APP_CLIENT_ID` | `social/facebook.py` | Optional Facebook app client ID used for OAuth bootstrap/app-token validation |
+| `FACEBOOK_APP_CLIENT_SECRET` | `social/facebook.py` | Optional Facebook app client secret used to mint an app access token |
 | `FACEBOOK_PAGE_ID` | `social/facebook.py` | Numeric Facebook Page ID |
-| `FACEBOOK_ACCESS_TOKEN` | `social/facebook.py`, `social/instagram.py` | Long-lived Page access token |
+| `FACEBOOK_ACCESS_TOKEN` | `social/facebook.py`, `social/instagram.py` | Page access token used for publishing |
 | `INSTAGRAM_ACCOUNT_ID` | `social/instagram.py` | Instagram Business Account ID |
 
 Locally sourced from `automation/.env` (gitignored). In CI sourced from
 GitHub repository secrets injected as environment variables.
+
+### Authentication Strategy
+
+The Facebook OAuth bootstrap flow was validated locally by sourcing the automation
+environment and calling the app-token endpoint with the app ID and app secret.
+The endpoint returned a bearer token successfully, which confirms that the
+app credentials are usable for app-level authentication.
+
+Implementation notes:
+
+1. Keep `FACEBOOK_PAGE_ID` and `FACEBOOK_ACCESS_TOKEN` as the production runtime
+   secrets for publishing. These are the values the current automation code uses.
+2. Add optional `FACEBOOK_APP_CLIENT_ID` and `FACEBOOK_APP_CLIENT_SECRET`
+   variables for bootstrap/validation. They are useful for pre-flight checks and
+   future token refresh automation.
+3. Implement a small helper module (for example `social/facebook_auth.py`) with:
+   - `get_app_access_token(client_id, client_secret)` — calls
+     `https://graph.facebook.com/oauth/access_token` with
+     `grant_type=client_credentials`
+   - `validate_credentials()` — fails fast at startup when the app credentials are
+     missing or invalid
+   - `refresh_page_token(...)` — a future hook for refreshing or validating a
+     page-scoped token when a longer-lived admin-auth flow is available
+4. Clarify the scope boundary in the ADR: the `client_credentials` flow returns an
+   app access token, not a page-scoping posting token. For publishing to a Page,
+   the automation still needs a Page Access Token with `pages_manage_posts` (and
+   `instagram_content_publish` for Instagram) stored in the existing runtime
+   secret.
+5. Treat the app secret as a bootstrap credential, not the replacement for the
+   page token. The app secret itself is long-lived; the token minted from it is
+   not.
+
+This keeps the current publishing contract intact while adding a safer bootstrap
+path for validation and future maintenance automation.
 
 ### GitHub Actions Workflow (`.github/workflows/daily-social.yml`)
 
