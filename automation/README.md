@@ -198,6 +198,12 @@ Ensure your video meets requirements:
 - Format: MP4 (H.264 codec)
 - Size: Under 8MB for Instagram
 
+## Video Generation
+
+```shell
+ffmpeg -loop 1 -i image.jpg -ss 00:00:30 -i audio.mp3 -c:v mpeg4 -vf "scale=-2:720,format=yuv420p" -b:v 1200k -c:a aac -b:a 128k -t 10 "$(uuidgen).mp4"
+```
+
 ## License
 
 Private - For Séptima Ola internal use only.
