@@ -27,9 +27,30 @@ IMAGES_DIR="${3:-./.images}"
 AUDIO_FILE="${4:-./audio.mp3}"
 ENDING_VIDEO="${5:-}"
 CLIP_DURATION=10
-VIDEO_HEIGHT=720
-VIDEO_BITRATE="1200k"
+# Quality settings tuned to match .inputs/video_1.mp4 (1920x1080, 24fps,
+# H.264 High profile, ~13.6 Mbps).
+VIDEO_WIDTH=1920
+VIDEO_HEIGHT=1080
+VIDEO_FPS=24
+VIDEO_CRF=18
+VIDEO_BITRATE="13000k"
+VIDEO_MAXRATE="13000k"
+VIDEO_BUFSIZE="26000k"
 AUDIO_BITRATE="128k"
+ENDING_BASE_DURATION=5
+ENDING_DURATION_SECONDS=0
+EFFECTIVE_CLIP_DURATION="$CLIP_DURATION"
+ENDING_VIDEO_ABS=""
+CURRENT_TEMP_DIR=""
+
+cleanup_current_temp_dir() {
+    if [[ -n "$CURRENT_TEMP_DIR" && -d "$CURRENT_TEMP_DIR" ]]; then
+        rm -rf "$CURRENT_TEMP_DIR"
+        CURRENT_TEMP_DIR=""
+    fi
+}
+
+trap cleanup_current_temp_dir EXIT
 
 # Validate dependencies
 if ! command -v ffmpeg &>/dev/null; then
@@ -63,6 +84,30 @@ if [[ -n "$ENDING_VIDEO" ]]; then
         echo "Error: Ending video '$ENDING_VIDEO' must be an .mp4 file." >&2
         exit 1
     fi
+
+    ENDING_VIDEO_ABS=$(readlink -f "$ENDING_VIDEO")
+    if [[ -z "$ENDING_VIDEO_ABS" || ! -f "$ENDING_VIDEO_ABS" ]]; then
+        echo "Error: Could not resolve ending video path '$ENDING_VIDEO'." >&2
+        exit 1
+    fi
+
+    ENDING_DURATION_RAW=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$ENDING_VIDEO_ABS")
+    ENDING_DURATION_SECONDS=$(awk -v d="$ENDING_DURATION_RAW" 'BEGIN {
+        if (d <= 0) {
+            print 0
+        } else if (d == int(d)) {
+            printf "%d", d
+        } else {
+            printf "%d", int(d) + 1
+        }
+    }')
+
+    if [[ "$ENDING_DURATION_SECONDS" -le 0 ]]; then
+        echo "Error: Could not determine ending video duration." >&2
+        exit 1
+    fi
+
+    EFFECTIVE_CLIP_DURATION=$((ENDING_BASE_DURATION + ENDING_DURATION_SECONDS))
 fi
 
 # Get all images
@@ -82,10 +127,10 @@ if [[ -z "$AUDIO_DURATION" || "$AUDIO_DURATION" -le 0 ]]; then
     exit 1
 fi
 
-MAX_START=$((AUDIO_DURATION - CLIP_DURATION))
+MAX_START=$((AUDIO_DURATION - EFFECTIVE_CLIP_DURATION))
 
 if [[ $MAX_START -le 0 ]]; then
-    echo "Error: Audio file is too short (need at least ${CLIP_DURATION}s)." >&2
+    echo "Error: Audio file is too short (need at least ${EFFECTIVE_CLIP_DURATION}s)." >&2
     exit 1
 fi
 
@@ -100,11 +145,13 @@ echo "Videos to create: $COUNT"
 echo "Images source:    $IMAGES_DIR (${#IMAGES[@]} images available)"
 echo "Audio source:     $AUDIO_FILE (${AUDIO_DURATION}s duration)"
 if [[ -n "$ENDING_VIDEO" ]]; then
-    echo "Ending video:     $ENDING_VIDEO"
-    echo "Clip duration:    5s generated segment + appended video"
+    echo "Ending video:     $ENDING_VIDEO_ABS"
+    echo "Clip duration:    ${ENDING_BASE_DURATION}s generated segment + ${ENDING_DURATION_SECONDS}s appended video"
 else
     echo "Clip duration:    ${CLIP_DURATION}s"
 fi
+echo "Resolution:       ${VIDEO_WIDTH}x${VIDEO_HEIGHT} @ ${VIDEO_FPS}fps"
+echo "Video bitrate:    ${VIDEO_BITRATE} (crf ${VIDEO_CRF}, maxrate ${VIDEO_MAXRATE})"
 echo "======================================"
 echo ""
 
@@ -177,40 +224,51 @@ for ((i = 0; i < COUNT; i++)); do
     BASE_DURATION="$CLIP_DURATION"
 
     if [[ -n "$ENDING_VIDEO" ]]; then
-        BASE_DURATION=5
+        BASE_DURATION="$ENDING_BASE_DURATION"
     fi
 
     if [[ -n "$ENDING_VIDEO" ]]; then
-        TEMP_BASE_VIDEO=$(mktemp "${TMPDIR:-/tmp}/septimaola-base-XXXXXX.mp4")
-        TEMP_CONCAT_LIST=$(mktemp "${TMPDIR:-/tmp}/septimaola-concat-XXXXXX.txt")
+        CURRENT_TEMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/septimaola-render-XXXXXX")
+        TEMP_BASE_VIDEO="$CURRENT_TEMP_DIR/base.mp4"
+        TEMP_CONCAT_VIDEO="$CURRENT_TEMP_DIR/joined.mp4"
 
         ffmpeg -hide_banner -loglevel error \
             -loop 1 -i "$IMAGE" \
-            -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
-            -c:v mpeg4 \
-            -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
-            -b:v "$VIDEO_BITRATE" \
-            -c:a aac \
-            -b:a "$AUDIO_BITRATE" \
+            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
+            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p" \
+            -r "$VIDEO_FPS" \
+            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
+            -an \
             -t "$BASE_DURATION" \
             -y "$TEMP_BASE_VIDEO"
 
-        printf "file '%s'\nfile '%s'\n" "$TEMP_BASE_VIDEO" "$ENDING_VIDEO" > "$TEMP_CONCAT_LIST"
+        ffmpeg -hide_banner -loglevel error \
+            -i "$TEMP_BASE_VIDEO" \
+            -i "$ENDING_VIDEO_ABS" \
+            -filter_complex "[0:v:0]fps=${VIDEO_FPS},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p[v0];[1:v:0]fps=${VIDEO_FPS},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p[v1];[v0][v1]concat=n=2:v=1:a=0[v]" \
+            -map "[v]" \
+            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
+            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
+            -y "$TEMP_CONCAT_VIDEO"
 
-        ffmpeg -hide_banner \
-            -f concat -safe 0 -i "$TEMP_CONCAT_LIST" -c copy "$OUTPUT_FILE"
-            # -c:v mpeg4 -b:v "$VIDEO_BITRATE" \
-            # -c:a aac -b:a "$AUDIO_BITRATE" \
-            # -y "$OUTPUT_FILE"
+        ffmpeg -hide_banner -loglevel error \
+            -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
+            -i "$TEMP_CONCAT_VIDEO" \
+            -map 1:v:0 -map 0:a:0 \
+            -c:v copy \
+            -c:a aac -b:a "$AUDIO_BITRATE" \
+            -shortest \
+            -y "$OUTPUT_FILE"
 
-        rm -fv "$TEMP_BASE_VIDEO" "$TEMP_CONCAT_LIST"
+        cleanup_current_temp_dir
     else
         ffmpeg -hide_banner -loglevel error \
             -loop 1 -i "$IMAGE" \
             -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
-            -c:v libx264 -preset veryfast -crf 23 \
-            -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
-            -b:v "$VIDEO_BITRATE" \
+            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
+            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p" \
+            -r "$VIDEO_FPS" \
+            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
             -c:a aac \
             -b:a "$AUDIO_BITRATE" \
             -t "$BASE_DURATION" \

@@ -201,7 +201,7 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 
 **Usage:**
 ```bash
-./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE]
+./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE] [ENDING_VIDEO]
 ```
 
 **Arguments:**
@@ -209,6 +209,18 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 - `COUNT` - Number of videos to generate (default: `10`)
 - `IMAGES_DIR` - Directory containing source images (default: `./.images`)
 - `AUDIO_FILE` - Path to long audio file (default: `./audio.mp3`)
+- `ENDING_VIDEO` - Optional .mp4 video appended after a 5s generated segment
+
+**Output quality:**
+
+The script encodes at 1920x1080, 24fps, H.264 (libx264) High profile, CRF 18
+with a 13 Mbps target/max bitrate (26 Mbps VBV buffer). These defaults are
+tuned to match the quality of `.inputs/video_1.mp4`, the reference ending
+video used in the final recording example below. Source images are
+scaled and center-cropped to fill 1920x1080 regardless of their original
+aspect ratio, so the generated segment and the appended ending video share
+identical resolution, frame rate, and color range (avoids `ffmpeg` errors
+when concatenating).
 
 **Examples:**
 ```bash
@@ -222,9 +234,9 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 ./generate_videos.sh ./output 15 ./photos ./music/podcast.mp3
 
 # With final recording
-./generate_videos.sh ~/Videos/7aOla/random 1 \
-  ~/Pictures/7aola ~/Videos/7aOla/20260515_SkaEnLasMontanas.mp3 \
-  ~/Pictures/7aola/video_1_fixed.mp4
+./generate_videos.sh ~/Downloads/generated 1 ./.inputs \
+   $(pwd)/.inputs/input.mp3 \
+   $(pwd)/.inputs/video_1.mp4
 ```
 
 **Requirements:**
@@ -233,12 +245,27 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 - Image directory with .jpg, .jpeg, .png, or .webp files
 - Audio file at least 10 seconds long
 
+In fedora:
+
+```bash
+sudo dnf install -y \
+  https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+  https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install -y ffmpeg ffmpeg-libs x264 x264-libs
+```
+
 ### Manual Video Generation
 
-Generate a short video from an image and audio using ffmpeg directly:
+Generate a short video from an image and audio using ffmpeg directly,
+matching the quality of the batch script (1920x1080, 24fps, H.264 High
+profile, ~13 Mbps):
 
 ```shell
-ffmpeg -loop 1 -i image.jpg -ss 00:00:30 -i audio.mp3 -c:v mpeg4 -vf "scale=-2:720,format=yuv420p" -b:v 1200k -c:a aac -b:a 128k -t 10 "$(uuidgen).mp4"
+ffmpeg -loop 1 -i image.jpg -ss 00:00:30 -i audio.mp3 \
+  -c:v libx264 -preset veryfast -crf 18 \
+  -vf "scale=1920:1080:force_original_aspect_ratio=increase:out_range=tv,crop=1920:1080,setsar=1,format=yuv420p" \
+  -r 24 -b:v 13000k -maxrate 13000k -bufsize 26000k \
+  -c:a aac -b:a 128k -t 10 "$(uuidgen).mp4"
 ```
 
 To add text to the video:
@@ -251,8 +278,10 @@ Normalize final/any video with the expected format:
 
 ```shell
 ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
-  -c:v mpeg4 -pix_fmt yuv420p -r 25 -video_track_timescale 12800 \
-  -s 960x720 -aspect 4:3 -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
+  -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -r 24 \
+  -vf "scale=1920:1080:force_original_aspect_ratio=increase:out_range=tv,crop=1920:1080,setsar=1" \
+  -b:v 13000k -maxrate 13000k -bufsize 26000k \
+  -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
 ```
 
 ## License
