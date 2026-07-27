@@ -155,16 +155,18 @@ echo "Video bitrate:    ${VIDEO_BITRATE} (crf ${VIDEO_CRF}, maxrate ${VIDEO_MAXR
 echo "======================================"
 echo ""
 
-# Randomly vary one or two of the main colorchannelmixer coefficients
+# Randomly vary one or more of the main colorchannelmixer coefficients
 randomize_value() {
     local base="$1"
     local spread="$2"
+    local seed="$RANDOM"
     local value
 
-    value=$(awk -v base="$base" -v spread="$spread" 'BEGIN {
+    value=$(awk -v base="$base" -v spread="$spread" -v seed="$seed" 'BEGIN {
+        srand(seed)
         value = base + (rand() * 2 - 1) * spread
-        if (value < 0.10) value = 0.10
-        if (value > 0.95) value = 0.95
+        if (value < -0.50) value = -0.50
+        if (value > 1.50) value = 1.50
         printf "%.3f", value
     }')
 
@@ -188,22 +190,66 @@ for ((i = 0; i < COUNT; i++)); do
     echo "  Image: $IMAGE"
     echo "  Audio start: ${START_FORMATTED} (second $START_TIME)"
 
-    RR="0.393"
-    RG="0.769"
-    GG="0.686"
-    BB="0.131"
-    AFFECTED_COUNT=$((RANDOM % 2 + 1))
+    # Select a random filter style profile
+    # 0: Sepia (warm vintage)
+    # 1: Black & White / Grayscale / Duotone
+    # 2: Cool Blue / Teal
+    # 3: Warm Orange / Golden
+    # 4: Vibrant / Trippy / Cross-process
+    STYLE_INDEX=$((RANDOM % 5))
+    STYLE_NAME="Sepia"
+
+    # Base coefficients
+    RR="0.393"; RG="0.769"; RB="0.189"
+    GR="0.349"; GG="0.686"; GB="0.168"
+    BR="0.272"; BG="0.534"; BB="0.131"
+
+    case "$STYLE_INDEX" in
+        1)
+            RR="0.299"; RG="0.587"; RB="0.114"
+            GR="0.299"; GG="0.587"; GB="0.114"
+            BR="0.299"; BG="0.587"; BB="0.114"
+            STYLE_NAME="Black & White"
+            ;;
+        2)
+            RR="0.200"; RG="0.400"; RB="0.200"
+            GR="0.200"; GG="0.700"; GB="0.400"
+            BR="0.100"; BG="0.300"; BB="0.900"
+            STYLE_NAME="Cool Blue / Teal"
+            ;;
+        3)
+            RR="0.800"; RG="0.400"; RB="0.000"
+            GR="0.300"; GG="0.700"; GB="0.000"
+            BR="0.100"; BG="0.100"; BB="0.300"
+            STYLE_NAME="Warm Orange / Golden"
+            ;;
+        4)
+            RR="1.100"; RG="0.100"; RB="-0.100"
+            GR="-0.100"; GG="1.100"; GB="0.100"
+            BR="0.100"; BG="-0.100"; BB="1.100"
+            STYLE_NAME="Vibrant / Trippy"
+            ;;
+    esac
+
+    echo "  Style profile: $STYLE_NAME"
+
+    AFFECTED_COUNT=$((RANDOM % 5 + 1))
     SELECTED_PARAMS=()
 
     for ((j = 0; j < AFFECTED_COUNT; j++)); do
         while :; do
-            PARAM_INDEX=$((RANDOM % 4))
+            PARAM_INDEX=$((RANDOM % 9))
             PARAM=""
             case "$PARAM_INDEX" in
                 0) PARAM="RR" ;;
                 1) PARAM="RG" ;;
-                2) PARAM="GG" ;;
-                3) PARAM="BB" ;;
+                2) PARAM="RB" ;;
+                3) PARAM="GR" ;;
+                4) PARAM="GG" ;;
+                5) PARAM="GB" ;;
+                6) PARAM="BR" ;;
+                7) PARAM="BG" ;;
+                8) PARAM="BB" ;;
             esac
 
             if [[ " ${SELECTED_PARAMS[*]} " != *" $PARAM "* ]]; then
@@ -213,14 +259,19 @@ for ((i = 0; i < COUNT; i++)); do
         done
 
         case "$PARAM" in
-            RR) RR=$(randomize_value "$RR" 0.08) ;;
-            RG) RG=$(randomize_value "$RG" 0.08) ;;
-            GG) GG=$(randomize_value "$GG" 0.08) ;;
-            BB) BB=$(randomize_value "$BB" 0.08) ;;
+            RR) RR=$(randomize_value "$RR" 0.15) ;;
+            RG) RG=$(randomize_value "$RG" 0.15) ;;
+            RB) RB=$(randomize_value "$RB" 0.15) ;;
+            GR) GR=$(randomize_value "$GR" 0.15) ;;
+            GG) GG=$(randomize_value "$GG" 0.15) ;;
+            GB) GB=$(randomize_value "$GB" 0.15) ;;
+            BR) BR=$(randomize_value "$BR" 0.15) ;;
+            BG) BG=$(randomize_value "$BG" 0.15) ;;
+            BB) BB=$(randomize_value "$BB" 0.15) ;;
         esac
     done
 
-    FILTER_STRING="colorchannelmixer=${RR}:${RG}:0.189:0:0.349:${GG}:0.168:0:0.272:0.534:${BB}"
+    FILTER_STRING="colorchannelmixer=${RR}:${RG}:${RB}:0:${GR}:${GG}:${GB}:0:${BR}:${BG}:${BB}"
     BASE_DURATION="$CLIP_DURATION"
 
     if [[ -n "$ENDING_VIDEO" ]]; then
@@ -235,7 +286,7 @@ for ((i = 0; i < COUNT; i++)); do
         ffmpeg -hide_banner -loglevel error \
             -loop 1 -i "$IMAGE" \
             -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
-            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p" \
+            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease:out_range=tv,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,format=yuv420p" \
             -r "$VIDEO_FPS" \
             -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
             -an \
@@ -266,7 +317,7 @@ for ((i = 0; i < COUNT; i++)); do
             -loop 1 -i "$IMAGE" \
             -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
             -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
-            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p" \
+            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease:out_range=tv,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,format=yuv420p" \
             -r "$VIDEO_FPS" \
             -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
             -c:a aac \
