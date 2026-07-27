@@ -27,7 +27,12 @@ VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("arenga_1", "1BIRUvp6Oi1SUs49wm8nLWzndsmz8hDZl", "Arenga", "Séptima Ola"),
     VideoAsset("tqm_2", "1u_f6lXk2-IROknLaFb0QbdEjtqzK-eHR", "Tqm", "Séptima Ola"),
     VideoAsset("tqm_3", "16cTaAnPikBIroO9x3jW2Rfrrf442jjZ4", "Tqm", "Séptima Ola"),
-    # VideoAsset("salsa_callejera", "DRIVE_ID_HERE", "Salsa Callejera", "Séptima Ola"),
+    VideoAsset("despertar_2", "1RHRS4tTd7xi-UHvTIjt_VCs5C4jXpVuR", "Despertar", "Séptima Ola"),
+    VideoAsset("ventana_2", "1GGz1JwvDGv4AgVEBOsXeuQ-HtxlbhNBr", "Desde Mi Ventana", "Séptima Ola"),
+    VideoAsset("arenga_2", "1HxGW-3QR_CScYUI9L00p-MbLfMRIRE1E", "Arenga", "Séptima Ola"),
+    VideoAsset("tqm_4", "1jZ0n8Eq2nPIwNrpZf5L_IWrhFQ2EUah0", "Tqm", "Séptima Ola"),
+    VideoAsset("ventana_3", "1M-hUx57GnEtrr7wH9Bmz8sKl657f0yDs", "Desde Mi Ventana", "Séptima Ola"),
+    VideoAsset("despertar_3", "1rM2paJq9poq5Qo0Dm6tsIiYsqjeW-AfS", "Despertar", "Séptima Ola"),
 ]
 
 # Hashtags to include in posts

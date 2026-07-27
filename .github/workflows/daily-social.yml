@@ -2,12 +2,12 @@ name: Daily Social Media Post
 
 on:
   schedule:
-    # Run Mondays and Wednesdays and Fridays at 12 UTC (6 AM Mexico City time)
-    - cron: '0 12 * * 1,3,5'
+    # Run Mondays, Tuesdays and Fridays at 12 UTC (6 AM Mexico City time)
+    - cron: '0 12 * * 1,2,5'
   # Dry run to test the workflow without posting to social media
-  push:
-    branches:
-      - ah/availability
+  # push:
+  #   branches:
+  #     - ah/availability
   workflow_dispatch:
     inputs:
       dry_run:
@@ -18,13 +18,6 @@ on:
         options:
           - 'true'
           - 'false'
-      provider:
-        description: 'AI provider to use'
-        required: false
-        default: 'deepseek'
-        type: choice
-        options:
-          - 'deepseek'
 
 permissions:
   contents: read
@@ -58,9 +51,8 @@ jobs:
           FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
           INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
         run: |
-          PROVIDER="${{ github.event.inputs.provider || 'deepseek' }}"
           if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
-            uv run daily-post --provider "$PROVIDER" --dry-run
+            uv run daily-post --dry-run
           else
-            uv run daily-post --provider "$PROVIDER"
+            uv run daily-post
           fi
