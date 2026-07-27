@@ -33,6 +33,13 @@ VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("tqm_4", "1jZ0n8Eq2nPIwNrpZf5L_IWrhFQ2EUah0", "Tqm", "Séptima Ola"),
     VideoAsset("ventana_3", "1M-hUx57GnEtrr7wH9Bmz8sKl657f0yDs", "Desde Mi Ventana", "Séptima Ola"),
     VideoAsset("despertar_3", "1rM2paJq9poq5Qo0Dm6tsIiYsqjeW-AfS", "Despertar", "Séptima Ola"),
+    VideoAsset("4a644f1b-e88f-4e3a-99ab-814fe2fe7414.mp4", "1DJrOE7ommjpMHclUwydVEp4pfKNDdr9h", "Despertar", "Séptima Ola"),
+    VideoAsset("12ef6afe-8a63-42aa-8783-5976b81f0256.mp4", "1Frv0RsIuxBNrbT8dJ78gPcpKIIT3py6R", "Despertar", "Séptima Ola"),
+    VideoAsset("13a4637d-61d2-489b-8b5a-d0391f72a290.mp4", "1PhDboLBCfAZTxG0mJ2TW06yveOGuIS7z", "Tqm", "Séptima Ola"),
+    VideoAsset("450b2956-7df6-4266-a165-2a99d3a86d92.mp4", "11p0fM-8aGc-zDFogBn-5rWSznX0VPKAJ", "Disco", "Séptima Ola"),
+    VideoAsset("36843a3b-28dd-4ff0-96bb-b94fc71dedbc.mp4", "1kuKhHGAXOeg9JHb-oeF0KryjLjVs-JPx", "Desde Mi Ventana", "Séptima Ola"),
+    VideoAsset("effe3f85-08a0-4d4c-9747-5ef564a740d1.mp4", "1BBnKCCi0PR6Wq9CsTuUr8aw-OvyFOzRs", "Arenga", "Séptima Ola"),
+    VideoAsset("fa072729-2a3c-4255-8282-6ce7bda693eb.mp4", "1uiJpUFgINqhARDc36UrikdqnQ15mVZZi", "Desde Mi Ventana", "Séptima Ola")
 ]
 
 # Hashtags to include in posts
@@ -44,6 +51,9 @@ HASHTAGS: List[str] = [
     "#MusicaMexicana",
     "#LaRaza",
     "#CDMX",
+    "#Mexico",
+    "#MusicaIndependiente",
+    "#Jazz",
 ]
 
 # AI provider selection
