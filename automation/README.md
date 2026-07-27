@@ -193,6 +193,8 @@ Manual trigger available via GitHub Actions "Run workflow" button.
 
 ## Video Generation
 
+* [Link to the video assets](https://drive.google.com/drive/folders/1OfduqBHzvJ9G6uAepvidkpydieitTZUj?usp=drive_link)
+
 ### Batch Video Generation Script
 
 Use the included `generate_videos.sh` script to create multiple short videos from random images and sequential audio segments.
