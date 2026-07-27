@@ -3,16 +3,19 @@
 # Generate short videos from random images and sequential audio segments.
 #
 # Usage:
-#   ./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE]
+#   ./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE] [ENDING_VIDEO]
 #
 # Arguments:
-#   OUTPUT_DIR   Directory to save generated videos (default: ./output)
-#   COUNT        Number of videos to generate (default: 10)
-#   IMAGES_DIR   Directory containing source images (default: ./.images)
-#   AUDIO_FILE   Path to long audio file (default: ./audio.mp3)
+#   OUTPUT_DIR     Directory to save generated videos (default: ./output)
+#   COUNT          Number of videos to generate (default: 10)
+#   IMAGES_DIR     Directory containing source images (default: ./.images)
+#   AUDIO_FILE     Path to long audio file (default: ./audio.mp3)
+#   ENDING_VIDEO   Optional .mp4 file to append after each generated clip. When
+#                  provided, the generated segment lasts 5s and is followed by
+#                  the supplied video.
 #
 # Example:
-#   ./generate_videos.sh ./videos 15 ./photos ./music/podcast.mp3
+#   ./generate_videos.sh ./videos 15 ./photos ./music/podcast.mp3 ./final.mp4
 #
 
 set -euo pipefail
@@ -22,6 +25,7 @@ OUTPUT_DIR="${1:-./output}"
 COUNT="${2:-10}"
 IMAGES_DIR="${3:-./.images}"
 AUDIO_FILE="${4:-./audio.mp3}"
+ENDING_VIDEO="${5:-}"
 CLIP_DURATION=10
 VIDEO_HEIGHT=720
 VIDEO_BITRATE="1200k"
@@ -47,6 +51,18 @@ fi
 if [[ ! -f "$AUDIO_FILE" ]]; then
     echo "Error: Audio file '$AUDIO_FILE' does not exist." >&2
     exit 1
+fi
+
+if [[ -n "$ENDING_VIDEO" ]]; then
+    if [[ ! -f "$ENDING_VIDEO" ]]; then
+        echo "Error: Ending video '$ENDING_VIDEO' does not exist." >&2
+        exit 1
+    fi
+
+    if [[ "$ENDING_VIDEO" != *.mp4 && "$ENDING_VIDEO" != *.MP4 ]]; then
+        echo "Error: Ending video '$ENDING_VIDEO' must be an .mp4 file." >&2
+        exit 1
+    fi
 fi
 
 # Get all images
@@ -83,7 +99,12 @@ echo "Output directory: $OUTPUT_DIR"
 echo "Videos to create: $COUNT"
 echo "Images source:    $IMAGES_DIR (${#IMAGES[@]} images available)"
 echo "Audio source:     $AUDIO_FILE (${AUDIO_DURATION}s duration)"
-echo "Clip duration:    ${CLIP_DURATION}s"
+if [[ -n "$ENDING_VIDEO" ]]; then
+    echo "Ending video:     $ENDING_VIDEO"
+    echo "Clip duration:    5s generated segment + appended video"
+else
+    echo "Clip duration:    ${CLIP_DURATION}s"
+fi
 echo "======================================"
 echo ""
 
@@ -153,17 +174,48 @@ for ((i = 0; i < COUNT; i++)); do
     done
 
     FILTER_STRING="colorchannelmixer=${RR}:${RG}:0.189:0:0.349:${GG}:0.168:0:0.272:0.534:${BB}"
+    BASE_DURATION="$CLIP_DURATION"
 
-    ffmpeg -hide_banner -loglevel error \
-        -loop 1 -i "$IMAGE" \
-        -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
-        -c:v mpeg4 \
-        -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
-        -b:v "$VIDEO_BITRATE" \
-        -c:a aac \
-        -b:a "$AUDIO_BITRATE" \
-        -t "$CLIP_DURATION" \
-        -y "$OUTPUT_FILE"
+    if [[ -n "$ENDING_VIDEO" ]]; then
+        BASE_DURATION=5
+    fi
+
+    if [[ -n "$ENDING_VIDEO" ]]; then
+        TEMP_BASE_VIDEO=$(mktemp "${TMPDIR:-/tmp}/septimaola-base-XXXXXX.mp4")
+        TEMP_CONCAT_LIST=$(mktemp "${TMPDIR:-/tmp}/septimaola-concat-XXXXXX.txt")
+
+        ffmpeg -hide_banner -loglevel error \
+            -loop 1 -i "$IMAGE" \
+            -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
+            -c:v mpeg4 \
+            -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
+            -b:v "$VIDEO_BITRATE" \
+            -c:a aac \
+            -b:a "$AUDIO_BITRATE" \
+            -t "$BASE_DURATION" \
+            -y "$TEMP_BASE_VIDEO"
+
+        printf "file '%s'\nfile '%s'\n" "$TEMP_BASE_VIDEO" "$ENDING_VIDEO" > "$TEMP_CONCAT_LIST"
+
+        ffmpeg -hide_banner \
+            -f concat -safe 0 -i "$TEMP_CONCAT_LIST" -c copy "$OUTPUT_FILE"
+            # -c:v mpeg4 -b:v "$VIDEO_BITRATE" \
+            # -c:a aac -b:a "$AUDIO_BITRATE" \
+            # -y "$OUTPUT_FILE"
+
+        rm -fv "$TEMP_BASE_VIDEO" "$TEMP_CONCAT_LIST"
+    else
+        ffmpeg -hide_banner -loglevel error \
+            -loop 1 -i "$IMAGE" \
+            -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
+            -c:v libx264 -preset veryfast -crf 23 \
+            -vf "${FILTER_STRING},scale=-2:${VIDEO_HEIGHT},format=yuv420p" \
+            -b:v "$VIDEO_BITRATE" \
+            -c:a aac \
+            -b:a "$AUDIO_BITRATE" \
+            -t "$BASE_DURATION" \
+            -y "$OUTPUT_FILE"
+    fi
 
     echo "  Done: $OUTPUT_FILE"
     echo ""

@@ -218,6 +218,11 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 
 # Full custom configuration
 ./generate_videos.sh ./output 15 ./photos ./music/podcast.mp3
+
+# With final recording
+./generate_videos.sh ~/Videos/7aOla/random 1 \
+  ~/Pictures/7aola ~/Videos/7aOla/20260515_SkaEnLasMontanas.mp3 \
+  ~/Pictures/7aola/video_1_fixed.mp4
 ```
 
 **Requirements:**
@@ -238,6 +243,14 @@ To add text to the video:
 
 ```shell
 ffmpeg -i input.mp4 -vf "drawtext=text='Track: My Original Song Name':fontcolor=white:fontsize=36:box=1:boxcolor=black@0.5:x=40:y=h-120" -codec:a copy output.mp4
+```
+
+Normalize final/any video with the expected format:
+
+```shell
+ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
+  -c:v mpeg4 -pix_fmt yuv420p -r 25 -video_track_timescale 12800 \
+  -s 960x720 -aspect 4:3 -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
 ```
 
 ## License
