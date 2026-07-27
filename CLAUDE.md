@@ -18,17 +18,22 @@ This is the marketing and promotional repository for **Septima Ola**, a reggae/s
 ### Commands
 
 ```bash
+cd react/
+npm install       # one-time install
 npm run dev       # Vite dev server (port 5173)
 npm run build     # Production build → react/dist/
 npm run preview   # Serve the dist/ build
 npm start         # npx serve -s dist -l 5173
 ```
 
-### Container (Podman/Docker)
+### Container Fallback (Podman/Docker)
+
+Use this only when you need an isolated runtime instead of local Node.js.
 
 ```bash
+cd react/
 podman build -t septimaola-react .
-podman run -it --rm -v .:/app:z -p 5173:5173 septimaola-react
+podman run --rm -v .:/app:z -p 5173:5173 septimaola-react
 ```
 
 ### Architecture
@@ -95,6 +100,44 @@ Each file follows a strict template with sections: Quick Chord Reference, Chord 
 
 - To update `Members.jsx` from bios: use `.github/prompts/react-update.prompt.md`
 - To update `slides.tex` from bios: use `.github/agents/presskit-updater.agent.md`
+
+### Shared KB Skill For Content Updates
+
+For any prompt that requests content updates for press-kit information (band
+description, member profile details, technical rider, or channel/input list),
+use the shared skill:
+
+- `.claude/skills/septimaola-common/SKILL.md`
+
+This skill is the canonical documentation layer for copy updates consumed by
+`react/` and/or `latex/`.
+
+### Golden Language Rule
+
+For public-facing artifacts, default language is Spanish:
+
+- `react/` content must be authored in Spanish for the Mexico audience.
+- `latex/` press-kit content must be authored in Spanish for the Mexico
+	audience.
+
+English is acceptable for AI-rig/internal guidance files, including:
+
+- `CLAUDE.md`
+- `AGENTS.md`
+- `.copilot` prompts/instructions
+- `.claude` skills and operational documentation
+
+Required behavior for update prompts:
+
+- Identify if the target is `react/`, `latex/`, or both.
+- Reuse canonical facts from the shared skill and avoid inventing new data.
+- Keep web copy concise and PDF copy editorial when both are requested.
+- Use Spanish for `react/` and `latex/` unless the user explicitly requests a
+  different language.
+- If process guidance changes, synchronize related instruction docs in the same
+	update pass, including `CLAUDE.md` and `AGENTS.md` when present.
+
+For GitHub Copilot-specific operating notes, also maintain `AGENTS.md`.
 
 ## AI Agent (`/ai/press_kit_agent`)
 

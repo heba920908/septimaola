@@ -1,8 +1,8 @@
-# lemanu
+# LeManu (lemanubeats) - Drummer
 
 ## Datos Básicos
 
-- **Nombre artístico:** lemanu / lemanubeats
+- **Nombre artístico:** LeManu / lemanubeats
 - **Instrumento / Rol en la banda:** Baterista
 - **Lugar de origen:** Cuajimalpa, Ciudad de México
 - **Años de trayectoria:** 2 años 9 meses

@@ -2,19 +2,25 @@
   "name": "septimaola-presskit",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://heba920908.github.io/septimaola/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 5173",
-    "start": "npx serve -s dist -l 5173"
+    "start": "npx serve -s dist -l 5173",
+    "fetch:images": "node scripts/fetch-images.mjs",
+    "predev": "npm run fetch:images",
+    "prebuild": "npm run fetch:images"
   },
   "dependencies": {
+    "@unpic/react": "^1.0.2",
+    "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.40.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite-plugin-pwa": "^1.3.0"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "@vitejs/plugin-react": "^4.0.0"
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^5.0.0"
   }
 }
