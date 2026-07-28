@@ -32,7 +32,6 @@ class TestCreateProvider:
         monkeypatch.setenv("CODEMIE_REALM", "test-realm")
         monkeypatch.setenv("CODEMIE_CLIENT_ID", "test-client")
         monkeypatch.setenv("CODEMIE_CLIENT_SECRET", "test-secret")
-        monkeypatch.setenv("CODEMIE_ASSISTANT_ID", "test-assistant-uuid")
         provider = create_provider()
         assert isinstance(provider, CodemieClient)
 
@@ -87,7 +86,6 @@ class TestCodemieClientConstructor:
         "realm": "test-realm",
         "client_id": "test-client",
         "client_secret": "test-secret",
-        "assistant_id": "test-uuid",
     }
 
     def _clear_codemie_env(self, monkeypatch):
@@ -97,7 +95,6 @@ class TestCodemieClientConstructor:
             "CODEMIE_REALM",
             "CODEMIE_CLIENT_ID",
             "CODEMIE_CLIENT_SECRET",
-            "CODEMIE_ASSISTANT_ID",
         ]:
             monkeypatch.delenv(var, raising=False)
 
@@ -111,8 +108,8 @@ class TestCodemieClientConstructor:
         """Constructor raises ValueError when just one var is absent."""
         self._clear_codemie_env(monkeypatch)
         creds = dict(self._FULL_CREDS)
-        del creds["assistant_id"]
-        with pytest.raises(ValueError, match="CODEMIE_ASSISTANT_ID"):
+        del creds["client_secret"]
+        with pytest.raises(ValueError, match="CODEMIE_CLIENT_SECRET"):
             CodemieClient(**creds)
 
     def test_succeeds_with_all_credentials_as_args(self, monkeypatch):
@@ -121,7 +118,6 @@ class TestCodemieClientConstructor:
         client = CodemieClient(**self._FULL_CREDS)
         assert client.base_url == "https://codemie.example.com"
         assert client.realm == "test-realm"
-        assert client.assistant_id == "test-uuid"
 
     def test_trailing_slash_stripped_from_base_url(self, monkeypatch):
         """Trailing slash is removed from base_url and keycloak_url."""

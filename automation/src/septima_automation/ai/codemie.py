@@ -1,10 +1,13 @@
-"""Codemie AI provider via Keycloak OAuth2 client_credentials.
+"""Codemie AI provider via Keycloak OAuth2 and OpenAI-compatible API.
+
+This implementation uses the OpenAI library with Codemie's API, which provides
+a unified interface consistent with the Deepseek provider.
 
 Authentication flow:
     1. POST to Keycloak token endpoint with client_id + client_secret
        (grant_type=client_credentials)
     2. Receive a short-lived JWT access_token (~8h, no refresh token)
-    3. Call Codemie assistant API with Bearer token
+    3. Call Codemie assistant API with Bearer token via OpenAI client
 
 API reference: https://docs.codemie.ai/user-guide/api/
 """
@@ -14,16 +17,16 @@ import os
 import time
 from typing import Optional
 
-import httpx
+from openai import AsyncOpenAI
 
 from .base import AIProvider
-from .prompts import build_user_prompt
+from .prompts import SYSTEM_PROMPT, build_user_prompt
 
 logger = logging.getLogger(__name__)
 
 
 class CodemieClient(AIProvider):
-    """AI provider backed by Codemie via Keycloak OAuth2.
+    """AI provider backed by Codemie via Keycloak OAuth2 and OpenAI-compatible API.
 
     Required environment variables:
         CODEMIE_BASE_URL        Base URL of the Codemie instance
@@ -33,11 +36,10 @@ class CodemieClient(AIProvider):
         CODEMIE_REALM           Keycloak realm name  (e.g. codemie-prod)
         CODEMIE_CLIENT_ID       Keycloak client ID   (e.g. api-demo-project)
         CODEMIE_CLIENT_SECRET   Keycloak client secret (from Credentials tab)
-        CODEMIE_ASSISTANT_ID    UUID of the Codemie assistant to call
-    """
 
-    # Codemie API path for calling an assistant
-    _ASSISTANT_PATH = "/code-assistant-api/v1/assistants/{assistant_id}/model"
+    Note: ASSISTANT_ID is not required as we use the OpenAI-compatible API
+    with system prompts to configure the assistant behavior.
+    """
 
     # Seconds before expiry to proactively refresh the token
     _TOKEN_REFRESH_BUFFER = 60
@@ -49,7 +51,7 @@ class CodemieClient(AIProvider):
         realm: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
-        assistant_id: Optional[str] = None,
+        model: Optional[str] = None,
     ):
         self.base_url = (base_url or os.getenv("CODEMIE_BASE_URL", "")).rstrip("/")
         self.keycloak_url = (
@@ -58,7 +60,7 @@ class CodemieClient(AIProvider):
         self.realm = realm or os.getenv("CODEMIE_REALM", "")
         self.client_id = client_id or os.getenv("CODEMIE_CLIENT_ID", "")
         self.client_secret = client_secret or os.getenv("CODEMIE_CLIENT_SECRET", "")
-        self.assistant_id = assistant_id or os.getenv("CODEMIE_ASSISTANT_ID", "")
+        self.model = model or os.getenv("CODEMIE_MODEL", "gpt-4o")
 
         missing = [
             name
@@ -68,7 +70,6 @@ class CodemieClient(AIProvider):
                 ("CODEMIE_REALM", self.realm),
                 ("CODEMIE_CLIENT_ID", self.client_id),
                 ("CODEMIE_CLIENT_SECRET", self.client_secret),
-                ("CODEMIE_ASSISTANT_ID", self.assistant_id),
             ]
             if not val
         ]
@@ -77,11 +78,10 @@ class CodemieClient(AIProvider):
                 f"Missing required Codemie credentials: {', '.join(missing)}"
             )
 
-        self._http = httpx.AsyncClient(timeout=30.0)
-
         # Token cache
         self._access_token: Optional[str] = None
         self._token_expires_at: float = 0.0
+        self._openai_client: Optional[AsyncOpenAI] = None
 
     # ------------------------------------------------------------------
     # OAuth2 token management
@@ -94,25 +94,39 @@ class CodemieClient(AIProvider):
             f"/protocol/openid-connect/token"
         )
 
+    @property
+    def _codemie_api_base(self) -> str:
+        """Return the OpenAI-compatible API base URL for Codemie."""
+        return f"{self.base_url}/code-assistant-api/v1"
+
     async def _fetch_token(self) -> str:
         """Request a new access token via client_credentials grant."""
+        import httpx
+
         logger.debug("Fetching Codemie access token...")
-        response = await self._http.post(
-            self._token_endpoint,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            data={
-                "client_id": self.client_id,
-                "client_secret": self.client_secret,
-                "grant_type": "client_credentials",
-            },
-        )
-        response.raise_for_status()
-        payload = response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                self._token_endpoint,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                data={
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "grant_type": "client_credentials",
+                },
+            )
+            response.raise_for_status()
+            payload = response.json()
 
         self._access_token = payload["access_token"]
         expires_in: int = payload.get("expires_in", 28500)
         self._token_expires_at = time.monotonic() + expires_in
         logger.debug(f"Token acquired (expires in {expires_in}s)")
+
+        # Recreate OpenAI client with new token
+        self._openai_client = AsyncOpenAI(
+            api_key=self._access_token,
+            base_url=self._codemie_api_base,
+        )
 
         return self._access_token
 
@@ -124,7 +138,13 @@ class CodemieClient(AIProvider):
         ):
             logger.debug("Token expired or missing; refreshing...")
             await self._fetch_token()
-        return self._access_token  # type: ignore[return-value]
+        return self._access_token or ""
+
+    async def _get_client(self) -> AsyncOpenAI:
+        """Return a configured OpenAI client with valid token."""
+        if self._openai_client is None:
+            await self._get_token()
+        return self._openai_client  # type: ignore[return-value]
 
     # ------------------------------------------------------------------
     # AIProvider interface
@@ -135,33 +155,40 @@ class CodemieClient(AIProvider):
         song_title: str,
         song_author: str,
     ) -> str:
-        """Generate a message via the Codemie assistant API.
+        """Generate a message via the Codemie assistant API using OpenAI-compatible endpoint.
 
-        The prompt is sent as the `text` field. The response is extracted
-        from the `generated` field of the JSON response.
+        Uses the chat completions API with system prompt and user prompt to generate
+        social media content.
         """
-        logger.debug(f"Calling Codemie assistant for: {song_title} by {song_author}")
-        token = await self._get_token()
+        logger.debug(f"Calling Codemie API for: {song_title} by {song_author}")
 
-        url = self.base_url + self._ASSISTANT_PATH.format(
-            assistant_id=self.assistant_id
+        client = await self._get_client()
+
+        # Codemie uses assistant-specific endpoint; we map to chat completions
+        response = await client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": build_user_prompt(song_title, song_author),
+                },
+            ],
+            temperature=0.8,
+            max_tokens=150,
+            stream=False,
         )
 
-        response = await self._http.post(
-            url,
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "text": build_user_prompt(song_title, song_author),
-            },
-        )
-        response.raise_for_status()
-        data = response.json()
-        message = data["generated"].strip()
-        logger.debug(f"Codemie response received ({len(message)} chars)")
+        message = response.choices[0].message.content or ""
+        message = message.strip()
+
+        logger.info("Codemie response received (%d chars)", len(message))
+        logger.debug("Codemie full message: %s", message)
+
         return message
 
     async def close(self) -> None:
-        await self._http.aclose()
+        """Release any held resources."""
+        if self._openai_client:
+            await self._openai_client.close()
+            self._openai_client = None

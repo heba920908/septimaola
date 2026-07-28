@@ -27,11 +27,13 @@ cron workflow and publishes a video post daily to Facebook and Instagram.
 |-----------|--------|--------|
 | Language | Python 3.11+ | Async support, rich ecosystem |
 | Package manager | `uv` | Fast installs, locked reproducible envs |
-| AI provider | Deepseek (`deepseek-chat`) | Free tier available, OpenAI-compatible API |
+| AI providers | Deepseek (`deepseek-chat`) + Codemie | Deepseek: free tier, OpenAI-compatible API; Codemie: internal platform, OpenAI-compatible via Keycloak OAuth |
+| AI Library | `openai` SDK | Unified interface for both providers via OpenAI-compatible APIs |
 | Video download | Direct download via `httpx` | Fast, asynchronous download of public Google Drive files |
 | Social platforms | Facebook Graph API v18.0, Instagram Graph API | Official APIs |
 | Scheduling | GitHub Actions cron (`0 9 * * *`) | Free for public repos, no extra infra |
 | Secrets | GitHub Secrets (CI), `dotenv` (local) | Secure and standard |
+| Testing | pytest + LLM-as-grader | Live integration tests with `--live` flag for prompt quality validation |
 
 ### Project Layout
 
@@ -45,7 +47,13 @@ automation/
 ├── src/septima_automation/
 │   ├── __init__.py
 │   ├── config.py               # Asset manifests and constants
-│   ├── ai_client.py            # Deepseek HTTP client
+│   ├── ai/                     # AI provider implementations
+│   │   ├── __init__.py
+│   │   ├── base.py             # Abstract AIProvider interface
+│   │   ├── factory.py          # Provider factory
+│   │   ├── prompts.py          # Prompt templates and builders
+│   │   ├── deepseek.py         # Deepseek provider (OpenAI SDK)
+│   │   └── codemie.py          # Codemie provider (OpenAI SDK + Keycloak OAuth)
 │   ├── selectors.py            # Random video picker
 │   ├── video_downloader.py     # Google Drive file downloader
 │   ├── message_generator.py    # Post text builder
@@ -56,7 +64,14 @@ automation/
 │       ├── facebook.py         # Facebook Graph API publisher
 │       └── instagram.py        # Instagram Graph API publisher
 └── tests/
-    └── test_daily_post.py
+    ├── conftest.py             # Pytest configuration with --live flag
+    ├── test_daily_post.py
+    ├── test_prompts_live.py    # Live integration tests with LLM-as-grader
+    └── graders/                # LLM grading framework
+        ├── __init__.py
+        ├── base.py
+        ├── codemie_grader.py
+        └── rubric.py
 ```
 
 ### Dependencies (`pyproject.toml`)
@@ -124,27 +139,39 @@ DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_MODEL   = "deepseek-chat"
 ```
 
-### AI Message Generation (`ai_client.py`)
+### AI Message Generation (`ai/`)
 
-`DeepseekClient` wraps the Deepseek REST API using `httpx.AsyncClient`.
+Both providers use the `openai` SDK for a unified interface:
 
-System prompt (Spanish, fixed per run):
-> "Eres un asistente creativo para Séptima Ola, una banda de
-> reggae/ska/rocksteady de La Raza, Ciudad de México. Generas mensajes
-> inspiradores y auténticos para redes sociales."
+**DeepseekClient** (`ai/deepseek.py`):
+- Wraps Deepseek API via OpenAI-compatible SDK
+- Authentication: Bearer token via `DEEPSEEK_API_KEY`
+- Model: `deepseek-chat`
+- Parameters: `temperature=0.3`, `max_tokens=150`, `reasoning_effort=high`
 
-User prompt template:
+**CodemieClient** (`ai/codemie.py`):
+- Wraps Codemie API via Keycloak OAuth2 + OpenAI-compatible endpoint
+- Authentication: `client_credentials` grant with automatic token refresh
+- Model: Configurable via `CODEMIE_MODEL` (default: `gpt-4o`)
+- Parameters: `temperature=0.8`, `max_tokens=150`
+
+**Provider Selection** (`ai/factory.py`):
+```python
+# Via environment variable
+AI_PROVIDER=codemie uv run daily-post
+
+# Via factory function
+from ai.factory import create_provider
+provider = create_provider("deepseek")  # or "codemie"
 ```
-Genera un mensaje del día para Séptima Ola...
-- Canción destacada: "{title}" por {author}
-- Longitud: 2-3 oraciones
-- Tono: cercano, auténtico, con groove
-- Incluye un emoji musical apropiado
-- Idioma: español
-Genera solo el mensaje, sin encabezados ni formato adicional.
-```
 
-Parameters: `temperature=0.8`, `max_tokens=150`.
+System and user prompts are defined in `ai/prompts.py`:
+- `SYSTEM_PROMPT`: Spanish-language instructions for tone, style, and content
+- `build_user_prompt(song_title, song_author)`: Generates context-rich user prompt
+
+Parameters vary by provider to optimize for their respective models.
+
+Note: `ASSISTANT_ID` is not required since both providers use the OpenAI-compatible API with `role: "system"` messages to configure assistant behavior.
 
 ### Post Caption Format (`message_generator.py`)
 
@@ -226,7 +253,14 @@ CLI flags:
 
 | Variable | Used by | Description |
 |----------|---------|-------------|
-| `DEEPSEEK_API_KEY` | `ai_client.py` | Deepseek platform API key |
+| `AI_PROVIDER` | `ai/factory.py` | Provider selection: `deepseek` (default) or `codemie` |
+| `DEEPSEEK_API_KEY` | `ai/deepseek.py` | Deepseek platform API key |
+| `CODEMIE_BASE_URL` | `ai/codemie.py` | Codemie instance base URL |
+| `CODEMIE_KEYCLOAK_URL` | `ai/codemie.py` | Keycloak base URL for OAuth |
+| `CODEMIE_REALM` | `ai/codemie.py` | Keycloak realm name |
+| `CODEMIE_CLIENT_ID` | `ai/codemie.py` | Keycloak OAuth client ID |
+| `CODEMIE_CLIENT_SECRET` | `ai/codemie.py` | Keycloak OAuth client secret |
+| `CODEMIE_MODEL` | `ai/codemie.py` | Model name (default: `gpt-4o`) |
 | `FACEBOOK_APP_CLIENT_ID` | `social/facebook.py` | Optional Facebook app client ID used for OAuth bootstrap/app-token validation |
 | `FACEBOOK_APP_CLIENT_SECRET` | `social/facebook.py` | Optional Facebook app client secret used to mint an app access token |
 | `FACEBOOK_PAGE_ID` | `social/facebook.py` | Numeric Facebook Page ID |
@@ -293,8 +327,43 @@ jobs:
 ```
 
 Secrets are injected as env vars in the final step:
-`DEEPSEEK_API_KEY`, `FACEBOOK_PAGE_ID`, `FACEBOOK_ACCESS_TOKEN`,
+`DEEPSEEK_API_KEY` (or Codemie credentials), `FACEBOOK_PAGE_ID`, `FACEBOOK_ACCESS_TOKEN`,
 `INSTAGRAM_ACCOUNT_ID`.
+
+### Testing (`tests/`)
+
+The test suite includes both unit tests and live integration tests with LLM-as-grader:
+
+**Unit Tests (default):**
+```bash
+uv run pytest tests/
+```
+
+**Live Integration Tests:**
+```bash
+# Run live tests with real LLM providers
+uv run pytest tests/test_prompts_live.py --live
+
+# Test specific provider
+AI_PROVIDER=codemie uv run pytest tests/test_prompts_live.py --live -v
+
+# Run all tests including live
+uv run pytest tests/ --live
+```
+
+**Test Structure:**
+- `conftest.py`: Pytest configuration with `--live` flag
+- `test_prompts_live.py`: Live tests using LLM-as-grader for quality validation
+- `graders/`: Grading framework with `CodemieGrader` and rubrics
+
+The LLM-as-grader framework validates prompt quality against a rubric including:
+- Tone match (25%): Positive, Mexican Spanish, reggae/jazz vibe
+- Length (20%): 2-3 sentences as specified
+- Content (30%): Includes fun-fact/historical element
+- Emoji usage (15%): Appropriate musical emoji
+- Language (10%): Correct Spanish grammar
+
+Live tests are opt-in via `--live` flag to manage costs and latency.
 
 ## Consequences
 
@@ -326,3 +395,6 @@ Secrets are injected as env vars in the final step:
 - Implement Facebook token auto-refresh
 - Add engagement analytics tracking
 - Support story/reel-specific content variants
+- Automated A/B testing for prompt variations with statistical significance
+- Historical quality tracking dashboard for LLM-as-grader results
+- Fine-tuned grading model trained on historical quality assessments
