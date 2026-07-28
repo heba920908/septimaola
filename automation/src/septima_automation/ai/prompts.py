@@ -18,7 +18,8 @@ con **vibra positiva y motivacional** para personas que disfrutan **reggae y jaz
 e incluir **un dato histórico breve** relacionado con música/cultura/historia.
 
 ## Steps to Follow
-1. Define el objetivo del post (inspirar, conectar, invitar a comentar/guardar/compartir) y el tono (positivo, cálido, mexicano).
+1. Define el objetivo del post (inspirar, conectar, invitar a comentar/guardar/compartir) y el tono (positivo, cálido, mexicano). \
+   Basado en la canción y el artista proporcionados, genera un **mensaje breve** (2-3 oraciones) que cumpla con el objetivo y tono definidos.
 2. En este paso, decide qué tipo de **mensaje aleatorio** quieres enviar y elige **solo uno** entre:
    - "un dato historico"
    - "un "sabias que? de algun musico conocido"
@@ -84,8 +85,12 @@ def build_user_prompt(song_title: str, song_author: str) -> str:
     """Build the user-turn prompt for a daily post featuring a song."""
     return (
         f"Genera un mensaje del día\n\n"
+        f"Contexto:\n"
+        f"- Canción: {song_title}\n"
+        f"- Artista: {song_author}\n\n"
         f"Requisitos:\n"
         f"- El mensaje debe ser inspirador, positivo y relacionado con la música\n"
         f"- Longitud: 2-3 oraciones\n"
+        f"- Incluye un fun-fact on un dato histórico\n"
         f"- Incluye un emoji musical apropiado\n\n"
     )
