@@ -98,7 +98,6 @@ async def main() -> int:
         provider_name = args.provider or None  # factory reads AI_PROVIDER env if None
         if args.verbose:
             from .config import AI_PROVIDER_DEFAULT
-            import os
 
             resolved = args.provider or os.getenv("AI_PROVIDER", AI_PROVIDER_DEFAULT)
             logger.debug(f"Generating message via '{resolved}'...")

@@ -56,6 +56,15 @@ class TestDailyPostCLI:
         assert args.facebook
         assert not args.skip_facebook
 
+    def test_parse_args_enabled_by_env_var(self, monkeypatch):
+        from septima_automation.daily_post import parse_args
+
+        monkeypatch.delenv("ENABLE_FACEBOOK", raising=False)
+        args = parse_args([])
+
+        assert not args.facebook
+        assert not args.skip_facebook
+
 
 class TestVideoDownload:
     """Test video downloader (requires network access)."""
