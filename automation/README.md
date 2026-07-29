@@ -283,6 +283,16 @@ ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
   -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
 ```
 
+## Audio crop to generate singles
+
+```bash
+ffmpeg -ss 00:01:30 -to 00:02:15 -i input.mp3 -c copy output.mp3
+ffmpeg -ss 00:04:30 -t 00:03:51 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_arenga.mp3
+ffmpeg -ss 00:10:57 -t 00:03:45 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_acontra.mp3
+ffmpeg -ss 00:19:30 -t 00:03:33 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_despertar.mp3
+ffmpeg -ss 00:34:52 -t 00:05:10 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_tqm.mp3
+```
+
 ## License
 
 Private - For Séptima Ola internal use only.
