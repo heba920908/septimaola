@@ -94,6 +94,9 @@ Use these when invoking this skill in a task:
 - Preserve the structure of the technical rider tables when updating details.
 - Keep language policy consistent: Spanish for public artifacts; English is
 	acceptable for AI-rig/internal documentation files.
+- When canonical band-profile facts change, manually synchronize the band-only
+	facts in `automation/src/septima_automation/ai/band_context.py`. Do not add
+	member or crew facts to that automation context.
 
 ---
 
@@ -234,5 +237,4 @@ by architecture decisions under `docs/decisions/`.
 ## Downloads
 
 `TBD` — downloadable assets (PDF rider, stage plot, hi-res photos).
-
 

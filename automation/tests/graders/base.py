@@ -1,8 +1,8 @@
 """Base interface for LLM-as-grader implementations."""
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from typing import Dict, Any
+from dataclasses import dataclass, field
+from typing import Any, Dict, Iterable
 
 
 @dataclass
@@ -18,10 +18,38 @@ class GradingRubric:
     scale_max: int = 5
     """Maximum score value."""
 
+    descriptions: Dict[str, str] = field(default_factory=dict)
+    """Optional mapping of criterion name to a human-readable description,
+    surfaced to the grading LLM so it knows what each criterion means
+    (e.g. what "grounding" refers to)."""
+
+    optional_criteria: frozenset[str] = frozenset()
+    """Criteria that may not apply to all content (e.g. "grounding" only
+    applies when the content is about Septima Ola). The grader may report
+    these as N/A, in which case they are dropped and the remaining weights
+    are renormalized via `effective_weights`."""
+
     def validate_weights(self) -> bool:
         """Check that weights sum to approximately 1.0."""
         total = sum(self.criteria.values())
         return abs(total - 1.0) < 0.001
+
+    def effective_weights(self, skipped: Iterable[str]) -> Dict[str, float]:
+        """Return weights with `skipped` criteria dropped and renormalized.
+
+        If all criteria are skipped (degenerate case), returns the original
+        weights unchanged rather than dividing by zero.
+        """
+        skipped_set = set(skipped)
+        remaining = {
+            name: weight
+            for name, weight in self.criteria.items()
+            if name not in skipped_set
+        }
+        total = sum(remaining.values())
+        if total <= 0:
+            return dict(self.criteria)
+        return {name: weight / total for name, weight in remaining.items()}
 
 
 @dataclass
@@ -40,6 +68,13 @@ class GradingResult:
     passed: bool
     """Whether the content passed the minimum threshold."""
 
+    skipped: tuple[str, ...] = ()
+    """Optional criteria the grader reported as not applicable (N/A)."""
+
+    weights: Dict[str, float] = field(default_factory=dict)
+    """Effective weights actually used to compute `total` (after dropping
+    any `skipped` criteria and renormalizing)."""
+
 
 class LLMGrader(ABC):
     """Abstract base class for LLM-based content graders."""
@@ -56,7 +91,12 @@ class LLMGrader(ABC):
         Args:
             content: The text content to evaluate.
             rubric: The grading criteria and weights.
-            context: Optional additional context (e.g., song title, expected tone).
+            context: Optional additional context. Two kinds of entries are
+                recognized specially by `_build_grading_prompt`:
+                - `grounding_reference`: reference/source-of-truth facts
+                  rendered in a distinct block, never as an "expectation".
+                - anything else: rendered as an expected attribute
+                  (e.g. song_title, expected_tone).
 
         Returns:
             GradingResult with scores and feedback.
@@ -75,18 +115,41 @@ class LLMGrader(ABC):
         Subclasses may override for provider-specific optimization.
         """
         criteria_desc = "\n".join(
-            f"- {name}: score {rubric.scale_min}-{rubric.scale_max} (weight: {weight:.0%})"
+            f"- {name} (weight: {weight:.0%})"
+            + (f" — {rubric.descriptions[name]}" if name in rubric.descriptions else "")
             for name, weight in rubric.criteria.items()
         )
         score_template = "\n".join(
-            f"{name}: [score {rubric.scale_min}-{rubric.scale_max}]"
+            f"{name}: [score {rubric.scale_min}-{rubric.scale_max}, or N/A]"
+            if name in rubric.optional_criteria
+            else f"{name}: [score {rubric.scale_min}-{rubric.scale_max}]"
             for name in rubric.criteria
         )
 
+        expected_attrs = {
+            k: v for k, v in (context or {}).items() if k != "grounding_reference"
+        }
+        grounding_reference = (context or {}).get("grounding_reference")
+
         ctx_str = ""
-        if context:
-            ctx_str = "\nContext:\n" + "\n".join(
-                f"- {k}: {v}" for k, v in context.items()
+        if expected_attrs:
+            ctx_str = "\nExpected attributes:\n" + "\n".join(
+                f"- {k}: {v}" for k, v in expected_attrs.items()
+            )
+
+        reference_str = ""
+        if grounding_reference:
+            reference_str = (
+                f"\nReference facts (grounding source):\n{grounding_reference}\n"
+            )
+
+        optional_note = ""
+        if rubric.optional_criteria:
+            optional_names = ", ".join(sorted(rubric.optional_criteria))
+            optional_note = (
+                f"\nIf a criterion does not apply to this content, output "
+                f"`<name>: N/A` instead of a number. This is expected for: "
+                f"{optional_names}."
             )
 
         return f"""You are a quality grader for social media content. Evaluate the following content against the criteria below.
@@ -99,7 +162,7 @@ Content to evaluate:
 Evaluation Criteria:
 {criteria_desc}
 {ctx_str}
-
+{reference_str}
 Provide your evaluation in this exact format:
 
 SCORES:
@@ -108,4 +171,4 @@ TOTAL: [weighted sum from {rubric.scale_min} to {rubric.scale_max}]
 PASS: [YES/NO]
 FEEDBACK: [2-3 sentences explaining scores]
 
-Be strict but fair. A score of 3 indicates acceptable quality, 4 is good, 5 is excellent."""
+Be strict but fair. A score of 3 indicates acceptable quality, 4 is good, 5 is excellent.{optional_note}"""

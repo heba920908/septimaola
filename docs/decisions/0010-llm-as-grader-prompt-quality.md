@@ -16,7 +16,7 @@ We need a systematic approach to:
 
 ## Decision
 
-Implement an LLM-as-grader testing framework using pytest with live integration tests. The framework will use Codemie as the primary AI rig for testing, with Deepseek as a secondary provider for comparison.
+Implement an LLM-as-grader testing framework using pytest with live integration tests. The framework uses Codemie as the sole live AI rig for generation and grading. Deepseek remains the production provider and is covered by mocked provider-integration tests.
 
 ### Architecture
 
@@ -25,10 +25,11 @@ Implement an LLM-as-grader testing framework using pytest with live integration 
 | Test Framework | pytest with pytest-asyncio | Existing test infrastructure, async support |
 | Grader Strategy | LLM-as-grader pattern | Use a separate LLM call to evaluate output quality |
 | Primary AI Rig | Codemie | Internal platform with OpenAI-compatible Chat Completions API |
-| Secondary Provider | Deepseek | For cross-provider validation |
+| Production Provider | Deepseek | Generates production content; mocked tests cover its tool loop |
 | Provider Library | `openai` (OpenAI-compatible) | Unified interface for both providers |
 | Test Isolation | `--live` pytest marker | Run live tests only when explicitly requested |
-| Grading Criteria | Structured rubric (1-5 scale) | Tone, length, content accuracy, emoji usage |
+| Grading Criteria | Structured rubric (1-5 scale) | Tone, length, content, conditional grounding, emoji usage, language |
+| Band grounding | OpenAI-compatible function tool | Canonical band-only facts are supplied on demand |
 
 ### Provider Implementation Strategy
 
@@ -50,6 +51,22 @@ Key changes:
 1. `CODEMIE_TOKEN_URL` provides the complete OAuth token endpoint
 2. `CODEMIE_BASE_URL` accepts either the service origin or a legacy API base URL
 3. Token refresh recreates the OpenAI-compatible client as required
+4. `CODEMIE_MODEL` defaults to `gpt-4.1` for both generation and grading
+5. The grader calls Codemie with `temperature=0` for repeatable evaluations
+
+### Band-Fact Grounding
+
+Both OpenAI-compatible providers receive the `get_septima_ola_facts` function
+tool. `automation/src/septima_automation/ai/band_context.py` contains a
+manually synchronized, band-only representation of the canonical profile from
+`.claude/skills/septimaola-common/SKILL.md`; it must not contain member or crew
+facts. The shared tool loop resolves up to three model-requested tool rounds.
+
+The tool is intended only for Séptima Ola content. If a Codemie model rejects
+the `tools` parameter, the client retries once without tools and adds a compact
+band-context system message as a fallback. Deepseek tool behavior is covered by
+mocked tests because its configured live credentials were invalid during this
+decision's implementation.
 
 ### Testing Framework
 
@@ -83,10 +100,11 @@ quality gate is a weighted score of at least 3.5/5 (70% of the maximum), with
 additional minimum scores of 3/5 for tone and 4/5 for length in the Codemie
 generation test.
 
-Grounding against `.claude/skills/septimaola-common/SKILL.md` is not currently
-implemented in the rubric or live tests. It is therefore not a passing
-criterion of the current test suite and must be added to the rubric, grader
-context, and assertions before it can be treated as a quality gate.
+Grounding applies only when the generated content concerns Séptima Ola. For
+other artists, the grader must emit `grounding: N/A`; the criterion is removed
+and the remaining weights are renormalized before the total is computed. For
+Séptima Ola content, live tests require a canonical fact marker and a grounding
+score of at least 4/5.
 
 #### Test Execution
 
@@ -143,9 +161,9 @@ async def test_codemie_generates_valid_content():
 ```
 
 The representative example reflects `automation/tests/test_prompts_live.py`.
-The suite also has four Codemie emoji smoke tests and two cross-provider
-Spanish/emoji checks. The Deepseek generation test enforces only the 3.5/5
-weighted threshold; it does not apply the Codemie tone and length sub-gates.
+The suite also checks two Séptima Ola songs for canonical grounding. Deepseek
+and cross-provider live tests are retained but permanently skipped; mocked tests
+verify its tool-call integration and `reasoning_content` fallback.
 
 ### Configuration
 
@@ -157,7 +175,7 @@ weighted threshold; it does not apply the Codemie tone and length sub-gates.
 | `CODEMIE_TOKEN_URL` | CodemieClient | Keycloak OAuth token endpoint |
 | `CODEMIE_CLIENT_ID` | CodemieClient | OAuth client ID |
 | `CODEMIE_CLIENT_SECRET` | CodemieClient | OAuth client secret |
-| `CODEMIE_MODEL` | CodemieClient | Chat Completions model ID (default: `gpt-4o`) |
+| `CODEMIE_MODEL` | CodemieClient | Chat Completions model ID (default: `gpt-4.1`) |
 | `DEEPSEEK_API_KEY` | DeepseekClient | Deepseek API key |
 
 #### Codemie Model Discovery
@@ -271,6 +289,15 @@ the command above.
 
 For comparison, the same module without `--live` completed with 3 passed and
 8 skipped in 0.75 seconds, confirming the explicit live-test gate works.
+
+After the grounding/tool-loop implementation, the non-live automation suite
+passed with `78 passed, 9 skipped` using `uv run pytest tests/ -v`. A refreshed
+Codemie live run on 2026-07-28 passed with `8 passed, 3 skipped` using
+`uv run pytest tests/test_prompts_live.py --live -v`. The live result confirmed
+that non-Séptima Ola content receives `grounding: N/A` and that both grounded
+Séptima Ola cases invoked the fact tool and received grounding scores of 5/5.
+Deepseek remains excluded from live prompt-quality tests until valid credentials
+are available.
 
 ## Consequences
 

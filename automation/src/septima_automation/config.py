@@ -130,6 +130,7 @@ DEEPSEEK_MODEL = "deepseek-v4-flash"
 # CODEMIE_TOKEN_URL     - Keycloak OAuth token endpoint
 # CODEMIE_CLIENT_ID     - Keycloak client ID
 # CODEMIE_CLIENT_SECRET - Keycloak client secret
+# CODEMIE_MODEL         - Chat Completions model ID (default: gpt-4.1)
 
 # Facebook/Instagram API
 FACEBOOK_API_VERSION = "v25.0"

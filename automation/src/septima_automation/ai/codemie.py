@@ -3,14 +3,21 @@
 import logging
 import os
 import time
-from typing import Optional
+from typing import Any, Optional
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BadRequestError
 
+from .band_context import BAND_CONTEXT_SUMMARY, BAND_FACTS_TOOL, get_band_facts
 from .base import AIProvider
 from .prompts import SYSTEM_PROMPT, build_user_prompt
+from .tool_loop import run_tool_loop
 
 logger = logging.getLogger(__name__)
+
+# Handler map for the get_septima_ola_facts tool (see band_context.py).
+_BAND_TOOL_HANDLERS = {
+    "get_septima_ola_facts": lambda args: get_band_facts(args.get("topic")),
+}
 
 
 class CodemieClient(AIProvider):
@@ -39,7 +46,7 @@ class CodemieClient(AIProvider):
         self.token_url = (token_url or os.getenv("CODEMIE_TOKEN_URL", "")).rstrip("/")
         self.client_id = client_id or os.getenv("CODEMIE_CLIENT_ID", "")
         self.client_secret = client_secret or os.getenv("CODEMIE_CLIENT_SECRET", "")
-        self.model = model or os.getenv("CODEMIE_MODEL", "gemini-3.5-flash")
+        self.model = model or os.getenv("CODEMIE_MODEL", "gpt-4.1")
 
         missing = [
             name
@@ -123,25 +130,73 @@ class CodemieClient(AIProvider):
         return self._openai_client
 
     async def generate_message(self, song_title: str, song_author: str) -> str:
-        """Generate a daily message via Codemie Chat Completions."""
+        """Generate a daily message via Codemie Chat Completions.
+
+        Attaches the get_septima_ola_facts tool so the model can ground
+        content about Septima Ola in canonical band facts (see
+        band_context.py). Other artists are unaffected: the model is
+        instructed not to call the tool for them (see SYSTEM_PROMPT).
+        """
         return await self.generate_chat_completion(
             [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": build_user_prompt(song_title, song_author)},
-            ]
+            ],
+            tools=[BAND_FACTS_TOOL],
+            tool_handlers=_BAND_TOOL_HANDLERS,
         )
 
-    async def generate_chat_completion(self, messages: list[dict[str, str]]) -> str:
-        """Send role-based messages to Codemie and return the completion text."""
+    async def generate_chat_completion(
+        self,
+        messages: list[dict[str, Any]],
+        *,
+        tools: Optional[list[dict[str, Any]]] = None,
+        tool_handlers: Optional[dict[str, Any]] = None,
+        temperature: float = 0.8,
+    ) -> str:
+        """Send role-based messages to Codemie and return the completion text.
+
+        If `tools` is provided, resolves any tool_calls via `tool_handlers`
+        before returning the final text (see tool_loop.run_tool_loop). If the
+        deployment/model rejects the `tools` parameter (HTTP 400), retries
+        once without tools, injecting BAND_CONTEXT_SUMMARY as a system
+        message so grounding can still be attempted without native
+        function-calling support.
+        """
         client = await self._get_client()
-        response = await client.chat.completions.create(
-            model=self.model,
-            messages=messages,  # type: ignore[arg-type]
-            temperature=0.8,
-            max_tokens=2000,
-            stream=False,
-        )
-        message = (response.choices[0].message.content or "").strip()
+
+        async def _create(**kwargs):
+            return await client.chat.completions.create(
+                model=self.model,
+                temperature=temperature,
+                max_tokens=2000,
+                stream=False,
+                **kwargs,
+            )
+
+        try:
+            message = await run_tool_loop(
+                _create,
+                messages=messages,
+                tools=tools,
+                tool_handlers=tool_handlers,
+            )
+        except BadRequestError:
+            if not tools:
+                raise
+            logger.warning(
+                "Codemie model %s rejected the 'tools' parameter; retrying "
+                "without tools using the band-context summary fallback",
+                self.model,
+            )
+            fallback_messages = [
+                messages[0],
+                {"role": "system", "content": BAND_CONTEXT_SUMMARY},
+                *messages[1:],
+            ]
+            response = await _create(messages=fallback_messages, tools=None)
+            message = (response.choices[0].message.content or "").strip()
+
         logger.info("Codemie response received (%d chars)", len(message))
         return message
 

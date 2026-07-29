@@ -9,8 +9,13 @@ import os
 import pytest
 import pytest_asyncio
 
-from septima_automation.ai.prompts import build_user_prompt, SYSTEM_PROMPT
+from septima_automation.ai.prompts import (
+    build_user_prompt,
+    SYSTEM_PROMPT,
+    MUSICAL_EMOJIS,
+)
 from septima_automation.ai.factory import create_provider
+from septima_automation.ai.band_context import SEPTIMA_OLA_MARKERS, get_band_facts
 
 # Import graders
 from graders import CodemieGrader, SOCIAL_MEDIA_RUBRIC
@@ -22,6 +27,7 @@ logger = logging.getLogger(__name__)
 MIN_TOTAL_SCORE = 3.5
 MIN_TONE_SCORE = 3.0
 MIN_LENGTH_SCORE = 4.0
+MIN_GROUNDING_SCORE = 4.0
 
 
 def has_codemie_credentials():
@@ -97,7 +103,9 @@ class TestBuildUserPromptLive:
         assert response, "Response should not be empty"
         assert len(response) > 20, "Response should be substantive"
 
-        # Use grader to evaluate quality
+        # Use grader to evaluate quality. Bob Marley is not Septima Ola, so
+        # grounding does not apply and should be reported as N/A and
+        # excluded from the weighted total (see SOCIAL_MEDIA_RUBRIC).
         result = await grader.evaluate(
             response,
             rubric=SOCIAL_MEDIA_RUBRIC,
@@ -109,13 +117,19 @@ class TestBuildUserPromptLive:
             },
         )
         logger.info(
-            "Codemie grader result: total=%.2f passed=%s criteria=%s feedback=%s",
+            "Codemie grader result: total=%.2f passed=%s criteria=%s "
+            "skipped=%s weights=%s feedback=%s",
             result.total,
             result.passed,
             result.criteria,
+            result.skipped,
+            result.weights,
             result.feedback,
         )
 
+        assert "grounding" in result.skipped, (
+            "Grounding should be N/A for a non-Septima-Ola song, not scored"
+        )
         assert result.total >= MIN_TOTAL_SCORE, (
             f"Quality score {result.total:.2f} below threshold {MIN_TOTAL_SCORE}. "
             f"Feedback: {result.feedback}"
@@ -191,9 +205,73 @@ class TestBuildUserPromptLive:
 
         # Quick quality check - no grader needed for basic validation
         assert len(response) > 10, "Response too short"
-        emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
-        assert any(char in response for char in emojis), (
+        assert any(char in response for char in MUSICAL_EMOJIS), (
             "Response should contain a musical emoji"
+        )
+
+
+class TestSeptimaOlaGrounding:
+    """Live tests validating the get_septima_ola_facts tool actually
+    grounds generated content in canonical band facts (see
+    band_context.py), and that the grader scores it accordingly.
+    """
+
+    @pytest.mark.asyncio
+    @pytest.mark.live
+    @pytest.mark.skipif(
+        not has_codemie_credentials(),
+        reason="Missing required Codemie credentials",
+    )
+    @pytest.mark.parametrize(
+        "song_title,song_author",
+        [
+            ("Despertar", "Septima Ola"),
+            ("Desde mi ventana", "Septima Ola"),
+        ],
+    )
+    async def test_codemie_grounds_septima_ola_content(
+        self, codemie_provider, grader, song_title, song_author
+    ):
+        """Content about Septima Ola should be grounded in real band facts."""
+        response = await codemie_provider.generate_message(song_title, song_author)
+        log_generation("Codemie", song_title, song_author, response)
+
+        assert response, f"Empty response for {song_title}"
+
+        # Deterministic grounding check: independent of the grader's
+        # judgment, the copy should actually contain a canonical band fact
+        # token (proves the tool result reached the final text).
+        assert any(marker in response for marker in SEPTIMA_OLA_MARKERS), (
+            f"Response should mention a canonical Septima Ola fact, got: {response!r}"
+        )
+
+        result = await grader.evaluate(
+            response,
+            rubric=SOCIAL_MEDIA_RUBRIC,
+            context={
+                "song_title": song_title,
+                "song_author": song_author,
+                "expected_language": "es",
+                "expected_tone": "positive",
+                "grounding_reference": get_band_facts(),
+            },
+        )
+        logger.info(
+            "Codemie grounding grader result: total=%.2f passed=%s "
+            "criteria=%s skipped=%s feedback=%s",
+            result.total,
+            result.passed,
+            result.criteria,
+            result.skipped,
+            result.feedback,
+        )
+
+        assert "grounding" not in result.skipped, (
+            "Grounding should be scored (not N/A) for a Septima Ola song"
+        )
+        assert result.criteria.get("grounding", 0) >= MIN_GROUNDING_SCORE, (
+            f"Grounding score {result.criteria.get('grounding')} below "
+            f"threshold {MIN_GROUNDING_SCORE}. Feedback: {result.feedback}"
         )
 
 
@@ -270,12 +348,10 @@ class TestCrossProviderConsistency:
             log_generation("Codemie", song_title, song_author, codemie_response)
             log_generation("Deepseek", song_title, song_author, deepseek_response)
 
-            emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
-
-            assert any(e in codemie_response for e in emojis), (
+            assert any(e in codemie_response for e in MUSICAL_EMOJIS), (
                 "Codemie response missing emoji"
             )
-            assert any(e in deepseek_response for e in emojis), (
+            assert any(e in deepseek_response for e in MUSICAL_EMOJIS), (
                 "Deepseek response missing emoji"
             )
         finally:

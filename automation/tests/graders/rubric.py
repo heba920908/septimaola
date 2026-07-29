@@ -3,15 +3,33 @@
 from .base import GradingRubric
 
 
-# Default rubric for evaluating social media content
+# Default rubric for evaluating social media content.
+# Weights and descriptions mirror the "Grading Rubric" table in
+# docs/decisions/0010-llm-as-grader-prompt-quality.md. `grounding` is
+# optional: it only applies when the content is about Septima Ola, and is
+# reported as N/A (then dropped + renormalized) otherwise — see
+# GradingRubric.effective_weights and CodemieGrader._parse_evaluation.
 SOCIAL_MEDIA_RUBRIC = GradingRubric(
     criteria={
-        "tone_match": 0.25,  # Positive, Mexican Spanish, reggae/jazz vibe
-        "length": 0.20,  # 2-3 sentences as specified
-        "content": 0.30,  # Includes fun-fact/historical element
-        "emoji_usage": 0.15,  # Appropriate musical emoji present
-        "language": 0.10,  # Correct Spanish grammar and vocabulary
+        "tone_match": 0.05,
+        "length": 0.20,
+        "content": 0.30,
+        "grounding": 0.30,
+        "emoji_usage": 0.05,
+        "language": 0.10,
     },
+    descriptions={
+        "tone_match": "Positive, Mexican Spanish, reggae/jazz vibe",
+        "length": "2-3 sentences as specified",
+        "content": "Includes a fun-fact or brief historical element",
+        "grounding": (
+            'Includes factual information from "Septima Ola" if the '
+            "content is about Septima Ola; N/A for other artists"
+        ),
+        "emoji_usage": "Appropriate musical emoji present",
+        "language": "Correct Spanish grammar and vocabulary",
+    },
+    optional_criteria=frozenset({"grounding"}),
     scale_min=1,
     scale_max=5,
 )
