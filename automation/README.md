@@ -209,18 +209,17 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 - `COUNT` - Number of videos to generate (default: `10`)
 - `IMAGES_DIR` - Directory containing source images (default: `./.images`)
 - `AUDIO_FILE` - Path to long audio file (default: `./audio.mp3`)
-- `ENDING_VIDEO` - Optional .mp4 video appended after a 5s generated segment
+- `ENDING_VIDEO` - Optional .mp4 video appended within the 20s output; its duration is subtracted from the generated segment
 
 **Output quality:**
 
-The script encodes at 1920x1080, 24fps, H.264 (libx264) High profile, CRF 18
-with a 13 Mbps target/max bitrate (26 Mbps VBV buffer). These defaults are
-tuned to match the quality of `.inputs/video_1.mp4`, the reference ending
-video used in the final recording example below. Source images are
-scaled and center-cropped to fill 1920x1080 regardless of their original
-aspect ratio, so the generated segment and the appended ending video share
-identical resolution, frame rate, and color range (avoids `ffmpeg` errors
-when concatenating).
+The script exports TikTok and Instagram Reels-ready MP4s: strict 1080x1920
+(9:16) at 30fps, H.264 High Profile Level 4.1, CRF 20, `yuv420p`, and AAC
+stereo at 44.1kHz/160kbps. MP4 metadata is moved to the beginning of each
+file for faster streaming. Source images and optional ending videos are scaled
+to fit the vertical frame and padded with black bars when needed, preserving
+the full source while keeping a matching resolution, frame rate, and color
+range for safe concatenation.
 
 **Examples:**
 ```bash
@@ -235,15 +234,15 @@ when concatenating).
 
 # With final recording
 ./generate_videos.sh ~/Downloads/generated 1 ./.inputs \
-   $(pwd)/.inputs/input.mp3 \
-   $(pwd)/.inputs/video_1.mp4
+    $(pwd)/.inputs/input.mp3 \
+    $(pwd)/.inputs/video_1.mp4
 ```
 
 **Requirements:**
 - `ffmpeg` installed
 - `uuidgen` installed
 - Image directory with .jpg, .jpeg, .png, or .webp files
-- Audio file at least 10 seconds long
+- Audio file at least 20 seconds long
 
 In fedora:
 
@@ -282,6 +281,16 @@ ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
   -vf "scale=1920:1080:force_original_aspect_ratio=increase:out_range=tv,crop=1920:1080,setsar=1" \
   -b:v 13000k -maxrate 13000k -bufsize 26000k \
   -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
+```
+
+## Audio crop to generate singles
+
+```bash
+ffmpeg -ss 00:01:30 -to 00:02:15 -i input.mp3 -c copy output.mp3
+ffmpeg -ss 00:04:30 -t 00:03:51 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_arenga.mp3
+ffmpeg -ss 00:10:57 -t 00:03:45 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_acontra.mp3
+ffmpeg -ss 00:19:30 -t 00:03:33 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_despertar.mp3
+ffmpeg -ss 00:34:52 -t 00:05:10 -i  202604_ensayo_a.mp3 -c copy 202604_ensayo_tqm.mp3
 ```
 
 ## License
