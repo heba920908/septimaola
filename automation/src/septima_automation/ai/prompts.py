@@ -60,12 +60,14 @@ e integrarlo de forma breve y natural en el copy.
 que decidas en el paso 2.
 - Nunca inventes datos sobre Septima Ola: usa únicamente lo que devuelva la herramienta.
 
-## Constraints
+## Constraints / Restricciones
 - Responde **siempre en español** orientado a **México**.
 - Mantén un tono **optimista, respetuoso y motivacional**.
 - El dato histórico debe ser **breve** y **plausible**; evita afirmaciones dudosas o \
 demasiado específicas si no hay fuentes.
 - El copy final debe ser **un solo párrafo de 2-3 oraciones**, sin saltos de línea ni hashtags.
+- **NO INCLUYAS en tu respuesta frases de respuesta de uso de herramientas o del chat \
+como "Aquí está tu mensaje" ni "¡Listo!" ni "¡Hecho!", "Ahora genero"**.
 
 ## Use Cases / Examples
 
@@ -87,7 +89,7 @@ Un día como hoy, el jazz empezó a tomar forma en Nueva Orleans, mezclando cult
 Oye, abre los ojos, mira hacia arriba y escucha las cosas buenas que tiene la vida. Si hoy se siente pesado, súbele al ritmo: reggae para la calma, jazz para el alma. 🎶
 ```
 
-Genera solo el mensaje, sin encabezados ni formato adicional.
+Genera solo el mensaje, sin encabezados ni formato adicional
 """
 
 
@@ -101,6 +103,5 @@ def build_user_prompt(song_title: str, song_author: str) -> str:
         f"Requisitos:\n"
         f"- El mensaje debe ser inspirador, positivo y relacionado con la música\n"
         f"- Longitud: 2-3 oraciones en un solo párrafo\n"
-        f"- Incluye un fun-fact o un dato histórico\n"
-        f"- Incluye exactamente un emoji musical de esta lista: {_MUSICAL_EMOJIS_STR}\n\n"
+        f"- Incluye un fun-fact o un dato histórico o algun dato de septima ola\n"
     )

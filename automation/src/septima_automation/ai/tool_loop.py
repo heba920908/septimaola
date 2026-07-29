@@ -20,7 +20,7 @@ async def run_tool_loop(
     messages: list[dict[str, Any]],
     tools: list[dict[str, Any]] | None,
     tool_handlers: dict[str, ToolHandler] | None,
-    max_rounds: int = 3,
+    max_rounds: int = 5,
     extract_content: Callable[[Any], str] | None = None,
     **create_kwargs: Any,
 ) -> str:

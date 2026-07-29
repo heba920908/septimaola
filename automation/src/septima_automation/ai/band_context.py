@@ -25,6 +25,8 @@ BAND_FACTS: dict[str, str] = {
         "La banda tiene su base en La Raza, Ciudad de Mexico, y sigue "
         "evolucionando a traves de presentaciones en vivo energeticas y "
         "canciones sinceras."
+        "Sus integrantes son de diferentes lugares de Mexico y El Estado de Mexico, "
+        "Coacalco, Valle de Chalco, Ixtapaluca"
     ),
     "historia": (
         "Septima Ola nacio en noviembre de 2025, debutando en el FARO de "
@@ -38,6 +40,11 @@ BAND_FACTS: dict[str, str] = {
         "corazones inquietos que buscan movimiento e inspiracion, una ola "
         "que nace de nuestra tierra y se expande sin limites fusionando "
         "ska, reggae y rocksteady con notas de jazz."
+    ),
+    "cancion_arenga": (
+        "Arenga es un estilo de cancion que combina elementos de ska, ska y rocksteady, "
+        "Arenga significa fiesta, algarabia y celebracion, y la banda lo utiliza para transmitir un mensaje de unidad, "
+        "movimiento e inspiracion."
     ),
 }
 

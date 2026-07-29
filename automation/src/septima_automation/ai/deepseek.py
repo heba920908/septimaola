@@ -58,7 +58,7 @@ class DeepseekClient(AIProvider):
             return await self._client.chat.completions.create(
                 model=DEEPSEEK_MODEL,
                 temperature=0.3,
-                max_tokens=800,
+                max_tokens=2000,
                 stream=False,
                 reasoning_effort="high",
                 extra_body={"thinking": {"type": "disabled"}},
