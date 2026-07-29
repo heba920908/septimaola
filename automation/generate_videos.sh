@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Generate short videos from random images and sequential audio segments.
+# Generate vertical short-form videos from random images and audio segments.
 #
 # Usage:
 #   ./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE] [ENDING_VIDEO]
@@ -10,9 +10,7 @@
 #   COUNT          Number of videos to generate (default: 10)
 #   IMAGES_DIR     Directory containing source images (default: ./.images)
 #   AUDIO_FILE     Path to long audio file (default: ./audio.mp3)
-#   ENDING_VIDEO   Optional .mp4 file to append after each generated clip. When
-#                  provided, the generated segment lasts 5s and is followed by
-#                  the supplied video.
+#   ENDING_VIDEO   Optional .mp4 file appended within the 20s generated clip.
 #
 # Example:
 #   ./generate_videos.sh ./videos 15 ./photos ./music/podcast.mp3 ./final.mp4
@@ -26,18 +24,15 @@ COUNT="${2:-10}"
 IMAGES_DIR="${3:-./.images}"
 AUDIO_FILE="${4:-./audio.mp3}"
 ENDING_VIDEO="${5:-}"
-CLIP_DURATION=10
-# Quality settings tuned to match .inputs/video_1.mp4 (1920x1080, 24fps,
-# H.264 High profile, ~13.6 Mbps).
-VIDEO_WIDTH=1920
-VIDEO_HEIGHT=1080
-VIDEO_FPS=24
-VIDEO_CRF=18
-VIDEO_BITRATE="13000k"
-VIDEO_MAXRATE="13000k"
-VIDEO_BUFSIZE="26000k"
-AUDIO_BITRATE="128k"
-ENDING_BASE_DURATION=5
+CLIP_DURATION=20
+# TikTok and Instagram Reels export preset.
+VIDEO_WIDTH=1080
+VIDEO_HEIGHT=1920
+VIDEO_FPS=30
+VIDEO_CRF=20
+VIDEO_PRESET="slow"
+AUDIO_BITRATE="160k"
+AUDIO_SAMPLE_RATE=44100
 ENDING_DURATION_SECONDS=0
 EFFECTIVE_CLIP_DURATION="$CLIP_DURATION"
 ENDING_VIDEO_ABS=""
@@ -58,6 +53,11 @@ if ! command -v ffmpeg &>/dev/null; then
     exit 1
 fi
 
+if ! command -v ffprobe &>/dev/null; then
+    echo "Error: ffprobe is required but not installed." >&2
+    exit 1
+fi
+
 if ! command -v uuidgen &>/dev/null; then
     echo "Error: uuidgen is required but not installed." >&2
     exit 1
@@ -71,6 +71,11 @@ fi
 
 if [[ ! -f "$AUDIO_FILE" ]]; then
     echo "Error: Audio file '$AUDIO_FILE' does not exist." >&2
+    exit 1
+fi
+
+if ! [[ "$COUNT" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: COUNT must be a positive integer, got '$COUNT'." >&2
     exit 1
 fi
 
@@ -107,7 +112,10 @@ if [[ -n "$ENDING_VIDEO" ]]; then
         exit 1
     fi
 
-    EFFECTIVE_CLIP_DURATION=$((ENDING_BASE_DURATION + ENDING_DURATION_SECONDS))
+    if [[ "$ENDING_DURATION_SECONDS" -ge "$CLIP_DURATION" ]]; then
+        echo "Error: Ending video must be shorter than the ${CLIP_DURATION}s clip duration." >&2
+        exit 1
+    fi
 fi
 
 # Get all images
@@ -146,12 +154,12 @@ echo "Images source:    $IMAGES_DIR (${#IMAGES[@]} images available)"
 echo "Audio source:     $AUDIO_FILE (${AUDIO_DURATION}s duration)"
 if [[ -n "$ENDING_VIDEO" ]]; then
     echo "Ending video:     $ENDING_VIDEO_ABS"
-    echo "Clip duration:    ${ENDING_BASE_DURATION}s generated segment + ${ENDING_DURATION_SECONDS}s appended video"
+    echo "Clip duration:    $((CLIP_DURATION - ENDING_DURATION_SECONDS))s generated segment + ${ENDING_DURATION_SECONDS}s appended video"
 else
     echo "Clip duration:    ${CLIP_DURATION}s"
 fi
 echo "Resolution:       ${VIDEO_WIDTH}x${VIDEO_HEIGHT} @ ${VIDEO_FPS}fps"
-echo "Video bitrate:    ${VIDEO_BITRATE} (crf ${VIDEO_CRF}, maxrate ${VIDEO_MAXRATE})"
+echo "Export preset:    H.264 High@4.1, CRF ${VIDEO_CRF}, AAC ${AUDIO_BITRATE} stereo @ ${AUDIO_SAMPLE_RATE}Hz"
 echo "======================================"
 echo ""
 
@@ -172,6 +180,8 @@ randomize_value() {
 
     printf '%s' "$value"
 }
+
+FRAME_FILTER="scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease:out_range=tv,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,format=yuv420p"
 
 # Generate videos sequentially
 for ((i = 0; i < COUNT; i++)); do
@@ -275,7 +285,7 @@ for ((i = 0; i < COUNT; i++)); do
     BASE_DURATION="$CLIP_DURATION"
 
     if [[ -n "$ENDING_VIDEO" ]]; then
-        BASE_DURATION="$ENDING_BASE_DURATION"
+        BASE_DURATION=$((CLIP_DURATION - ENDING_DURATION_SECONDS))
     fi
 
     if [[ -n "$ENDING_VIDEO" ]]; then
@@ -285,10 +295,9 @@ for ((i = 0; i < COUNT; i++)); do
 
         ffmpeg -hide_banner -loglevel error \
             -loop 1 -i "$IMAGE" \
-            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
-            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease:out_range=tv,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,format=yuv420p" \
+            -c:v libx264 -preset "$VIDEO_PRESET" -crf "$VIDEO_CRF" -profile:v high -level:v 4.1 \
+            -vf "${FILTER_STRING},${FRAME_FILTER}" \
             -r "$VIDEO_FPS" \
-            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
             -an \
             -t "$BASE_DURATION" \
             -y "$TEMP_BASE_VIDEO"
@@ -296,10 +305,10 @@ for ((i = 0; i < COUNT; i++)); do
         ffmpeg -hide_banner -loglevel error \
             -i "$TEMP_BASE_VIDEO" \
             -i "$ENDING_VIDEO_ABS" \
-            -filter_complex "[0:v:0]fps=${VIDEO_FPS},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p[v0];[1:v:0]fps=${VIDEO_FPS},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=increase:out_range=tv,crop=${VIDEO_WIDTH}:${VIDEO_HEIGHT},setsar=1,format=yuv420p[v1];[v0][v1]concat=n=2:v=1:a=0[v]" \
+            -filter_complex "[0:v:0]fps=${VIDEO_FPS},${FRAME_FILTER}[v0];[1:v:0]fps=${VIDEO_FPS},${FRAME_FILTER}[v1];[v0][v1]concat=n=2:v=1:a=0[v]" \
             -map "[v]" \
-            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
-            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
+            -c:v libx264 -preset "$VIDEO_PRESET" -crf "$VIDEO_CRF" -profile:v high -level:v 4.1 \
+            -movflags +faststart \
             -y "$TEMP_CONCAT_VIDEO"
 
         ffmpeg -hide_banner -loglevel error \
@@ -307,8 +316,9 @@ for ((i = 0; i < COUNT; i++)); do
             -i "$TEMP_CONCAT_VIDEO" \
             -map 1:v:0 -map 0:a:0 \
             -c:v copy \
-            -c:a aac -b:a "$AUDIO_BITRATE" \
+            -c:a aac -b:a "$AUDIO_BITRATE" -ac 2 -ar "$AUDIO_SAMPLE_RATE" \
             -shortest \
+            -movflags +faststart \
             -y "$OUTPUT_FILE"
 
         cleanup_current_temp_dir
@@ -316,13 +326,12 @@ for ((i = 0; i < COUNT; i++)); do
         ffmpeg -hide_banner -loglevel error \
             -loop 1 -i "$IMAGE" \
             -ss "$START_FORMATTED" -i "$AUDIO_FILE" \
-            -c:v libx264 -preset veryfast -crf "$VIDEO_CRF" \
-            -vf "${FILTER_STRING},scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease:out_range=tv,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,format=yuv420p" \
+            -c:v libx264 -preset "$VIDEO_PRESET" -crf "$VIDEO_CRF" -profile:v high -level:v 4.1 \
+            -vf "${FILTER_STRING},${FRAME_FILTER}" \
             -r "$VIDEO_FPS" \
-            -b:v "$VIDEO_BITRATE" -maxrate "$VIDEO_MAXRATE" -bufsize "$VIDEO_BUFSIZE" \
-            -c:a aac \
-            -b:a "$AUDIO_BITRATE" \
+            -c:a aac -b:a "$AUDIO_BITRATE" -ac 2 -ar "$AUDIO_SAMPLE_RATE" \
             -t "$BASE_DURATION" \
+            -movflags +faststart \
             -y "$OUTPUT_FILE"
     fi
 
