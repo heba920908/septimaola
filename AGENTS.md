@@ -64,3 +64,6 @@ When data overlaps, prefer this order:
 - Do not invent missing facts; keep unknowns as `TBD`.
 - Keep React and LaTeX content consistent on names, roles, and technical data.
 - Do not perform broad rewrites outside the requested sections.
+- When canonical band-profile facts change, manually synchronize the band-only
+  facts in `automation/src/septima_automation/ai/band_context.py`; exclude
+  member and crew facts from that automation context.

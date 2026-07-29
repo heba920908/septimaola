@@ -136,6 +136,9 @@ Required behavior for update prompts:
   different language.
 - If process guidance changes, synchronize related instruction docs in the same
 	update pass, including `CLAUDE.md` and `AGENTS.md` when present.
+- When canonical band-profile facts change, manually synchronize the band-only
+  facts in `automation/src/septima_automation/ai/band_context.py`; exclude
+  member and crew facts from that automation context.
 
 For GitHub Copilot-specific operating notes, also maintain `AGENTS.md`.
 

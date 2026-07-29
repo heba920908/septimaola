@@ -3,3 +3,4 @@
 .claude/skills/.codemie-sync.json
 *.png
 !assets/logo.png
+.codemie/

@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -20,7 +21,7 @@ from .video_downloader import VideoDownloader
 logger = logging.getLogger(__name__)
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="Generate and publish daily social media post for Séptima Ola"
@@ -46,9 +47,14 @@ def parse_args() -> argparse.Namespace:
         help="Enable verbose logging",
     )
     parser.add_argument(
+        "--facebook",
+        action="store_true",
+        help="Enable Facebook publishing (disabled by default)",
+    )
+    parser.add_argument(
         "--skip-facebook",
         action="store_true",
-        help="Skip Facebook publishing",
+        help="Skip Facebook publishing (overrides --facebook and ENABLE_FACEBOOK)",
     )
     parser.add_argument(
         "--skip-instagram",
@@ -92,7 +98,6 @@ async def main() -> int:
         provider_name = args.provider or None  # factory reads AI_PROVIDER env if None
         if args.verbose:
             from .config import AI_PROVIDER_DEFAULT
-            import os
 
             resolved = args.provider or os.getenv("AI_PROVIDER", AI_PROVIDER_DEFAULT)
             logger.debug(f"Generating message via '{resolved}'...")
@@ -142,9 +147,25 @@ async def main() -> int:
                 )
 
         tasks = []
-        if not args.skip_facebook:
+        if args.skip_facebook and args.facebook:
+            logger.warning(
+                "Both --facebook and --skip-facebook were provided. "
+                "Facebook publishing will remain disabled."
+            )
+
+        facebook_enabled = (
+            args.facebook
+            or os.getenv("ENABLE_FACEBOOK", "false").lower() in ("1", "true", "yes")
+        ) and not args.skip_facebook
+
+        if facebook_enabled:
             tasks.append(publish_facebook())
             logger.info("Publishing to Facebook...")
+        else:
+            logger.info(
+                "Facebook publishing is disabled by default. "
+                "Use --facebook or ENABLE_FACEBOOK=1 to enable."
+            )
         if not args.skip_instagram:
             tasks.append(publish_instagram())
             logger.info("Publishing to Instagram...")

@@ -37,6 +37,35 @@ class TestSelectors:
             select_random_video([])
 
 
+class TestDailyPostCLI:
+    """Test CLI behavior for daily-post."""
+
+    def test_parse_args_default_disables_facebook(self):
+        from septima_automation.daily_post import parse_args
+
+        args = parse_args([])
+
+        assert not args.facebook
+        assert not args.skip_facebook
+
+    def test_parse_args_facebook_flag_enables_publishing(self):
+        from septima_automation.daily_post import parse_args
+
+        args = parse_args(["--facebook"])
+
+        assert args.facebook
+        assert not args.skip_facebook
+
+    def test_parse_args_enabled_by_env_var(self, monkeypatch):
+        from septima_automation.daily_post import parse_args
+
+        monkeypatch.delenv("ENABLE_FACEBOOK", raising=False)
+        args = parse_args([])
+
+        assert not args.facebook
+        assert not args.skip_facebook
+
+
 class TestVideoDownload:
     """Test video downloader (requires network access)."""
 

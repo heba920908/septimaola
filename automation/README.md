@@ -34,6 +34,8 @@ uv run daily-post
 uv run src/septima_automation/daily_post.py
 ```
 
+> Facebook publishing is disabled by default. Use `--facebook` or set `ENABLE_FACEBOOK=1` in `.env` to opt in.
+
 ## Credentials Setup
 
 ### Deepseek AI
@@ -169,6 +171,64 @@ uv run daily-post --verbose
 Dry run (generate but don't publish):
 ```bash
 uv run daily-post --dry-run
+```
+
+### Running unit tests
+
+```bash
+uv run pytest tests/ -v
+```
+
+### Running live tests
+
+Live tests call the real Codemie provider and an LLM-as-grader to score
+generated prompt quality (see `docs/decisions/0010-llm-as-grader-prompt-quality.md`).
+They are skipped by default and require `CODEMIE_BASE_URL`, `CODEMIE_TOKEN_URL`,
+`CODEMIE_CLIENT_ID`, and `CODEMIE_CLIENT_SECRET` in `automation/.env`.
+
+Deepseek is not exercised by these live tests — Codemie is the sole live
+provider for prompt-quality checks. The Deepseek and cross-provider tests in
+`tests/test_prompts_live.py` are permanently marked `@pytest.mark.skip` and
+will show as `SKIPPED` (not run) regardless of credentials.
+
+```bash
+# Run from the automation project directory
+cd automation
+
+# Run the whole live suite with verbose output
+uv run pytest tests/test_prompts_live.py --live -v
+
+# Run only the Codemie-related tests
+uv run pytest tests/test_prompts_live.py --live -v -k codemie
+```
+
+`automation/tests/conftest.py` loads `automation/.env` automatically (with
+`override=True`, so it takes precedence even if your shell already exports
+same-named variables such as `CODEMIE_BASE_URL` from an unrelated tool). You
+do not need to `source .env` manually before running `uv run pytest`.
+
+#### Reading test logs
+
+Live-test logging is enabled via `log_cli = true` / `log_cli_level = "INFO"`
+in `pyproject.toml`, so logs stream to the console during the run — no extra
+flags needed. Each test logs:
+
+- The full generated message from Codemie (`Live Codemie generation for ...`)
+- The grader's raw LLM evaluation text (`Codemie grader raw evaluation:`)
+- The parsed grader result — total score, per-criterion scores, pass/fail,
+  and feedback (`Codemie grader result: total=...`)
+
+To capture logs to a file for later review:
+
+```bash
+uv run pytest tests/test_prompts_live.py --live -v 2>&1 | tee live-test-run.log
+```
+
+For more verbose debugging (raw HTTP requests/responses to Codemie), add
+`--log-cli-level=DEBUG`:
+
+```bash
+uv run pytest tests/test_prompts_live.py --live -v --log-cli-level=DEBUG
 ```
 
 ## CI/CD
