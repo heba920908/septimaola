@@ -70,10 +70,11 @@ automation/tests/
 
 | Criterion | Weight | Description |
 |-----------|--------|-------------|
-| Tone Match | 25% | Positive, Mexican Spanish, reggae/jazz vibe |
+| Tone Match | 5% | Positive, Mexican Spanish, reggae/jazz vibe |
 | Length | 20% | 2-3 sentences as specified |
 | Content | 30% | Includes a fun-fact or brief historical element |
-| Emoji Usage | 15% | Appropriate musical emoji present |
+| Grounding | 30% | Includes factual information from "septima ola" if related |
+| Emoji Usage | 5% | Appropriate musical emoji present |
 | Language | 10% | Correct Spanish grammar and vocabulary |
 
 The weights total 100% and are implemented by `SOCIAL_MEDIA_RUBRIC` in

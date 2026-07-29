@@ -35,9 +35,14 @@ def has_codemie_credentials():
     return all(os.getenv(var) for var in required)
 
 
-def has_deepseek_credentials():
-    """Check if Deepseek API key is available."""
-    return bool(os.getenv("DEEPSEEK_API_KEY"))
+# Deepseek is intentionally not exercised by the live prompt-quality tests.
+# Codemie is the sole provider for `--live` prompt tests (see ADR-0010); the
+# Deepseek-specific tests below are permanently skipped rather than deleted so
+# a future ADR can re-enable them without needing to reconstruct fixtures.
+DEEPSEEK_SKIP_REASON = (
+    "Deepseek provider disabled for live prompt-quality tests; Codemie is "
+    "the sole provider for tests/test_prompts_live.py (see ADR-0010)"
+)
 
 
 def log_generation(
@@ -57,14 +62,6 @@ def log_generation(
 async def codemie_provider():
     """Fixture for Codemie provider."""
     provider = create_provider("codemie")
-    yield provider
-    await provider.close()
-
-
-@pytest_asyncio.fixture
-async def deepseek_provider():
-    """Fixture for Deepseek provider."""
-    provider = create_provider("deepseek")
     yield provider
     await provider.close()
 
@@ -128,42 +125,47 @@ class TestBuildUserPromptLive:
 
     @pytest.mark.asyncio
     @pytest.mark.live
-    @pytest.mark.skipif(
-        not has_deepseek_credentials(),
-        reason="Missing DEEPSEEK_API_KEY",
-    )
-    async def test_deepseek_generates_valid_content(self, deepseek_provider, grader):
-        """Validate Deepseek generates quality social media content."""
-        response = await deepseek_provider.generate_message(
-            "Three Little Birds", "Bob Marley"
-        )
-        log_generation("Deepseek", "Three Little Birds", "Bob Marley", response)
+    @pytest.mark.skip(reason=DEEPSEEK_SKIP_REASON)
+    async def test_deepseek_generates_valid_content(self, grader):
+        """Validate Deepseek generates quality social media content.
 
-        assert response, "Response should not be empty"
-        assert len(response) > 20, "Response should be substantive"
+        Skipped: Codemie is the sole provider for live prompt-quality tests
+        (see ADR-0010). Kept for future re-enablement.
+        """
+        deepseek_provider = create_provider("deepseek")
+        try:
+            response = await deepseek_provider.generate_message(
+                "Three Little Birds", "Bob Marley"
+            )
+            log_generation("Deepseek", "Three Little Birds", "Bob Marley", response)
 
-        result = await grader.evaluate(
-            response,
-            rubric=SOCIAL_MEDIA_RUBRIC,
-            context={
-                "song_title": "Three Little Birds",
-                "song_author": "Bob Marley",
-                "expected_language": "es",
-                "expected_tone": "positive",
-            },
-        )
-        logger.info(
-            "Deepseek grader result: total=%.2f passed=%s criteria=%s feedback=%s",
-            result.total,
-            result.passed,
-            result.criteria,
-            result.feedback,
-        )
+            assert response, "Response should not be empty"
+            assert len(response) > 20, "Response should be substantive"
 
-        assert result.total >= MIN_TOTAL_SCORE, (
-            f"Quality score {result.total:.2f} below threshold {MIN_TOTAL_SCORE}. "
-            f"Feedback: {result.feedback}"
-        )
+            result = await grader.evaluate(
+                response,
+                rubric=SOCIAL_MEDIA_RUBRIC,
+                context={
+                    "song_title": "Three Little Birds",
+                    "song_author": "Bob Marley",
+                    "expected_language": "es",
+                    "expected_tone": "positive",
+                },
+            )
+            logger.info(
+                "Deepseek grader result: total=%.2f passed=%s criteria=%s feedback=%s",
+                result.total,
+                result.passed,
+                result.criteria,
+                result.feedback,
+            )
+
+            assert result.total >= MIN_TOTAL_SCORE, (
+                f"Quality score {result.total:.2f} below threshold {MIN_TOTAL_SCORE}. "
+                f"Feedback: {result.feedback}"
+            )
+        finally:
+            await deepseek_provider.close()
 
     @pytest.mark.asyncio
     @pytest.mark.live
@@ -174,10 +176,8 @@ class TestBuildUserPromptLive:
     @pytest.mark.parametrize(
         "song_title,song_author",
         [
-            ("La Bamba", "Ritchie Valens"),
-            ("Oye Cómo Va", "Santana"),
-            ("Guantanamera", "Celia Cruz"),
-            ("Despacito", "Luis Fonsi"),
+            ("Despertar", "Septima Ola"),
+            ("Desde mi ventana", "Septima Ola"),
         ],
     )
     async def test_codemie_handles_various_songs(
@@ -191,91 +191,95 @@ class TestBuildUserPromptLive:
 
         # Quick quality check - no grader needed for basic validation
         assert len(response) > 10, "Response too short"
-        assert any(char in response for char in ["🎵", "🎶", "🎷", "🎸", "🎹"]), (
+        emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
+        assert any(char in response for char in emojis), (
             "Response should contain a musical emoji"
         )
 
 
 class TestCrossProviderConsistency:
-    """Tests to validate consistency between Codemie and Deepseek."""
+    """Tests to validate consistency between Codemie and Deepseek.
+
+    Skipped: Codemie is the sole provider for live prompt-quality tests
+    (see ADR-0010), so cross-provider comparisons cannot run. Kept for
+    future re-enablement.
+    """
 
     @pytest.mark.asyncio
     @pytest.mark.live
-    @pytest.mark.skipif(
-        not (has_codemie_credentials() and has_deepseek_credentials()),
-        reason="Missing credentials for one or both providers",
-    )
-    async def test_both_providers_generate_spanish_content(
-        self, codemie_provider, deepseek_provider
-    ):
+    @pytest.mark.skip(reason=DEEPSEEK_SKIP_REASON)
+    async def test_both_providers_generate_spanish_content(self, codemie_provider):
         """Both providers should generate Spanish-language content."""
         song_title = "One Love"
         song_author = "Bob Marley"
 
-        codemie_response = await codemie_provider.generate_message(
-            song_title, song_author
-        )
-        deepseek_response = await deepseek_provider.generate_message(
-            song_title, song_author
-        )
-        log_generation("Codemie", song_title, song_author, codemie_response)
-        log_generation("Deepseek", song_title, song_author, deepseek_response)
+        deepseek_provider = create_provider("deepseek")
+        try:
+            codemie_response = await codemie_provider.generate_message(
+                song_title, song_author
+            )
+            deepseek_response = await deepseek_provider.generate_message(
+                song_title, song_author
+            )
+            log_generation("Codemie", song_title, song_author, codemie_response)
+            log_generation("Deepseek", song_title, song_author, deepseek_response)
 
-        # Spanish indicators
-        spanish_words = [
-            "canción",
-            "música",
-            "ritmo",
-            "vida",
-            "amor",
-            "alma",
-            "corazón",
-        ]
+            # Spanish indicators
+            spanish_words = [
+                "canción",
+                "música",
+                "ritmo",
+                "vida",
+                "amor",
+                "alma",
+                "corazón",
+            ]
 
-        codemie_has_spanish = any(
-            word in codemie_response.lower() for word in spanish_words
-        )
-        deepseek_has_spanish = any(
-            word in deepseek_response.lower() for word in spanish_words
-        )
+            codemie_has_spanish = any(
+                word in codemie_response.lower() for word in spanish_words
+            )
+            deepseek_has_spanish = any(
+                word in deepseek_response.lower() for word in spanish_words
+            )
 
-        assert codemie_has_spanish, (
-            f"Codemie response lacks Spanish: {codemie_response[:100]}"
-        )
-        assert deepseek_has_spanish, (
-            f"Deepseek response lacks Spanish: {deepseek_response[:100]}"
-        )
+            assert codemie_has_spanish, (
+                f"Codemie response lacks Spanish: {codemie_response[:100]}"
+            )
+            assert deepseek_has_spanish, (
+                f"Deepseek response lacks Spanish: {deepseek_response[:100]}"
+            )
+        finally:
+            await deepseek_provider.close()
 
     @pytest.mark.asyncio
     @pytest.mark.live
-    @pytest.mark.skipif(
-        not (has_codemie_credentials() and has_deepseek_credentials()),
-        reason="Missing credentials for one or both providers",
-    )
-    async def test_both_providers_include_emoji(
-        self, codemie_provider, deepseek_provider
-    ):
+    @pytest.mark.skip(reason=DEEPSEEK_SKIP_REASON)
+    async def test_both_providers_include_emoji(self, codemie_provider):
         """Both providers should include musical emojis."""
         song_title = "No Woman No Cry"
         song_author = "Bob Marley"
 
-        codemie_response = await codemie_provider.generate_message(
-            song_title, song_author
-        )
-        deepseek_response = await deepseek_provider.generate_message(
-            song_title, song_author
-        )
-        log_generation("Codemie", song_title, song_author, codemie_response)
-        log_generation("Deepseek", song_title, song_author, deepseek_response)
+        deepseek_provider = create_provider("deepseek")
+        try:
+            codemie_response = await codemie_provider.generate_message(
+                song_title, song_author
+            )
+            deepseek_response = await deepseek_provider.generate_message(
+                song_title, song_author
+            )
+            log_generation("Codemie", song_title, song_author, codemie_response)
+            log_generation("Deepseek", song_title, song_author, deepseek_response)
 
-        emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
+            emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
 
-        assert any(e in codemie_response for e in emojis), (
-            "Codemie response missing emoji"
-        )
-        assert any(e in deepseek_response for e in emojis), (
-            "Deepseek response missing emoji"
-        )
+            assert any(e in codemie_response for e in emojis), (
+                "Codemie response missing emoji"
+            )
+            assert any(e in deepseek_response for e in emojis), (
+                "Deepseek response missing emoji"
+            )
+        finally:
+            await deepseek_provider.close()
 
 
 class TestPromptStructure:

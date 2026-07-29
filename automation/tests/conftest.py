@@ -7,10 +7,13 @@ import pytest
 from dotenv import load_dotenv
 
 
-# Load environment variables from .env file
+# Load environment variables from .env file.
+# override=True ensures automation/.env is authoritative even when the shell
+# already exports same-named variables (e.g. CODEMIE_BASE_URL) from an
+# unrelated tool such as a coding-agent CLI session.
 env_path = Path(__file__).parent.parent / ".env"
 if env_path.exists():
-    load_dotenv(env_path)
+    load_dotenv(env_path, override=True)
 
 
 # Configure pytest-asyncio mode
