@@ -256,8 +256,7 @@ CLI flags:
 | `AI_PROVIDER` | `ai/factory.py` | Provider selection: `deepseek` (default) or `codemie` |
 | `DEEPSEEK_API_KEY` | `ai/deepseek.py` | Deepseek platform API key |
 | `CODEMIE_BASE_URL` | `ai/codemie.py` | Codemie instance base URL |
-| `CODEMIE_KEYCLOAK_URL` | `ai/codemie.py` | Keycloak base URL for OAuth |
-| `CODEMIE_REALM` | `ai/codemie.py` | Keycloak realm name |
+| `CODEMIE_TOKEN_URL` | `ai/codemie.py` | Keycloak OAuth token endpoint |
 | `CODEMIE_CLIENT_ID` | `ai/codemie.py` | Keycloak OAuth client ID |
 | `CODEMIE_CLIENT_SECRET` | `ai/codemie.py` | Keycloak OAuth client secret |
 | `CODEMIE_MODEL` | `ai/codemie.py` | Model name (default: `gpt-4o`) |

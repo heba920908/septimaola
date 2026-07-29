@@ -4,6 +4,7 @@ import logging
 import re
 from typing import Any, Dict
 
+from septima_automation.ai.codemie import CodemieClient
 from septima_automation.ai.factory import create_provider
 
 from .base import GradingRubric, GradingResult, LLMGrader
@@ -32,27 +33,21 @@ class CodemieGrader(LLMGrader):
     ) -> GradingResult:
         """Evaluate content using Codemie LLM."""
         provider = await self._get_provider()
+        if not isinstance(provider, CodemieClient):
+            raise TypeError("CodemieGrader requires a CodemieClient provider")
 
         grading_prompt = self._build_grading_prompt(content, rubric, context)
 
-        # Call Codemie for evaluation - use a simple system prompt
-        from septima_automation.ai.prompts import SYSTEM_PROMPT
-
-        response = await provider._client.chat.completions.create(
-            model=getattr(provider, "model", "gpt-4o"),
-            messages=[
+        evaluation_text = await provider.generate_chat_completion(
+            [
                 {
                     "role": "system",
                     "content": "You are a quality assessment expert. Evaluate content objectively.",
                 },
                 {"role": "user", "content": grading_prompt},
-            ],
-            temperature=0.3,
-            max_tokens=300,
-            stream=False,
+            ]
         )
-
-        evaluation_text = response.choices[0].message.content or ""
+        logger.info("Codemie grader raw evaluation:\n%s", evaluation_text)
 
         return self._parse_evaluation(evaluation_text, rubric)
 
@@ -72,30 +67,25 @@ class CodemieGrader(LLMGrader):
             for pattern in patterns:
                 match = re.search(pattern, evaluation_text, re.IGNORECASE)
                 if match:
-                    criteria_scores[criterion] = float(match.group(1))
-                    break
+                    score = float(match.group(1))
+                    if rubric.scale_min <= score <= rubric.scale_max:
+                        criteria_scores[criterion] = score
+                        break
             else:
                 # Default to middle score if not found
                 criteria_scores[criterion] = (rubric.scale_min + rubric.scale_max) / 2
                 logger.warning(f"Could not find score for criterion: {criterion}")
 
-        # Extract total score
-        total_match = re.search(
-            r"TOTAL[:\s]+(\d+(?:\.\d+)?)", evaluation_text, re.IGNORECASE
+        total = sum(
+            criteria_scores.get(criterion, 0) * weight
+            for criterion, weight in rubric.criteria.items()
         )
-        if total_match:
-            total = float(total_match.group(1))
-        else:
-            # Calculate weighted total
-            total = sum(
-                criteria_scores.get(c, 0) * w for c, w in rubric.criteria.items()
-            )
 
         # Extract pass/fail
         pass_match = re.search(
             r"PASS[:\s]+(YES|NO|TRUE|FALSE)", evaluation_text, re.IGNORECASE
         )
-        passed = pass_match and pass_match.group(1).upper() in ("YES", "TRUE")
+        passed = bool(pass_match and pass_match.group(1).upper() in ("YES", "TRUE"))
 
         # Extract feedback (everything after FEEDBACK: or the whole text if no markers)
         feedback_match = re.search(

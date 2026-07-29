@@ -28,8 +28,10 @@ class TestCreateProvider:
         """AI_PROVIDER=codemie env var → CodemieClient."""
         monkeypatch.setenv("AI_PROVIDER", "codemie")
         monkeypatch.setenv("CODEMIE_BASE_URL", "https://codemie.example.com")
-        monkeypatch.setenv("CODEMIE_KEYCLOAK_URL", "https://keycloak.example.com")
-        monkeypatch.setenv("CODEMIE_REALM", "test-realm")
+        monkeypatch.setenv(
+            "CODEMIE_TOKEN_URL",
+            "https://keycloak.example.com/realms/test-realm/protocol/openid-connect/token",
+        )
         monkeypatch.setenv("CODEMIE_CLIENT_ID", "test-client")
         monkeypatch.setenv("CODEMIE_CLIENT_SECRET", "test-secret")
         provider = create_provider()
@@ -82,8 +84,7 @@ class TestCodemieClientConstructor:
 
     _FULL_CREDS = {
         "base_url": "https://codemie.example.com",
-        "keycloak_url": "https://keycloak.example.com",
-        "realm": "test-realm",
+        "token_url": "https://keycloak.example.com/realms/test-realm/protocol/openid-connect/token",
         "client_id": "test-client",
         "client_secret": "test-secret",
     }
@@ -91,8 +92,7 @@ class TestCodemieClientConstructor:
     def _clear_codemie_env(self, monkeypatch):
         for var in [
             "CODEMIE_BASE_URL",
-            "CODEMIE_KEYCLOAK_URL",
-            "CODEMIE_REALM",
+            "CODEMIE_TOKEN_URL",
             "CODEMIE_CLIENT_ID",
             "CODEMIE_CLIENT_SECRET",
         ]:
@@ -117,14 +117,19 @@ class TestCodemieClientConstructor:
         self._clear_codemie_env(monkeypatch)
         client = CodemieClient(**self._FULL_CREDS)
         assert client.base_url == "https://codemie.example.com"
-        assert client.realm == "test-realm"
+        assert (
+            client.token_url
+            == "https://keycloak.example.com/realms/test-realm/protocol/openid-connect/token"
+        )
 
     def test_trailing_slash_stripped_from_base_url(self, monkeypatch):
-        """Trailing slash is removed from base_url and keycloak_url."""
+        """Trailing slash is removed from base_url and token_url."""
         self._clear_codemie_env(monkeypatch)
         creds = dict(self._FULL_CREDS)
         creds["base_url"] = "https://codemie.example.com/"
-        creds["keycloak_url"] = "https://keycloak.example.com/"
+        creds["token_url"] = (
+            "https://keycloak.example.com/realms/test-realm/protocol/openid-connect/token/"
+        )
         client = CodemieClient(**creds)
         assert not client.base_url.endswith("/")
-        assert not client.keycloak_url.endswith("/")
+        assert not client.token_url.endswith("/")

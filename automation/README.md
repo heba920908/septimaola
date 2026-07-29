@@ -171,6 +171,19 @@ Dry run (generate but don't publish):
 uv run daily-post --dry-run
 ```
 
+### Running unit tests
+
+```bash
+uv run pytest tests/ -v
+```
+
+### Running live tests
+
+```bash
+# Run live tests with Codemie provider
+AI_PROVIDER=codemie uv run pytest tests/test_prompts_live.py --live -v
+```
+
 ## CI/CD
 
 The workflow runs daily at 9 AM UTC (3 AM Mexico City time):

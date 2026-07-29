@@ -75,8 +75,12 @@ class LLMGrader(ABC):
         Subclasses may override for provider-specific optimization.
         """
         criteria_desc = "\n".join(
-            f"- {name} (weight: {weight:.0%}): Score {rubric.scale_min}-{rubric.scale_max}"
+            f"- {name}: score {rubric.scale_min}-{rubric.scale_max} (weight: {weight:.0%})"
             for name, weight in rubric.criteria.items()
+        )
+        score_template = "\n".join(
+            f"{name}: [score {rubric.scale_min}-{rubric.scale_max}]"
+            for name in rubric.criteria
         )
 
         ctx_str = ""
@@ -99,8 +103,8 @@ Evaluation Criteria:
 Provide your evaluation in this exact format:
 
 SCORES:
-{criteria_desc.replace(" (weight: ", ": ").replace(")", "")}
-TOTAL: [weighted sum]
+{score_template}
+TOTAL: [weighted sum from {rubric.scale_min} to {rubric.scale_max}]
 PASS: [YES/NO]
 FEEDBACK: [2-3 sentences explaining scores]
 

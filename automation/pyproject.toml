@@ -20,6 +20,10 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/septima_automation"]
 
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",

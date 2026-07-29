@@ -4,16 +4,18 @@ These tests require live LLM access and are skipped by default.
 Run with: uv run pytest automation/tests/test_prompts_live.py --live -v
 """
 
+import logging
 import os
 import pytest
 import pytest_asyncio
 
 from septima_automation.ai.prompts import build_user_prompt, SYSTEM_PROMPT
 from septima_automation.ai.factory import create_provider
-from septima_automation.ai.base import AIProvider
 
 # Import graders
-from graders import CodemieGrader, SOCIAL_MEDIA_RUBRIC, PROMPT_ENGINEERING_RUBRIC
+from graders import CodemieGrader, SOCIAL_MEDIA_RUBRIC
+
+logger = logging.getLogger(__name__)
 
 
 # Thresholds for quality gates
@@ -26,8 +28,7 @@ def has_codemie_credentials():
     """Check if all required Codemie credentials are available."""
     required = [
         "CODEMIE_BASE_URL",
-        "CODEMIE_KEYCLOAK_URL",
-        "CODEMIE_REALM",
+        "CODEMIE_TOKEN_URL",
         "CODEMIE_CLIENT_ID",
         "CODEMIE_CLIENT_SECRET",
     ]
@@ -37,6 +38,19 @@ def has_codemie_credentials():
 def has_deepseek_credentials():
     """Check if Deepseek API key is available."""
     return bool(os.getenv("DEEPSEEK_API_KEY"))
+
+
+def log_generation(
+    provider: str, song_title: str, song_author: str, response: str
+) -> None:
+    """Log a live provider response for prompt-quality review."""
+    logger.info(
+        "Live %s generation for %r by %r:\n%s",
+        provider,
+        song_title,
+        song_author,
+        response,
+    )
 
 
 @pytest_asyncio.fixture
@@ -81,6 +95,7 @@ class TestBuildUserPromptLive:
         response = await codemie_provider.generate_message(
             "Redemption Song", "Bob Marley"
         )
+        log_generation("Codemie", "Redemption Song", "Bob Marley", response)
 
         assert response, "Response should not be empty"
         assert len(response) > 20, "Response should be substantive"
@@ -95,6 +110,13 @@ class TestBuildUserPromptLive:
                 "expected_language": "es",
                 "expected_tone": "positive",
             },
+        )
+        logger.info(
+            "Codemie grader result: total=%.2f passed=%s criteria=%s feedback=%s",
+            result.total,
+            result.passed,
+            result.criteria,
+            result.feedback,
         )
 
         assert result.total >= MIN_TOTAL_SCORE, (
@@ -115,6 +137,7 @@ class TestBuildUserPromptLive:
         response = await deepseek_provider.generate_message(
             "Three Little Birds", "Bob Marley"
         )
+        log_generation("Deepseek", "Three Little Birds", "Bob Marley", response)
 
         assert response, "Response should not be empty"
         assert len(response) > 20, "Response should be substantive"
@@ -128,6 +151,13 @@ class TestBuildUserPromptLive:
                 "expected_language": "es",
                 "expected_tone": "positive",
             },
+        )
+        logger.info(
+            "Deepseek grader result: total=%.2f passed=%s criteria=%s feedback=%s",
+            result.total,
+            result.passed,
+            result.criteria,
+            result.feedback,
         )
 
         assert result.total >= MIN_TOTAL_SCORE, (
@@ -155,6 +185,7 @@ class TestBuildUserPromptLive:
     ):
         """Test prompt works with different Latin music songs."""
         response = await codemie_provider.generate_message(song_title, song_author)
+        log_generation("Codemie", song_title, song_author, response)
 
         assert response, f"Empty response for {song_title}"
 
@@ -187,6 +218,8 @@ class TestCrossProviderConsistency:
         deepseek_response = await deepseek_provider.generate_message(
             song_title, song_author
         )
+        log_generation("Codemie", song_title, song_author, codemie_response)
+        log_generation("Deepseek", song_title, song_author, deepseek_response)
 
         # Spanish indicators
         spanish_words = [
@@ -232,6 +265,8 @@ class TestCrossProviderConsistency:
         deepseek_response = await deepseek_provider.generate_message(
             song_title, song_author
         )
+        log_generation("Codemie", song_title, song_author, codemie_response)
+        log_generation("Deepseek", song_title, song_author, deepseek_response)
 
         emojis = ["🎵", "🎶", "🎷", "🎸", "🎹", "🎺", "🥁", "🎤", "🎧"]
 
