@@ -27,6 +27,16 @@ VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("4137d9f2-b3f5-495d-86e0-18c7e9d6e823.mp4", "1Rat4SZfIwdFV4R-dRGKM9JvLtVSVYR6j", "Arenga", "Séptima Ola"),
     VideoAsset("271b7364-f996-4bd0-97f5-eeec73e7be69.mp4", "1D2mxr9b8sC8_yH-SwtyXOFeVpU1qNMCE", "Arenga", "Séptima Ola"),
     VideoAsset("5bffb6ce-acd9-4cc4-8c16-a3652dc2fd24.mp4", "1xH06S-0Qu5hiGs2VIU6Yh6meZfu4s18Y", "Arenga", "Séptima Ola"),
+    VideoAsset("9c66d3db-51d3-4761-87fa-845a1128eb99.mp4", "1i0zhs7E8a7tgu6WbmvDJR9XzoBBZUFMp", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("11fa5289-99fc-4018-a690-c02fce2ae635.mp4", "1MH_0HIvAwSpzVMCaOW2nZFWMOaPPeZ7W", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("a8de8fd7-028c-4f6d-a461-fa70736a0875.mp4", "1u4Vy8c_EhVu6vf-UJEPK6d7eLid_MVZc", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("c23f135f-8273-48a1-8be8-48b0b72175ff.mp4", "1zAuqwAm1WCiILjRankCfUZMs7r2LLSDL", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("c54cf82b-3a47-4d0b-bf3b-049093cd5d46.mp4", "1SgwGJkSVDE5Tkye9S7vpZNdf9s0zHux7", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("75475935-5e1d-4e03-8588-48057ee0b2e9.mp4", "1ooVYe0poZ5_ua4VB3S4XuR_3MHJH4BJC", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("e53e874c-287b-4c01-839c-a30fa8456efd.mp4", "1XHb5igPS_Bt5_cTjWRM3__rkwcq7KICv", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("f96b523c-5f4e-4f01-93ef-934c0ea117db.mp4", "1fUNfSEgjx4P-SXez2Ywe4_DZ3DKR7IBv", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("fd8c2c1c-0601-4263-8866-bb370bd2d69c.mp4", "1uPNmHViYyMb4EVX6saYZFfeao_IDlb6N", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("b0903cbf-2d8a-4e2a-a2f5-6b91edc87b44.mp4", "1_KzARQn7l0legZ-SJFSQ6zsP4VhRsFZq", "Desde mi ventana", "Séptima Ola"),
 ]
 
 # Hashtags to include in posts

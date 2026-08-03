@@ -45,6 +45,16 @@ BAND_FACTS: dict[str, str] = {
         "Arenga es un estilo de cancion que combina elementos de ska, ska y rocksteady, "
         "Arenga significa fiesta, algarabia y celebracion, y la banda lo utiliza para transmitir un mensaje de unidad, "
         "movimiento e inspiracion."
+        "Compositor: Levi Sax"
+    ),
+    "cancion_ventana": (
+        "Desde mi ventana es una cancion de rocksteady principalmente romantica "
+        "Parte del coro es \"Cuando no te veo se nortea mi corazon\" \"Cada manana desde mi ventana miro al sol\", "
+        "\"Que ya no te marches no te vayas por favor\" \"Como explicarlo, vida entiendelo\", "
+        "\"Donde estas amor (x4)\", "
+        "No esta dedicada a una pareja en particular, si no a cualquier tipo de relacion, "
+        "Cuando no esta cerca. \n"
+        "Compositor: Alfred YearckLei"
     ),
 }
 
