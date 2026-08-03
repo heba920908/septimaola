@@ -25,10 +25,11 @@ const itemVariants = {
 }
 
 const songs = [
-  { title: 'Desde mi Ventana' },
-  { title: 'Despertar' },
-  { title: 'Arenga' },
-  { title: 'Contraluz' },
+  { title: 'Desde mi Ventana', url: 'https://hypeddit.com/qyhyl7' },
+  { title: 'Despertar', url: 'https://open.spotify.com/search?q=Septima+Ola' },
+  { title: 'Arenga', url: 'https://open.spotify.com/search?q=Septima+Ola' },
+  { title: 'A Contraluz', url: 'https://open.spotify.com/search?q=Septima+Ola' },
+  { title: 'Acelera', url: 'https://open.spotify.com/search?q=Septima+Ola' },
 ]
 
 export default function Discography() {
@@ -53,7 +54,7 @@ export default function Discography() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.p className="impact-phrase" variants={itemVariants}>
-            «<strong>Cuatro canciones</strong>. Una revolución sonora.»
+            «<strong>Sonidos que despiertan</strong>. Una propuesta para la escena actual.»
           </motion.p>
         </motion.div>
 
@@ -74,7 +75,7 @@ export default function Discography() {
             >
               <h3>{song.title}</h3>
               <a
-                href="https://open.spotify.com/search?q=Septima+Ola"
+                href={song.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="play-btn"

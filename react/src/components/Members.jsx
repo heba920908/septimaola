@@ -26,7 +26,7 @@ const itemVariants = {
 
 const members = [
   { name: 'Alfred YearckLei', role: 'Guitarra · Voz', image: 'alfred', imagePosition: 'top' },
-  { name: 'lemanu', role: 'Batería', image: 'lemanu', imagePosition: 'top' },
+  { name: 'Gil', role: 'Batería', image: 'lemanu', imagePosition: 'top' },
   { name: 'Levi\'Sax', role: 'Saxofón', image: 'levisax', imagePosition: 'top' },
   { name: 'Rodrigo Mera', role: 'Violín', image: 'rodrigo', imagePosition: 'top' },
   { name: 'Sandy Robinsuell', role: 'Teclado · Voz', image: 'sandy', imagePosition: 'center' },

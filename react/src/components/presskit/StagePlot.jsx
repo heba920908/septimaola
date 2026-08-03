@@ -27,11 +27,11 @@ const itemVariants = {
 // Stage position data aligned with SKILL.md canonical placement
 const stagePositions = [
   { id: 'arthur', name: 'Arthur', role: 'Bajo', emoji: '🎸', zone: 'left' },
-  { id: 'sandy', name: 'Sandy', role: 'Voz Principal', emoji: '🎹', zone: 'left' },
+  { id: 'rodrigo', name: 'Rodrigo Mera', role: 'Violín', emoji: '🎻', zone: 'left' },
   { id: 'alfred', name: 'Alfred Herrera', role: 'Guitarra / Voz Principal', emoji: '🎸', zone: 'center-front' },
-  { id: 'lemanu', name: 'lemanu', role: 'Batería', emoji: '🥁', zone: 'rear-center' },
+  { id: 'bateria', name: 'Gil', role: 'Batería', emoji: '🥁', zone: 'rear-center' },
   { id: 'levisax', name: 'Levi\'Sax', role: 'Saxofón', emoji: '🎷', zone: 'right' },
-  { id: 'rodrigo', name: 'Rodrigo Mera', role: 'Violín', emoji: '🎻', zone: 'right' },
+  { id: 'sandy', name: 'Sandy', role: 'Voz Principal', emoji: '🎹', zone: 'right' },
 ]
 
 function StagePerformerCard({ performer }) {
@@ -110,7 +110,7 @@ export default function StagePlot() {
   const stagePlacement = [
     'Lado Izquierdo del Escenario (desde la vista de la audiencia): Arthur (Bajo), Sandy (Teclado/Voz de Apoyo)',
     'Centro Frontal: Alfred Herrera (Guitarra / Voz Principal)',
-    'Parte Trasera Central: lemanu (Batería)',
+    'Parte Trasera Central: Gil (Batería)',
     'Lado Derecho del Escenario: Rodrigo Mera (Violín), Levi\'Sax (Saxofón)'
   ]
 
@@ -118,7 +118,7 @@ export default function StagePlot() {
     {
       mix: 'Mix 1 (Batería)',
       channels: 'Bombo, Caja, Overhead, Referencia de Bajo',
-      users: 'lemanu, Arthur'
+      users: 'Gil, Arthur'
     },
     {
       mix: 'Mix 2 (Primera línea)',
