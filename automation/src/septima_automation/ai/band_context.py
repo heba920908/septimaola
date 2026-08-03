@@ -29,10 +29,9 @@ BAND_FACTS: dict[str, str] = {
         "Coacalco, Valle de Chalco, Ixtapaluca"
     ),
     "historia": (
-        "Septima Ola nacio en noviembre de 2025, debutando en el FARO de "
-        'Indios Verdes bajo el nombre "The Soul Groove Collective", con '
-        "canciones originales y covers que hicieron bailar y cantar al "
-        "publico de ese recinto cultural."
+        "Septima Ola nacio en noviembre de 2025, "
+        "Inicialmente estaba compuesta por Levi Sax, Alfred YearckLei, Rodri Mera y otros musicos de la escena local. "
+        "Su origen de ensayos e inspiracion fue en un departamento en \"La Raza\", Distrito Federal. "
     ),
     "mision": (
         "En una epoca donde el mundo parece mas dividido que nunca, "
@@ -45,6 +44,17 @@ BAND_FACTS: dict[str, str] = {
         "Arenga es un estilo de cancion que combina elementos de ska, ska y rocksteady, "
         "Arenga significa fiesta, algarabia y celebracion, y la banda lo utiliza para transmitir un mensaje de unidad, "
         "movimiento e inspiracion."
+        "Compositor: Levi Sax"
+    ),
+    "cancion_ventana": (
+        "Desde mi ventana es una cancion de rocksteady principalmente romantica "
+        "Parte del coro es \"Cuando no te veo se nortea mi corazon\" \"Cada manana desde mi ventana miro al sol\", "
+        "\"Que ya no te marches no te vayas por favor\" \"Como explicarlo, vida entiendelo\", "
+        "\"Donde estas amor (x4)\", "
+        "No esta dedicada a una pareja en particular, si no a cualquier tipo de relacion, "
+        "Cuando no esta cerca. \n"
+        "Compositor: Alfred YearckLei\n"
+        "Discovery Link: https://hypeddit.com/qyhyl7"
     ),
 }
 
