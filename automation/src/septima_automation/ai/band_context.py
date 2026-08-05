@@ -52,9 +52,16 @@ BAND_FACTS: dict[str, str] = {
         "\"Que ya no te marches no te vayas por favor\" \"Como explicarlo, vida entiendelo\", "
         "\"Donde estas amor (x4)\", "
         "No esta dedicada a una pareja en particular, si no a cualquier tipo de relacion, "
-        "Cuando no esta cerca. \n"
-        "Compositor: Alfred YearckLei\n"
+        "Cuando no esta cerca, "
+        "Compositor: Alfred YearckLei, "
         "Discovery Link: https://hypeddit.com/qyhyl7"
+    ),
+    "cancion_contraluz": (
+        "A Contraluz es una cancion de ska con combinaciones barrocas de musica clasica y jazz, "
+        "Parte del coro es \"A contraluz el dolor se volvio de color\", "
+        "\"Y lo que ayer dolio hoy baila con valor\", "
+        "Esta dedicada a cualquier persona que haya pasado por un momento dificil y que haya encontrado la manera de superarlo, "
+        "Compositor: Rodrigo Mera, "
     ),
 }
 

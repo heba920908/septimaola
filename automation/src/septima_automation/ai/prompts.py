@@ -35,7 +35,7 @@ con **vibra positiva y motivacional** para personas que disfrutan **reggae y jaz
 e incluir **un dato histórico breve** relacionado con música/cultura/historia.
 
 ## Steps to Follow
-1. Define el objetivo del post (inspirar, conectar, invitar a comentar/guardar/compartir) y el tono (positivo, cálido, mexicano). \
+1. El objetivo del post es inspirar, conectar, invitar a comentar/guardar/compartir y con tono positivo, cálido y mexicano. \
    Basado en la canción y el artista proporcionados, genera un **mensaje breve** (2-3 oraciones, un solo párrafo) que cumpla con el objetivo y tono definidos.
 2. En este paso, decide qué tipo de **mensaje aleatorio** quieres enviar y elige **solo uno** entre:
    - "un dato historico"
@@ -103,5 +103,4 @@ def build_user_prompt(song_title: str, song_author: str) -> str:
         f"Requisitos:\n"
         f"- El mensaje debe ser inspirador, positivo y relacionado con la música\n"
         f"- Longitud: 2-3 oraciones en un solo párrafo\n"
-        f"- Incluye un fun-fact o un dato histórico o algun dato de septima ola\n"
     )
