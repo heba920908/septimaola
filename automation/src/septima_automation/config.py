@@ -19,12 +19,16 @@ class VideoAsset:
         return f"https://drive.google.com/uc?export=download&id={self.drive_id}"
 
 
-# Video assets - direct video files from Google Drive
-VIDEOS_CONFIG: List[VideoAsset] = [
+""" Video Assets that we can use for social media posts.
     VideoAsset("ed495a08-f3c1-4c42-9ae7-f32d03285a35.mp4", "1pl46qy4QX6BMJ6LaQUZPVVEk1Xm2KYPF", "Arenga", "Séptima Ola"),
     VideoAsset("dad8bce7-e22c-4777-9d28-0e2e5913d121.mp4", "1-pb5rOKj20vzI9zMRvBa4E0gzufD_Ulg", "Arenga", "Séptima Ola"),
     VideoAsset("31d1f8bd-49e9-49de-b964-1166fc6fec98.mp4", "1dXs7QKt2FjRDzKwOBXpuEvYuv5HdAZpd", "Arenga", "Séptima Ola"),
     VideoAsset("4137d9f2-b3f5-495d-86e0-18c7e9d6e823.mp4", "1Rat4SZfIwdFV4R-dRGKM9JvLtVSVYR6j", "Arenga", "Séptima Ola"),
+"""
+
+
+# Video assets - direct video files from Google Drive
+VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("271b7364-f996-4bd0-97f5-eeec73e7be69.mp4", "1D2mxr9b8sC8_yH-SwtyXOFeVpU1qNMCE", "Arenga", "Séptima Ola"),
     VideoAsset("5bffb6ce-acd9-4cc4-8c16-a3652dc2fd24.mp4", "1xH06S-0Qu5hiGs2VIU6Yh6meZfu4s18Y", "Arenga", "Séptima Ola"),
     VideoAsset("9c66d3db-51d3-4761-87fa-845a1128eb99.mp4", "1i0zhs7E8a7tgu6WbmvDJR9XzoBBZUFMp", "Desde mi ventana", "Séptima Ola"),
@@ -37,6 +41,15 @@ VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("f96b523c-5f4e-4f01-93ef-934c0ea117db.mp4", "1fUNfSEgjx4P-SXez2Ywe4_DZ3DKR7IBv", "Desde mi ventana", "Séptima Ola"),
     VideoAsset("fd8c2c1c-0601-4263-8866-bb370bd2d69c.mp4", "1uPNmHViYyMb4EVX6saYZFfeao_IDlb6N", "Desde mi ventana", "Séptima Ola"),
     VideoAsset("b0903cbf-2d8a-4e2a-a2f5-6b91edc87b44.mp4", "1_KzARQn7l0legZ-SJFSQ6zsP4VhRsFZq", "Desde mi ventana", "Séptima Ola"),
+    VideoAsset("1JP131kFcU9_6v6mIZlz3ETWKPgznQGnN.mp4", "1JP131kFcU9_6v6mIZlz3ETWKPgznQGnN", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1_23aN2bBMm_WdOwtTo-YH9h0ts0RXqaY.mp4", "1_23aN2bBMm_WdOwtTo-YH9h0ts0RXqaY", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1-iOTbczTfUoeSgDNgLCxzE3o06yURJn9.mp4", "1-iOTbczTfUoeSgDNgLCxzE3o06yURJn9", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1Bl8aQO-rYduE7PssDKDmNjvdR1CVQvhY.mp4", "1Bl8aQO-rYduE7PssDKDmNjvdR1CVQvhY", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1WG69nFJwXfRkQbfvboAMdZ6_q7qUn5qh.mp4", "1WG69nFJwXfRkQbfvboAMdZ6_q7qUn5qh", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1PmEB4UOCalKCliEXlE74_kYdHhpKzP1u.mp4", "1PmEB4UOCalKCliEXlE74_kYdHhpKzP1u", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1C8uXhFyevUROUTsTU89tIsAQm0NFLv5b.mp4", "1C8uXhFyevUROUTsTU89tIsAQm0NFLv5b", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1NsVWMEpNAYj0Isp3h4jmbHwdqZskJT7N.mp4", "1NsVWMEpNAYj0Isp3h4jmbHwdqZskJT7N", "A Contraluz", "Séptima Ola"),
+    VideoAsset("18LO3dUpR4J42IrgaX-6BMQhmaJMdof1j.mp4", "18LO3dUpR4J42IrgaX-6BMQhmaJMdof1j", "A Contraluz", "Séptima Ola")
 ]
 
 # Hashtags to include in posts

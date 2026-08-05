@@ -261,29 +261,30 @@ Use the included `generate_videos.sh` script to create multiple short videos fro
 
 **Usage:**
 ```bash
-./generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE] [ENDING_VIDEO]
+.generate_videos.sh [OUTPUT_DIR] [COUNT] [IMAGES_DIR] [AUDIO_FILE] [ENDING_VIDEO]
 ```
 
 **Arguments:**
 - `OUTPUT_DIR` - Directory to save generated videos (default: `./output`)
 - `COUNT` - Number of videos to generate (default: `10`)
-- `IMAGES_DIR` - Directory containing source images (default: `./.images`)
-- `AUDIO_FILE` - Path to long audio file (default: `./audio.mp3`)
-- `ENDING_VIDEO` - Optional .mp4 video appended within the 20s output; its duration is subtracted from the generated segment
+- `IMAGES_DIR` - Directory containing source images (default: `automation/.inputs/images`)
+- `AUDIO_FILE` - Path to long audio file (default: `automation/.inputs/audio/202604_ensayo_acontra_01.mp3`)
+- `ENDING_VIDEO` - Optional .mp4 video appended after the generated slideshow segment; the final output is still trimmed to 20s
 
 **Output quality:**
 
 The script exports TikTok and Instagram Reels-ready MP4s: strict 1080x1920
-(9:16) at 30fps, H.264 High Profile Level 4.1, CRF 20, `yuv420p`, and AAC
-stereo at 44.1kHz/160kbps. MP4 metadata is moved to the beginning of each
+(9:16) at 30fps, H.264 High Profile Level 4.1, CRF 18, `yuv420p`, and AAC
+stereo at 44.1kHz/192kbps. MP4 metadata is moved to the beginning of each
 file for faster streaming. Source images and optional ending videos are scaled
-to fit the vertical frame and padded with black bars when needed, preserving
-the full source while keeping a matching resolution, frame rate, and color
-range for safe concatenation.
+with high-quality Lanczos resizing, centered in the vertical frame, and backed
+by a blurred full-frame version of the same media instead of black padding.
+Image EXIF orientation is normalized before slideshow rendering so horizontal
+and vertical sources keep their intended orientation.
 
 **Examples:**
 ```bash
-# Generate 10 videos using defaults
+# Generate 10 videos using the local automation/.inputs assets
 ./generate_videos.sh
 
 # Generate 20 videos to a custom directory
@@ -293,9 +294,10 @@ range for safe concatenation.
 ./generate_videos.sh ./output 15 ./photos ./music/podcast.mp3
 
 # With final recording
-./generate_videos.sh ~/Downloads/generated 1 ./.inputs \
-    $(pwd)/.inputs/input.mp3 \
-    $(pwd)/.inputs/video_1.mp4
+./generate_videos.sh ~/Downloads/generated 1 \
+    .inputs/images \
+    .inputs/audio/202604_ensayo_acontra_01.mp3 \
+    .inputs/video/video_1.mp4
 ```
 
 **Requirements:**

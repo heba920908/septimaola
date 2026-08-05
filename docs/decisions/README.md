@@ -51,3 +51,4 @@ What are the resulting effects — positive, negative, and neutral?
 | [0008](0008-daily-social-automation.md) | Daily social media automation with uv and Deepseek | Proposed |
 | [0009](0009-privacy-notice-surface.md) | Aviso de Privacidad como superficie informativa independiente | Proposed |
 | [0010](0010-llm-as-grader-prompt-quality.md) | Live LLM-as-grader testing for prompt quality with Codemie | Proposed |
+| [0011](0011-short-video-render-quality-and-ending-append.md) | Short video render quality and ending append | Accepted |
