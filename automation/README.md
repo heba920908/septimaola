@@ -345,6 +345,10 @@ ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
   -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
 ```
 
+### Example video links
+
+* https://quickshare.samsungcloud.com/8Ds5WgannBeZ
+
 ## Audio crop to generate singles
 
 ```bash
