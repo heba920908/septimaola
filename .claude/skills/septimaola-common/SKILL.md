@@ -142,7 +142,13 @@ hospitality, booking/logistics, and downloadable assets.
 | [Levi'Sax](levi_sax.md) | Sax tenor | TBD |
 | [Rodrigo Mera](rodrigo_mera.md) | Violinist and Arranger | TBD |
 | [Sandy Robinsuell](sandy_robinsuell.md) | Keyboardist and Backing Vocalist | TBD |
-| [LeManu](lemanu.md) | Drummer | TBD |
+
+### Former Members and Crew
+
+| Name | Role | Status |
+| --- | --- | --- |
+| [LeManu](lemanu.md) | Drummer | Former (2025--2026) |
+| Rams | Guitarist | Former |
 
 ### Audio Requirements
 
@@ -153,7 +159,7 @@ hospitality, booking/logistics, and downloadable assets.
 - The PA system must be professional-grade. No specific brand is mandatory, but
 	Electro-Voice, Bose, or JBL are recommended.
 - Stage monitoring should include anti-feedback capability.
-- Mixing console: minimum 8 input channels (6-member band), with enough aux
+- Mixing console: minimum 6 input channels (5-member band), with enough aux
 	sends for monitor mixes.
 - System output must reach at least 100 dB SPL.
 - Guitar and bass require either direct boxes (DI) or monitor amplifiers.
@@ -164,15 +170,12 @@ hospitality, booking/logistics, and downloadable assets.
 
 | Channel | Instrument | Mic/DI | Aux | Equipment | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Kick Drum | Dynamic mic | Mix 1 (Drums) | Drum mic stand | Required |
-| 2 | Snare Drum | Dynamic mic | Mix 1 (Drums) | Drum mic stand | Required |
-| 3 | Overhead (Drums) | Condenser mic | Mix 1 (Drums) | Boom stand + phantom power | Can be mono if channels are limited |
-| 4 | Bass | DI (preferred) or amp mic | Mix 1 / Mix 2 | Active DI box or bass amp | DI or monitor amplifier required |
-| 5 | Guitar | DI or amp mic | Mix 2 (Frontline) | DI box or guitar amp | DI or monitor amplifier required |
-| 6 | Keyboard L | DI | Mix 2 / Mix 3 | Active DI box | If needed, can be summed to mono |
-| 7 | Keyboard R / Backing Vocal | DI or vocal dynamic mic | Mix 2 / Mix 3 | DI box or vocal mic + stand | Use as keyboard R when stereo is available |
-| 8 | Violin | DI | Mix 2 (Frontline) | Active DI box | DI required |
-| 9 | Sax | DI or clip mic | Mix 2 (Frontline) | DI box or sax mic + compressor | Compression required |
+| 1 | Bass | DI (preferred) or amp mic | Mix 1 / Mix 2 | Active DI box or bass amp | DI or monitor amplifier required |
+| 2 | Guitar | DI or amp mic | Mix 1 | DI box or guitar amp | DI or monitor amplifier required |
+| 3 | Keyboard L | DI | Mix 1 / Mix 2 | Active DI box | If needed, can be summed to mono |
+| 4 | Keyboard R / Backing Vocal | DI or vocal dynamic mic | Mix 1 / Mix 2 | DI box or vocal mic + stand | Use as keyboard R when stereo is available |
+| 5 | Violin | DI | Mix 1 | Active DI box | DI required |
+| 6 | Sax | DI or clip mic | Mix 1 | DI box or sax mic + compressor | Compression required |
 
 ### Stage Plot
 
@@ -181,40 +184,33 @@ hospitality, booking/logistics, and downloadable assets.
 - Audience is in front of the stage.
 - FOH position should be centered at approximately 20 m from the stage front
 	and around 1 m height.
-- Drum kit remains rear-center as timing anchor.
 
 #### Preferred On-Stage Placement
 
 - Stage Left (from audience view): Arthur (Bass), Sandy (Keyboard/Backing Vocal)
-- Center Front: Alfred Herrera (Guitar / Lead Vocal)
-- Rear Center: lemanu (Drums)
+- Center: Alfred Herrera (Guitar / Lead Vocal)
 - Stage Right: Rodrigo Mera (Violin), Levi'Sax (Sax)
 
 #### Monitor Mix Layout
 
-- Mix 1 (Drums): Kick, Snare, Overhead, Bass reference
-	- Primary users: lemanu, Arthur
-- Mix 2 (Frontline): Bass, Guitar, Violin, Sax, selective keys/vocal as needed
-	- Primary users: Alfred, Rodrigo, Levi'Sax, Sandy
-- Mix 3 (Keys/Vocal reference): Keyboard and backing vocal priority
+- Mix 1 (Frontline): Bass, Guitar, Violin, Sax, selective keys/vocal as needed
+	- Primary users: Alfred, Rodrigo, Levi'Sax, Arthur, Sandy
+- Mix 2 (Keys/Vocal reference): Keyboard and backing vocal priority
 	- Primary user: Sandy
 
 #### Input-to-Position Mapping (Reference)
 
-- Ch 1 Kick Drum -> Rear Center (Drums) -> Mix 1
-- Ch 2 Snare Drum -> Rear Center (Drums) -> Mix 1
-- Ch 3 Overhead -> Rear Center (Drums) -> Mix 1
-- Ch 4 Bass -> Stage Left -> Mix 1 / Mix 2
-- Ch 5 Guitar -> Center Front -> Mix 2
-- Ch 6 Keyboard L -> Stage Left -> Mix 2 / Mix 3
-- Ch 7 Keyboard R or Backing Vocal -> Stage Left -> Mix 2 / Mix 3
-- Ch 8 Violin -> Stage Right -> Mix 2
-- Ch 9 Sax -> Stage Right -> Mix 2 (compression required)
+- Ch 1 Bass -> Stage Left -> Mix 1 / Mix 2
+- Ch 2 Guitar -> Center -> Mix 1
+- Ch 3 Keyboard L -> Stage Left -> Mix 1 / Mix 2
+- Ch 4 Keyboard R or Backing Vocal -> Stage Left -> Mix 1 / Mix 2
+- Ch 5 Violin -> Stage Right -> Mix 1
+- Ch 6 Sax -> Stage Right -> Mix 1 (compression required)
 
 #### Technical Notes
 
-- Minimum stage console capacity: 8 channels with enough aux sends for monitor
-	distribution; 9 channels preferred to keep all listed inputs discrete.
+- Minimum stage console capacity: 6 channels with enough aux sends for 2 monitor
+	mixes.
 - Use active DI for Bass, Keys, Violin, and Sax where possible.
 - Guitar and Bass can use DI or amplifier miking based on venue inventory.
 - Monitor system must include anti-feedback control.
@@ -241,4 +237,25 @@ by architecture decisions under `docs/decisions/`.
 ## Experience
 
 * [agenda.md](agenda.md) — shows and presentations that were given by septima ola and the expertise
+
+## Songs Inventory
+
+Each song in the repertoire has a fact sheet under `7aola/songs/`. Load the
+relevant file when song-specific details (description, lyrics, chords, key,
+tempo, time signature, composer, discovery links) are needed for content
+generation or press-kit updates.
+
+| Song | File | Composer |
+| --- | --- | --- |
+| Arenga | [arenga.md](../../7aola/songs/arenga.md) | Levi Sax |
+| Desde mi ventana | [desde_mi_ventana.md](../../7aola/songs/desde_mi_ventana.md) | Alfred YearckLei |
+| A Contraluz | [a_contraluz.md](../../7aola/songs/a_contraluz.md) | Rodrigo Mera |
+| Acelera | [acelera.md](../../7aola/songs/acelera.md) | Robinsuel |
+| Despertar | [despertar.md](../../7aola/songs/despertar.md) | TBD |
+| TQM | [tqm.md](../../7aola/songs/tqm.md) | Levi Sax |
+
+When the skill is activated for a task that involves songs, load the relevant
+song file(s) alongside the canonical band facts in this skill. Prefer song-file
+data over `band_context.py` snippets when the two overlap, as the song files
+are the authoring surface.
 

@@ -1,4 +1,6 @@
-# LeManu (lemanubeats) - Drummer
+# LeManu (lemanubeats) — Exbaterista / Exintegrante (2025--2026)
+
+> **Miembro fundador de Séptima Ola (noviembre 2025 -- 2026).** Contribuyó con la base rítmica y el groove característico durante la etapa de formación y debut de la banda.
 
 ## Datos Básicos
 

@@ -7,6 +7,9 @@ You can use the image from [../README.md](../README.md) to build the CV, all the
 ```shell
 cd latex/letter_motivos/
 
-podman run --rm -v .:/data latex-build latexmk -pdf -interaction=nonstopmode letter.tex
+# If pdflatex and latexmk are available in your system
+pdflatex -interaction=nonstopmode letter.tex
+
+# If latex it is not available
 podman run --rm -v $(pwd):/data latex-build latexmk -pdf -interaction=nonstopmode letter.tex
 ```

@@ -21,7 +21,7 @@ const FORCE = process.argv.includes('--force')
 const manifest = {
   members: [
     { slug: 'alfred', id: '1NLXEkoOz8CcVXXAFOMoCwttNoPVw7t35' },
-    { slug: 'lemanu', id: '1vZxL4byBgKMExxKbakuZhEgQ2hsFDPVY' },
+    
     { slug: 'levisax', id: '1kh42JDOOif795zfIgig1c3THcWXdvsYq' },
     { slug: 'rodrigo', id: '1EXP5Kh_RfxbQLrNVMUn7-Fygg1LrC7Xw' },
     { slug: 'sandy', id: '1EfbO0_BJL924CbnvjxfwbDaUj6Vo3uhp' },
