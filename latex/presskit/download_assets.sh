@@ -9,9 +9,7 @@ mkdir -p "$OUT_DIR"
 
 declare -A images=(
   [Sandy_Robinsuell]=11URa6v_EjHpjz9s23eAo8siVFfbRcLkc
-  [Itzel_BP]=1NyA4KL3OsFB9m2W4u6JS7qcTJ_5-K3Mq
   [Alfred_Herrera]=1NLXEkoOz8CcVXXAFOMoCwttNoPVw7t35
-  [Lemanu]=1vZxL4byBgKMExxKbakuZhEgQ2hsFDPVY
   [Levi]=1kh42JDOOif795zfIgig1c3THcWXdvsYq
   [Rodrigo_Mera]=1EXP5Kh_RfxbQLrNVMUn7-Fygg1LrC7Xw
   [Arthur_Mono]=10nWFvuwRtm_hR9LMtT5SmwRO5NCWey30
@@ -48,4 +46,32 @@ for name in "${!images[@]}"; do
   fi
 done
 
-echo "Done. Downloaded images are in $OUT_DIR/"
+shared_zip_id="1hYChucBrjdjkYjl1iyFMZohzh4mSEXAC"
+shared_zip="$OUT_DIR/septimaola_shared_assets.zip"
+
+echo "Downloading shared ZIP bundle ($shared_zip_id) -> $shared_zip"
+COOKIE_JAR=$(mktemp)
+CONFIRM_PAGE=$(curl -s -L -c "$COOKIE_JAR" "https://drive.google.com/uc?export=download&id=$shared_zip_id")
+CONFIRM_TOKEN=$(printf '%s\n' "$CONFIRM_PAGE" | grep -o 'name="confirm" value="[^"]*"' | sed 's/.*value="\([^"]*\)"/\1/' | head -n 1)
+CONFIRM_UUID=$(printf '%s\n' "$CONFIRM_PAGE" | grep -o 'name="uuid" value="[^"]*"' | sed 's/.*value="\([^"]*\)"/\1/' | head -n 1)
+
+if [ -z "$CONFIRM_TOKEN" ]; then
+  curl --fail -L -o "$shared_zip" "https://drive.google.com/uc?export=download&id=$shared_zip_id"
+else
+  DRIVE_DOWNLOAD_URL="https://drive.usercontent.google.com/download?id=$shared_zip_id&export=download&confirm=$CONFIRM_TOKEN"
+  if [ -n "$CONFIRM_UUID" ]; then
+    DRIVE_DOWNLOAD_URL="$DRIVE_DOWNLOAD_URL&uuid=$CONFIRM_UUID"
+  fi
+  curl --fail -L -b "$COOKIE_JAR" -o "$shared_zip" "$DRIVE_DOWNLOAD_URL"
+fi
+rm -f "$COOKIE_JAR"
+
+if file --mime-type "$shared_zip" | grep -qE 'application/(zip|x-zip)|application/octet-stream'; then
+  unzip -o "$shared_zip" -d "$OUT_DIR"
+  echo "Success: extracted $shared_zip into $OUT_DIR/"
+  mv -v $OUT_DIR/7aola/* "$OUT_DIR/"
+else
+  echo "ERROR: failed to download a valid ZIP archive for ID '$shared_zip_id'" >&2
+fi
+
+echo "Done. Downloaded assets are in $OUT_DIR/"

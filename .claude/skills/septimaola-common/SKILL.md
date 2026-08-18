@@ -238,3 +238,7 @@ by architecture decisions under `docs/decisions/`.
 
 `TBD` — downloadable assets (PDF rider, stage plot, hi-res photos).
 
+## Experience
+
+* [agenda.md](agenda.md) — shows and presentations that were given by septima ola and the expertise
+
