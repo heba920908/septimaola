@@ -7,6 +7,8 @@ Download the assets from Google Drive: [Latex Assets](https://drive.google.com/f
 ```shell
 cd latex/
 podman build -t latex-build .
+
+# Either the presskit
 podman run --rm -v $(pwd):/data latex-build latexmk -pdf -interaction=nonstopmode slides.tex
 # in fedora
 podman run --rm -it --user root:root -v .:/data:z latex-build latexmk -pdf -interaction=nonstopmode slides.tex
