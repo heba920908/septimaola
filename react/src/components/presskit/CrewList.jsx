@@ -27,13 +27,13 @@ const itemVariants = {
 export default function CrewList() {
   const crewMembers = [
     { name: 'Alfred Herrera', role: 'Guitarra / stage manager' },
-    { name: 'Sandy Robinsuell', role: 'Vocalista / stage manager' },
-    { name: 'Levi\'Sax', role: 'Sax tenor / stage manager' },
-    { name: 'Rodrigo Mera', role: 'Violinista y Arreglista / stage manager' },
-    { name: 'Le Manu', role: 'Batería / stage manager' },
-    { name: 'Arturo Hernandez', role: 'Bajo electrico / stage manager' },
-    { name: 'Itzel Calzada', role: 'Staff Tecnico / Fotografia' },
-    { name: 'Mirna Mera', role: 'Staff Tecnico / Fotografia' },
+    { name: 'Arthur', role: 'Bajo eléctrico / stage manager' },
+    { name: 'Gil', role: 'Batería' },
+    { name: 'Levi\'Sax', role: 'Sax tenor' },
+    { name: 'Rodrigo Mera', role: 'Violinista y Arreglista' },
+    { name: 'Sandy Robinsuell', role: 'Tecladista y vocalista corista' },
+    { name: 'Itzel Calzada', role: 'Ingeniera de sonido' },
+    { name: 'Mirna Mera', role: 'Fotógrafa' },
   ]
 
   return (

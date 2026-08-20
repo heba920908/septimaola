@@ -1,9 +1,8 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{letter}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
-\usepackage{graphicx}
+\usepackage[spanish]{babel}
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -12,25 +11,35 @@
 \definecolor{darkblue}{RGB}{0,51,102}
 \hypersetup{colorlinks=true, linkcolor=darkblue, urlcolor=darkblue}
 
+% ---------------------------------------------------------------------
+% Remitente (membrete)
+% ---------------------------------------------------------------------
+\address{
+  {\LARGE\bfseries Septima Ola}\\[4pt]
+  {\large Reggae \,·\, Ska \,·\, Rocksteady \,·\, Jazz}\\[4pt]
+  Ciudad de México\\[2pt]
+  \href{mailto:septimaolaoficial@gmail.com}{septimaolaoficial@gmail.com}
+}
+
+% ---------------------------------------------------------------------
+% Fecha (sección más importante)
+% ---------------------------------------------------------------------
+\date{\large\bfseries Ciudad de México, a \today}
+
+% ---------------------------------------------------------------------
+% Firma
+% ---------------------------------------------------------------------
+\signature{
+  Septima Ola\\[2pt]
+  \href{mailto:septimaolaoficial@gmail.com}{septimaolaoficial@gmail.com}\\[2pt]
+  Ciudad de México
+}
+
 \begin{document}
 
-\begin{center}
-  {\LARGE \textbf{Septima Ola}}\\[4pt]
-  {\large Reggae \,·\, Ska \,·\, Rocksteady \,·\, Jazz}\\[4pt]
-  Ciudad de México\\[4pt]
-  \href{mailto:septimaolaoficial@gmail.com}{septimaolaoficial@gmail.com}
-\end{center}
+\begin{letter}{A quien corresponda:}
 
-\vspace{12pt}
-
-\hrule
-\vspace{18pt}
-
-\bigskip
-
-A quien corresponda:
-
-\bigskip
+\opening{}
 
 Por medio de la presente, Septima Ola manifiesta su interés en formar parte de la
 programación de su festival. Creemos que nuestra propuesta musical puede aportar una
@@ -57,14 +66,8 @@ Agradecemos de antemano la atención prestada y quedamos a su disposición para
 proporcionar cualquier información adicional, dossier de prensa o muestra de nuestro
 trabajo.
 
-\bigskip
+\closing{Atentamente,}
 
-Atentamente,
-
-\vspace{24pt}
-
-Septima Ola\\[4pt]
-\href{mailto:septimaolaoficial@gmail.com}{septimaolaoficial@gmail.com}\\[4pt]
-Ciudad de México
+\end{letter}
 
 \end{document}
