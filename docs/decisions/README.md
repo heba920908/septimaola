@@ -52,3 +52,5 @@ What are the resulting effects — positive, negative, and neutral?
 | [0009](0009-privacy-notice-surface.md) | Aviso de Privacidad como superficie informativa independiente | Proposed |
 | [0010](0010-llm-as-grader-prompt-quality.md) | Live LLM-as-grader testing for prompt quality with Codemie | Proposed |
 | [0011](0011-short-video-render-quality-and-ending-append.md) | Short video render quality and ending append | Accepted |
+| [0012](0012-reel-from-video-generation.md) | Reel-from-Video Generation | Accepted |
+| [0013](0013-posted-video-dedup.md) | Posted-video deduplication via GitHub Actions cache | Proposed |

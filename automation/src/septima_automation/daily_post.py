@@ -13,6 +13,7 @@ from .ai.factory import create_provider
 from .config import VIDEOS_CONFIG
 from .logger import setup_logger
 from .message_generator import MessageGenerator
+from .posted_tracker import DEFAULT_STATE_PATH, PostedTracker
 from .selectors import select_random_video
 from .social.facebook import FacebookPublisher
 from .social.instagram import InstagramPublisher
@@ -89,9 +90,22 @@ async def main() -> int:
         return 1
 
     try:
-        # Select random video
+        # Load posted-video history to avoid reposting the same asset
+        state_path = Path(os.getenv("POSTED_STATE_PATH", str(DEFAULT_STATE_PATH)))
+        tracker = PostedTracker.load(state_path)
+        logger.debug(f"Posted history loaded: {len(tracker.posted_drive_ids)} already posted")
+
+        # Select a random video that has not been posted yet
         logger.info("Selecting random video...")
-        video = select_random_video()
+        candidates = tracker.filter_unposted(VIDEOS_CONFIG)
+        if not candidates:
+            logger.warning(
+                "All %d videos have already been posted; resetting history for a new cycle.",
+                len(VIDEOS_CONFIG),
+            )
+            tracker.reset()
+            candidates = list(VIDEOS_CONFIG)
+        video = select_random_video(videos=candidates)
         logger.info(f"  Video: {video.slug} - {video.title} by {video.author}")
 
         # Generate AI message
@@ -188,6 +202,11 @@ async def main() -> int:
         logger.info(f"Title    : {video.title}")
         logger.info(f"Facebook : {results.get('facebook', 'SKIPPED')}")
         logger.info(f"Instagram: {results.get('instagram', 'SKIPPED') or 'Not implemented'}")
+
+        if any(results.values()):
+            tracker.mark_posted(video)
+            tracker.save()
+            logger.info(f"Marked '{video.drive_id}' as posted ({len(tracker.posted_drive_ids)} total)")
 
         return 0 if any(results.values()) else 1
 

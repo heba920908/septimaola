@@ -419,7 +419,20 @@ if [[ "$max_audio_start" -le 0 ]]; then
     max_audio_start=0
 fi
 
-audio_start=$((RANDOM % (max_audio_start + 1)))
+random_audio_start() {
+    local upper_bound="$1"
+    local random_value
+
+    if [[ "$upper_bound" -le 0 ]]; then
+        printf '0'
+        return
+    fi
+
+    random_value=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
+    printf '%d' "$((random_value % (upper_bound + 1)))"
+}
+
+audio_start=$(random_audio_start "$max_audio_start")
 audio_start_formatted=$(printf "%02d:%02d:%02d" $((audio_start / 3600)) $(((audio_start % 3600) / 60)) $((audio_start % 60)))
 
 echo "  Audio start: ${audio_start_formatted} (second $audio_start)"
