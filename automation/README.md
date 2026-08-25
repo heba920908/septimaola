@@ -315,6 +315,45 @@ sudo dnf install -y \
 sudo dnf install -y ffmpeg ffmpeg-libs x264 x264-libs
 ```
 
+### Reel From Video Generation
+
+Use `generate_reel_from_video.sh` to create vertical reels by mixing random sub-sections from a long-form video, applying visual effects and transitions, appending a short ending, and muxing with an audio track.
+
+**Usage:**
+```bash
+./generate_reel_from_video.sh [INPUT_MP3] [MAIN_VIDEO] [ENDING_VIDEO]
+```
+
+**Arguments:**
+- `INPUT_MP3` - Audio track muxed as final soundtrack (default: `automation/.inputs/input.mp3`)
+- `MAIN_VIDEO` - Long-form video source for sub-section extraction (default: `automation/.inputs/tiktok1.mp4`)
+- `ENDING_VIDEO` - Short outro video (~5s) appended to the reel (default: `automation/.inputs/video_1.mp4`)
+
+**Pipeline:**
+1. Normalizes all inputs to 1080x1920 (9:16 vertical)
+2. Extracts 3 random non-overlapping sub-sections from the main video
+3. Applies random color effects (sepia, B&W, cool, warm, vibrant, or pass-through) to sub-videos only
+4. Crossfades sub-videos with transition effects
+5. Appends normalized ending video
+6. Muxes audio with a random start time offset
+
+**Output quality:**
+H.264 High Profile Level 4.1, CRF 18, `slow` preset, 30fps, `yuv420p`. Audio: AAC stereo at 44.1kHz/192kbps.
+
+**Examples:**
+```bash
+# Use default inputs
+./generate_reel_from_video.sh
+
+# Custom inputs
+./generate_reel_from_video.sh ./my_audio.mp3 ./my_video.mp4 ./my_ending.mp4 ./.output_dir/
+```
+
+**Requirements:**
+- `ffmpeg` with x264 encoder
+- `uuidgen`
+- Input audio longer than sub-sections combined with crossfades
+
 ### Manual Video Generation
 
 Generate a short video from an image and audio using ffmpeg directly,
@@ -344,6 +383,10 @@ ffmpeg -i ~/Pictures/7aola/video_1.mp4 \
   -b:v 13000k -maxrate 13000k -bufsize 26000k \
   -c:a aac -ar 44100 ~/Pictures/7aola/video_1_fixed.mp4
 ```
+
+### Example video links
+
+* https://quickshare.samsungcloud.com/8Ds5WgannBeZ
 
 ## Audio crop to generate singles
 

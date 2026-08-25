@@ -1,0 +1,483 @@
+% Presskit CV para la banda "Séptima Ola" — versión en español (México)
+\documentclass[11pt,notheorems,hyperref={pdfauthor={Séptima Ola}}]{beamer}
+
+\input{loadslides.tex} % Reusar el archivo de configuración (tipografías, tema)
+
+% Aumentar jerarquía de tipografía para los slides (títulos + texto general)
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\large}
+\setbeamerfont{normal text}{size=\large}
+\setbeamerfont{itemize/enumerate body}{size=\large}
+\setbeamerfont{itemize/enumerate subbody}{size=\large}
+
+% Global tight spacing for itemize environments
+\let\olditemize\itemize
+\let\oldenditemize\enditemize
+\renewenvironment{itemize}
+  {\vspace{-3pt}\olditemize\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}
+  {\oldenditemize\vspace{-3pt}}
+
+% Metadatos
+\title[CV · Séptima Ola]{SÉPTIMA OLA — CURRÍCULUM DE BANDA}
+\subtitle{Reggae · Ska · Rocksteady — Ciudad de México}
+\author[]{SÉPTIMA OLA}
+\institute{Currículum artístico para medios, promotores y booking — Público: México}
+
+% Add project logo to slides (appears in the title/foot area via beamer \logo)
+\logo{\includegraphics[height=1.6cm]{./assets/logo.png}}
+
+% Load babel (language-specific macros can be set manually for this presskit)
+\usepackage{babel}
+% If babel is present or not, ensure Spanish names for month and part appear.
+% Build a Spanish month name macro and set a localized date string.
+\newcommand{\esmonthname}{%
+  \ifcase\month\or enero\or febrero\or marzo\or abril\or mayo\or junio\or julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre\fi
+}
+\date{\number\day\ de\ \esmonthname\ de\ \number\year}
+% Force the 'part' caption to Spanish
+\renewcommand{\partname}{Parte}
+
+\begin{document}
+
+% Portada
+% Portada (custom, avoid translator placeholders for date)
+{
+\setbeamertemplate{footline}{}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_discografia.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]
+  \vspace{0.4cm}
+  \begin{center}
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\Huge\inserttitle\par}
+    \vspace{0.35cm}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\large\insertsubtitle\par}
+    \vspace{0.5cm}
+    {\large\insertauthor\par}
+    {\small\insertinstitute\par}
+    \vspace{0.4cm}
+    {\small\insertdate\par}
+  \end{center}
+  \vfill
+  \begin{center}
+    \includegraphics[height=0.28\textheight,keepaspectratio]{./assets/logo.png}
+  \end{center}
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+\section{Biografía}
+% Aplicar un fondo dedicado únicamente a este cuadro; se atenúa para mejorar la legibilidad.
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[opacity=0.25,anchor=center] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_quienes_somos.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Biografía / Perfil del proyecto}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.62\textwidth}
+    \small
+    \textbf{Origen}
+    \begin{itemize}
+      \item Nacida en noviembre de 2025 en La Raza, CDMX. Debut en FARO Indios Verdes como «The Soul Groove Collective».
+      \item Fundada por Alfred Herrera (guitarra y voz), Levi'Sax (saxofón) y Rodrigo Mera (violín), sumando músicos de trayectorias diversas.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Propuesta musical}
+    \begin{itemize}
+      \item Reggae, ska y rocksteady con raíces latinas: melodías pegajosas, ritmos bailables, letras de amor, unidad y justicia social.
+      \item Incorpora jazz, trova, salsa y música andina como reflejo de la formación diversa de sus integrantes.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Base operativa}
+    \begin{itemize}
+      \item FARO Indios Verdes, Escuela de Música del Rock a la Palabra y espacios culturales del norte de la CDMX.
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.38\textwidth}
+    \begin{center}
+      \includegraphics[width=\textwidth,keepaspectratio]{./assets/Grupal_02.jpeg}
+      \vspace{0.3cm}
+      \begin{tikzpicture}[baseline={(img.base)}]
+        \node[opacity=0.7] (img)
+          {\includegraphics[width=0.55\textwidth]{./assets/logo.png}};
+      \end{tikzpicture}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Integrantes}
+
+% Sandy Robinsuell
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_female.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Sandy Robinsuell}{Tecladista / Vocalista Corista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Sandy_Robinsuell.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \footnotesize
+    \textbf{Formación musical}
+    \begin{itemize}
+      \item Inició en teclado a los 12 años.
+      \item Coro del FARO Indios Verdes: disciplina vocal y experiencia escénica.
+      \item Egresada de Psicología — aplica su formación humanista a la creación colectiva.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Experiencia destacada}
+    \begin{itemize}
+      \item Creó «Puente Mágico», canal de jam en vivo con colaboraciones internacionales durante la pandemia.
+      \item A los 22 años grabó sus primeras maquetas profesionales.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Aporte en Séptima Ola}
+    \begin{itemize}
+      \item Construye textura, emoción y atmósfera desde el teclado y las armonías vocales.
+      \item Construye textura y atmósfera desde el teclado y armonías vocales.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+
+
+% Levi'Sax
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Levi'Sax}{Saxofonista tenor · Compositor · Arreglista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth,keepaspectratio,angle=90]{./assets/Levi.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \footnotesize
+    \textbf{Formación musical}
+    \begin{itemize}
+      \item Más de 10 años de trayectoria en el saxofón.
+      \item Formación mayormente autodidacta, con entrenamiento en masterclass y cursos en línea.
+      \item Maestros: Tito Hinojosa y Sebastián Clementin.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Experiencia destacada}
+    \begin{itemize}
+      \item Exintegrante de Soul Lions.
+      \item Sala José León Portilla, Museo Gonzalo Carrasco. Docencia en O.S.I.N. Xochipilli.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Aporte en Séptima Ola}
+    \begin{itemize}
+      \item Miembro fundador. Compone, arregla y produce.
+      \item Géneros que lo definen: jazz, ska, trova y folclore.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+% Arthur
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Arthur}{Bajista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.33\textwidth}
+    \vspace{12pt}
+    \begin{center}
+      \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio,angle=90]{./assets/Arthur_Mono.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.67\textwidth}
+    \scriptsize
+    \textbf{Formación musical}
+    \begin{itemize}
+      \item Bajista empírico y autodidacta: aprendió copiando líneas de salsa para adaptarlas al reggae.
+      \item Trayectoria en la escena local desde la salsa al reggae y el ska.
+    \end{itemize}
+    \vspace{1pt}
+    \textbf{Experiencia destacada}
+    \begin{itemize}
+      \item Lideró «Arthur en sus días», proyecto versátil junto con Alfred.
+      \item Participó en «El Croar Norteño» y agrupaciones de música versátil donde consolidó técnica y criterio en el bajo.
+    \end{itemize}
+    \vspace{1pt}
+    \textbf{Aporte en Séptima Ola}
+    \begin{itemize}
+      \item Bajista natural del proyecto por su historia compartida con Alfred.
+      \item Lleva profundidad y bounce de la salsa al reggae/ska: un bajo que camina, respira y empuja.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+% Rodrigo Mera
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Rodrigo Mera}{Violinista · Arreglista · Multiinstrumentista}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.33\textwidth}
+    \vspace{12pt}
+    \begin{center}
+      \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio,angle=90]{./assets/Rodrigo_Mera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.67\textwidth}
+    \footnotesize
+    \textbf{Formación}
+    \begin{itemize}
+      \item Lic. Ejecución Musical (Violín) — Esc. Bellas Artes Nezahualcóyotl.
+      \item Lic. Administración — UAM-Iztapalapa.
+      \item Clínica de cuerdas con Edilberto Vela (concertino, O. Cámara CDMX).
+      \item Multiinstrumentista: batería, guitarra, flauta, zampoña y quena.
+    \end{itemize}
+    \textbf{Experiencia}
+    \begin{itemize}
+      \item Violín I: O. Sinfónica UACM, O. Sinfónica Ixtapaluca.
+      \item Violín II: O. Sinfónica Metropolitana; Concertino: Filarmonicus Naucalpan.
+      \item Escenarios: Los Pinos, Castillo Chapultepec, Biblioteca Vasconcelos.
+      \item Fundador «Violines en Armonía» (pedagogía comunitaria). Docente 11 años.
+    \end{itemize}
+    \textbf{Aporte en Séptima Ola}
+    \begin{itemize}
+      \item Miembro fundador; arreglos de cuerdas para diálogo violín-vientos-guitarras.
+      \item Violinista de academia con alma popular.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+% Alfred YearckLei
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_member_male.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Alfred YearckLei}{Guitarra · Voz líder · Compositor · Fundador}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.33\textwidth}
+    \vspace{12pt}
+    \begin{center}
+      \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio,angle=90]{./assets/Alfred_Herrera.jpg}
+    \end{center}
+  \end{column}
+  \begin{column}{0.70\textwidth}
+    \footnotesize
+    \textbf{Formación}
+    \begin{itemize}
+      \item 18 años de trayectoria desde los 17.
+      \item Guitarra: rock, blues, jazz (Javier Stone, Juan Pérez, Jorge Cárdenas, U. de Gdl.).
+      \item Masterclass Alejandro Marcovich (Caifanes); canto Adrian Dazz, Ada Castro.
+      \item Music business (Javier Paniagua); SAE, Berklee/Coursera.
+    \end{itemize}
+    \textbf{Experiencia}
+    \begin{itemize}
+      \item Proyectos: Ritmo Nacional, Caleidoscopio, Elipsis, Soul Lions.
+      \item Grabaciones: «Desde mi ventana» (Manueloko), «Soul Steady», «Suena el Riddim» (Argentina).
+      \item Maqueta de rap a los 17 (13 tracks, Spotify como Yearck Lei).
+    \end{itemize}
+    \textbf{Aporte en Séptima Ola}
+    \begin{itemize}
+      \item Fundador, letras con mensaje de amor, unidad y justicia social.
+      \item Mezcla reggae/rocksteady con rap, trova y solidez rítmica.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Música / Discografía}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_landing_2.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Discografía / Material disponible}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.55\textwidth}
+    \footnotesize
+    \textbf{Singles lanzados}
+    \begin{itemize}
+      \item «Desde mi ventana» — producido en Manueloko (Valentina Producciones).
+      \item «A Contraluz» — en proceso de lanzamiento.
+      \item «Despertar» — en proceso de lanzamiento.
+      \item «Arenga» — en proceso de lanzamiento.
+      \item «Acelera» — en proceso de lanzamiento.
+      \item «TQM» — en proceso de lanzamiento.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Plataformas}
+    \begin{itemize}
+      \item Spotify, Bandcamp y YouTube: material disponible para streaming.
+      \item Compilado «Suena el Riddim» (Argentina) — colaboración internacional.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Material para prensa}
+    \begin{itemize}
+      \item Masters (WAV), MP3, fotos profesionales y logos disponibles a solicitud.
+      \item Próximos lanzamientos en producción.
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.45\textwidth}
+    \vspace{0.3cm}
+    \begin{center}
+      \includegraphics[width=\textwidth,keepaspectratio]{./assets/Grupal_02.jpeg}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Trayectoria / Experiencia en vivo}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_quienes_somos.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Trayectoria 2026}{Experiencia en vivo — mayo a agosto 2026}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.52\textwidth}
+    \footnotesize
+    \textbf{Resumen cuantitativo}
+    \begin{itemize}
+      \item \textbf{24 eventos confirmados} (14 mayo – 20 agosto 2026), CDMX y zona metropolitana.
+    \end{itemize}
+    \vspace{-2pt}
+    \textbf{Distribución}
+    \begin{itemize}
+      \item Foros (5): Guadalajara 60, Convars, Capitán Gallo, El Rule, Rock Titanio.
+      \item Bares (5): Skatepec, Haraganes Rock, Pulquería Insurgentes, Vacas Verdes, Gato Calavera.
+      \item Cultural/Utopías (6): FARO IV, Utopía Teotongo, Cuauhtlicalli, Insulini, Mixiuhca, Armada Cultural.
+      \item Radio (2): Armada Cultural, Machincuepa; Festival (1): Ska montañas c/ Royal Club.
+      \item Familiares (2) + Junket prensa (1).
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \footnotesize
+    \textbf{Hitos destacados}
+    \begin{itemize}
+      \item \textbf{14 mayo}: Debut — junket y showcase de prensa ante medios.
+      \item \textbf{16 mayo}: Festival con Royal Club.
+      \item \textbf{13 junio}: Lanzamiento «Desde mi ventana» en Capitán Gallo (doble fecha + acústico FARO IV).
+      \item \textbf{5 julio}: Tarde de Reggae y Ska en El Rule.
+      \item \textbf{25 julio}: 5º Festival Mexicano de las Serpientes (Utopía Libertad).
+      \item \textbf{20 agosto}: Live session en Rock Titanio.
+    \end{itemize}
+    \vspace{2pt}
+    \textbf{Colaboradores frecuentes}
+    \begin{itemize}
+      \item Armada Cultural, La Matatena, Colectivo Latino, Royal Club, La Remambaramba, Mayor Skala.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Rider técnico}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_tecnico.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Resumen técnico}{Configuración para 6 músicos}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.48\textwidth}
+    \footnotesize\raggedright
+    \textbf{Canales (9 entradas)}\\[1pt]
+    Ch 1-3: Bombo, Caja, Overhead (batería)\\[1pt]
+    Ch 4-5: Bajo (DI), Guitarra (DI o mic)\\[1pt]
+    Ch 6-7: Teclado L (DI), Teclado R / Vocal corista\\[1pt]
+    Ch 8-9: Violín (DI), Saxofón (DI/mic + compresor)\\[4pt]
+    \textbf{Monitores (3 mezclas)}\\[1pt]
+    Mix 1 (Batería): bombo, caja, overhead\\[1pt]
+    Mix 2 (Primera línea): bajo, guitarra, violín, sax\\[1pt]
+    Mix 3 (Keys/Vocal): teclado y voz corista\\[4pt]
+    \textbf{Backline}\\[1pt]
+    Amp. bajo 500W + caja 4×10 \quad Amp. guitarra 1×12 o 2×12\\[4pt]
+    \textbf{Eléctrico}\\[1pt]
+    5 contactos con tierra física. 25 min montaje + 15 min prueba.
+  \end{column}
+  \begin{column}{0.52\textwidth}
+    \footnotesize\raggedright
+    \textbf{PA y consola}\\[1pt]
+    Sistema profesional (EV, Bose o JBL); medios definidos, bajos profundos\\[1pt]
+    Consola mín. 9 canales, 3 mezclas monitor, salida mín. 100 dB SPL\\[1pt]
+    FOH a 20 m del escenario, altura 1 m aprox.\\[4pt]
+    \textbf{Disposición en escenario}\\[1pt]
+    Izq.: Arthur (bajo), Rodrigo (violín)\\[1pt]
+    Centro: Sandy (teclado/voz corista), Gil (batería)\\[1pt]
+    Der.: Levi (sax), Alfred (guitarra/voz líder)\\[4pt]
+    \textbf{Extras}\\[1pt]
+    Envío auxiliar para efectos delay/dub\\[1pt]
+    Compresor dedicado para saxofón\\[1pt]
+    Iluminación cálida para cambios instrumentales
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\section{Contacto}
+{\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=center,opacity=0.22] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{./assets/bkg_contactos.png}};
+  \end{tikzpicture}}
+\begin{frame}[plain]{Contacto para booking y prensa}
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.50\textwidth}
+    \footnotesize
+    \textbf{Booking y prensa}
+    \begin{itemize}
+      \item \textbf{Correo:} septimaolaoficial@gmail.com
+    \end{itemize}
+    \vspace{4pt}
+    \textbf{Plataformas digitales}
+    \begin{itemize}
+      \item \textbf{Sitio web:} \href{https://septimaola.com}{septimaola.com}
+      \item \textbf{Spotify:} Séptima Ola
+      \item \textbf{Bandcamp:} septimaola
+      \item \textbf{YouTube:} @septimaolaoficial
+    \end{itemize}
+    \vspace{4pt}
+    \textbf{Redes sociales}
+    \begin{itemize}
+      \item \textbf{Instagram:} @septimaolaoficial
+      \item \textbf{Facebook:} @septimaolaoficial
+      \item \textbf{TikTok:} @septimaolaoficial
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \footnotesize
+    \textbf{Base de operaciones}
+    \begin{itemize}
+      \item Ciudad de México, México.
+      \item La Raza, CDMX.
+    \end{itemize}
+    \vspace{8pt}
+    \textbf{Material adicional disponible}
+    \begin{itemize}
+      \item Fotos profesionales en alta resolución.
+      \item Logos (PNG, SVG).
+      \item Masters de audio (WAV, MP3).
+      \item Rider técnico completo (PDF).
+      \item Stage plot descargable.
+    \end{itemize}
+    \vspace{8pt}
+    \centering{\small Para entrevistas, fechas y material adicional, favor de escribir a los contactos indicados.}
+  \end{column}
+\end{columns}
+\end{frame}}
+
+\end{document}

@@ -63,6 +63,22 @@ BAND_FACTS: dict[str, str] = {
         "Esta dedicada a cualquier persona que haya pasado por un momento dificil y que haya encontrado la manera de superarlo, "
         "Compositor: Rodrigo Mera, "
     ),
+    "cancion_despertar": (
+        "Despertar es una cancion sobre comenzar de nuevo y reconocer que algo esta cambiando. "
+        "Su letra expresa determinacion para aprovechar un dia nuevo, dejar atras los fallos del pasado "
+        "y no desperdiciar la oportunidad de avanzar. "
+        "Parte de la letra es \"He vuelto a despertar, se que algo esta cambiando\" y \"Ahora es el momento y no fallare esta vez\". "
+        "Compositor: Alfred Yelaiekr, "
+    ),
+    "cancion_tqm": (
+        "TQM es una cancion de Septima Ola sobre querer mucho a alguien, "
+        "perder el control cuando esa persona esta lejos y preguntarse si encontrara a alguien mas. "
+        "Parte de la letra es \"Yo te quiero mucho y pierdo el control\", "
+        "\"Cuando te tengo lejos se inunda mi corazon\" y \"Que nos espere el destino\". "
+        "Su letra expresa un amor profundo y la ansiedad de la separacion, "
+        "Dedicada a los amores inconclusos e intensos, "
+        "Compositor: Levi Sax."
+    ),
 }
 
 # Compact digest used as a fallback system-message injection when the target

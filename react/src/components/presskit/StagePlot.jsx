@@ -28,10 +28,10 @@ const itemVariants = {
 const stagePositions = [
   { id: 'arthur', name: 'Arthur', role: 'Bajo', emoji: '🎸', zone: 'left' },
   { id: 'rodrigo', name: 'Rodrigo Mera', role: 'Violín', emoji: '🎻', zone: 'left' },
-  { id: 'alfred', name: 'Alfred Herrera', role: 'Guitarra / Voz Principal', emoji: '🎸', zone: 'center-front' },
+  { id: 'sandy', name: 'Sandy', role: 'Teclado / Voz de Apoyo', emoji: '🎹', zone: 'center-front' },
   { id: 'bateria', name: 'Gil', role: 'Batería', emoji: '🥁', zone: 'rear-center' },
   { id: 'levisax', name: 'Levi\'Sax', role: 'Saxofón', emoji: '🎷', zone: 'right' },
-  { id: 'sandy', name: 'Sandy', role: 'Voz Principal', emoji: '🎹', zone: 'right' },
+  { id: 'alfred', name: 'Alfred Herrera', role: 'Guitarra / Voz Principal', emoji: '🎸', zone: 'right' },
 ]
 
 function StagePerformerCard({ performer }) {
@@ -108,22 +108,21 @@ export default function StagePlot() {
   ]
 
   const stagePlacement = [
-    'Lado Izquierdo del Escenario (desde la vista de la audiencia): Arthur (Bajo), Sandy (Teclado/Voz de Apoyo)',
-    'Centro Frontal: Alfred Herrera (Guitarra / Voz Principal)',
-    'Parte Trasera Central: Gil (Batería)',
-    'Lado Derecho del Escenario: Rodrigo Mera (Violín), Levi\'Sax (Saxofón)'
+    'Lado Izquierdo del Escenario (desde la vista de la audiencia): Arthur (Bajo), Rodrigo Mera (Violín)',
+    'Centro: Sandy (Teclado / Voz de Apoyo), Gil (Batería)',
+    'Lado Derecho del Escenario: Levi\'Sax (Saxofón), Alfred Herrera (Guitarra / Voz Principal)'
   ]
 
   const monitorMixLayout = [
     {
       mix: 'Mix 1 (Batería)',
-      channels: 'Bombo, Caja, Overhead, Referencia de Bajo',
-      users: 'Gil, Arthur'
+      channels: 'Bombo, Caja, Overhead; bajo según sea necesario',
+      users: 'Gil'
     },
     {
       mix: 'Mix 2 (Primera línea)',
-      channels: 'Bajo, Guitarra, Violín, Saxofón, teclados/voces selectivas según sea necesario',
-      users: 'Alfred, Rodrigo, Levi\'Sax, Sandy'
+      channels: 'Guitarra, Violín, Saxofón, Bajo y teclados selectivos según sea necesario',
+      users: 'Alfred, Rodrigo, Levi\'Sax, Arthur'
     },
     {
       mix: 'Mix 3 (Referencia de Teclados/Voz)',
@@ -133,19 +132,19 @@ export default function StagePlot() {
   ]
 
   const inputToPositionMapping = [
-    'Canal 1 Bombo -> Parte Trasera Central (Batería) -> Mix 1',
-    'Canal 2 Caja -> Parte Trasera Central (Batería) -> Mix 1',
-    'Canal 3 Overhead -> Parte Trasera Central (Batería) -> Mix 1',
+    'Canal 1 Bombo -> Centro (Batería) -> Mix 1',
+    'Canal 2 Caja -> Centro (Batería) -> Mix 1',
+    'Canal 3 Overhead -> Centro (Batería) -> Mix 1',
     'Canal 4 Bajo -> Lado Izquierdo -> Mix 1 / Mix 2',
-    'Canal 5 Guitarra -> Centro Frontal -> Mix 2',
-    'Canal 6 Teclado Izq -> Lado Izquierdo -> Mix 2 / Mix 3',
-    'Canal 7 Teclado Der o Voz de Apoyo -> Lado Izquierdo -> Mix 2 / Mix 3',
-    'Canal 8 Violín -> Lado Derecho -> Mix 2',
+    'Canal 5 Guitarra -> Lado Derecho -> Mix 2',
+    'Canal 6 Teclado Izq -> Centro -> Mix 2 / Mix 3',
+    'Canal 7 Teclado Der o Voz de Apoyo -> Centro -> Mix 2 / Mix 3',
+    'Canal 8 Violín -> Lado Izquierdo -> Mix 2',
     'Canal 9 Saxofón -> Lado Derecho -> Mix 2 (se requiere compresión)'
   ]
 
   const technicalNotes = [
-    'Capacidad mínima de consola en el escenario: 8 canales con suficientes buses auxiliares para distribución de monitores; se prefieren 9 canales para mantener todas las entradas listadas discretas.',
+    'Capacidad mínima de consola en el escenario: 9 canales con suficientes buses auxiliares para 3 mezclas de monitores.',
     'Usar DI activas para Bajo, Teclados, Violín y Saxofón cuando sea posible.',
     'La guitarra y el bajo pueden usar DI o micrófonos de amplificador basados en el inventario del lugar.',
     'El sistema de monitores debe incluir control anti-retroalimentación.',

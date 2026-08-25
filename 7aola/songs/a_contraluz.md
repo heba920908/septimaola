@@ -9,6 +9,12 @@ _Rodrigo Mera_  -- status: draft
 **Tempo:** 132 BPM  
 **Time Signature:** 4/4
 
+## Descripción
+
+Canción de ska con combinaciones barrocas de música clásica y jazz. Dedicada a cualquier persona que haya pasado por un momento difícil y haya encontrado la manera de superarlo.
+
+**Coro:** «A contraluz el dolor se volvió de color», «Y lo que ayer dolió hoy baila con valor».
+
 ### Chords Used
 - Main chords: **G, D7, Em, Bm, C**
 - Secondary chords: **Em7, Am, Ab7**

@@ -1,0 +1,140 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\babelprovide[import, main]{spanish}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+\newcommand{\sect}[1]{\section*{\normalfont\Large\bfseries\MakeUppercase{#1}}}
+
+\title{Séptima Ola --- Rider Técnico}
+\author{Séptima Ola}
+\date{\today}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries SÉPTIMA OLA}\\[0.4em]
+    {\Large Rider Técnico}\\[0.3em]
+    {\small Requisitos de Audio, Lista de Canales y Plano de Escenario}\\[0.6em]
+    {\small \today}
+\end{center}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\sect{Lista de Miembros}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabularx}{\textwidth}{@{} l X l @{}}
+        \toprule
+        \textbf{Nombre} & \textbf{Rol} & \textbf{ID} \\
+        \midrule
+        Alfred Herrera & Guitarra / Stage Manager & TBD \\
+        Arthur & Bajo eléctrico / Stage Manager & TBD \\
+        Gil & Batería & TBD \\
+        Levi'Sax & Saxofón tenor & TBD \\
+        Rodrigo Mera & Violinista y arreglista & TBD \\
+        Sandy Robinsuell & Tecladista y voz de apoyo & TBD \\
+        Itzel Calzada & Ingeniera de sonido & TBD \\
+        Mirna Mera & Fotógrafa & TBD \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\sect{Requisitos de Audio}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.4em]
+    \item El espectáculo requiere una posición completa de mezcla \emph{Front of House} (FOH) y un área independiente de monitoreo en el escenario.
+    \item El FOH debe colocarse aproximadamente a 20~m del frente del escenario y a unos 1~m de altura para una mezcla precisa de referencia de audiencia.
+    \item El sistema PA debe ser de grado profesional. No hay marca específica obligatoria, pero se recomiendan Electro-Voice, Bose o JBL.
+    \item El monitoreo en el escenario debe incluir capacidad anti-retroalimentación.
+    \item Consola de mezcla: mínimo 9 canales de entrada (banda de 6 miembros), con suficientes buses auxiliares para 3 mezclas de monitores.
+    \item La batería requiere tres canales de entrada: bombo, caja y overhead (mono si los canales son limitados).
+    \item La salida del sistema debe alcanzar al menos 100~dB SPL.
+    \item La guitarra y el bajo requieren cajas directas (DI) o amplificadores de monitor.
+    \item El violín y el saxofón requieren cajas directas (DI).
+    \item El canal del saxofón debe incluir compresión.
+\end{itemize}
+
+\sect{Lista de Canales}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.5}
+    \small
+    \begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X @{}}
+        \toprule
+        \textbf{Canal} & \textbf{Instrumento} & \textbf{Mic/DI} & \textbf{Aux} & \textbf{Equipo} & \textbf{Notas} \\
+        \midrule
+        1 & Bombo & Mic dinámico & Mix 1 (Batería) & Soporte para mic de batería & Requerido \\
+        2 & Caja & Mic dinámico & Mix 1 (Batería) & Soporte para mic de batería & Requerido \\
+        3 & Overhead (Batería) & Mic de condensador & Mix 1 (Batería) & Soporte boom + phantom power & Puede ser mono si los canales son limitados \\
+        4 & Bajo & DI (preferido) o mic de amp & Mix 1 / Mix 2 & Caja DI activa o amp de bajo & Se requiere DI o amplificador de monitor \\
+        5 & Guitarra & DI o mic de amp & Mix 2 (Primera línea) & Caja DI o amp de guitarra & Se requiere DI o amplificador de monitor \\
+        6 & Teclado Izq & DI & Mix 2 / Mix 3 & Caja DI activa & Si es necesario, puede sumarse a mono \\
+        7 & Teclado Der / Voz de Apoyo & DI o mic dinámico vocal & Mix 2 / Mix 3 & Caja DI o mic vocal + soporte & Usar como teclado derecho cuando esté disponible el estéreo \\
+        8 & Violín & DI & Mix 2 (Primera línea) & Caja DI activa & Se requiere DI \\
+        9 & Saxofón & DI o mic de clip & Mix 2 (Primera línea) & Caja DI o mic de sax + compresor & Se requiere compresión \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\sect{Plano de Escenario}
+
+\subsection*{Orientación}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.3em]
+    \item El público se encuentra al frente del escenario.
+    \item La posición FOH debe centrarse a aproximadamente 20~m del frente del escenario y a alrededor de 1~m de altura.
+\end{itemize}
+
+\subsection*{Colocación preferida en el escenario}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.3em]
+    \item Lado izquierdo (vista del público): Arthur (Bajo), Rodrigo Mera (Violín).
+    \item Centro: Sandy (Voz de apoyo), Gil (Batería).
+    \item Lado derecho: Levi'Sax (Saxofón), Alfred Herrera (Guitarra / Voz principal).
+\end{itemize}
+
+\subsection*{Distribución de mezclas de monitores}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.3em]
+    \item \textbf{Mix 1 (Batería):} Bombo, Caja y Overhead; bajo según necesidad. Usuario principal: Gil.
+    \item \textbf{Mix 2 (Primera línea):} Guitarra, Violín, Saxofón, Bajo y teclado según necesidad. Usuarios principales: Alfred, Arthur, Rodrigo Mera y Levi'Sax.
+    \item \textbf{Mix 3 (Teclado / Voz):} Teclado y voz de apoyo. Usuario principal: Sandy.
+\end{itemize}
+
+\subsection*{Notas técnicas}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.3em]
+    \item Capacidad mínima de la consola de escenario: 9 canales con suficientes buses auxiliares para 3 mezclas de monitores.
+    \item Usar DI activa para Bajo, Teclado, Violín y Saxofón cuando sea posible.
+    \item La guitarra y el bajo pueden usar DI o microfonía de amplificador según el inventario del recinto.
+    \item El sistema de monitoreo debe incluir control anti-retroalimentación.
+    \item La salida objetivo del sistema se mantiene en al menos 100~dB SPL.
+\end{itemize}
+
+\sect{Contacto y Coordinación Técnica}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.3em]
+    \item \textbf{Correo electrónico / Booking:} \href{mailto:septimaolaoficial@gmail.com}{septimaolaoficial@gmail.com}
+    \item \textbf{Sitio web oficial:} \href{https://septimaola.com}{https://septimaola.com}
+    \item \textbf{Redes sociales:} @septimaolaoficial (Instagram, Facebook, TikTok, YouTube)
+    \item \textbf{Base de operaciones:} La Raza, Ciudad de México, México.
+\end{itemize}
+
+\end{document}

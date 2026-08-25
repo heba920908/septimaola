@@ -1,0 +1,116 @@
+\renewcommand{\title}{\def \@title}
+\newcommand{\subtitle}{\def \@subtitle}
+\newcommand{\ihe}{\def \@ihe}
+\newcommand{\days}{\def \@days}
+\newcommand{\course}{\def \@course}
+\newcommand{\nivel}{\def \@nivel}
+\newcommand{\teacher}{\def \@teacher}
+\newcommand{\student}{\def \@student}
+\newcommand{\type}{\def \@type}
+
+\newcommand{\printtitle}{\@title}
+\newcommand{\printsubtitle}{\@subtitle}
+\newcommand{\printihe}{\@ihe}
+\newcommand{\printdays}{\@days}
+\newcommand{\printcourse}{\@course}
+\newcommand{\printnivel}{\@nivel}
+\newcommand{\printteacher}{\@teacher}
+\newcommand{\printstudent}{\@student}
+\newcommand{\printtype}{\@type}
+
+
+\newcounter{prob}
+\newcounter{subprob}
+\renewcommand{\thesubprob}{\alph{subprob}}
+
+\newcommand{\problem}{\setcounter{subprob}{0} \stepcounter{prob} \par \medskip \noindent \textbf{Problem~\theprob \ }}
+
+
+\newcommand{\finalanswer}[1]{
+	\begin{center} 
+    	{\renewcommand{\arraystretch}{1.5}
+		\renewcommand{\tabcolsep}{0.2cm} 
+    	\begin{tabular}{|c|} 
+    		\hline 
+        	$ \displaystyle #1 $  \\ 
+        	\hline 
+    	\end{tabular}} 
+   	\end{center}}
+
+\newcommand{\subproblem}{\stepcounter{subprob} \par \smallskip \noindent \quad \textit{(\thesubprob) \ }}
+
+\newcommand{\option}{\item[$\square$]}
+\newcommand{\thisone}{\item[$\blacksquare$]}
+
+\newenvironment{subitemize}{\begin{itemize}}{\end{itemize}}
+
+\newcommand{\ex}[1]{\textcolor{gray}{#1}}   % exemple
+\newcommand{\an}[1]{\textcolor{red}{#1}}    % answer
+
+\renewcommand{\sp}{\hspace{1em} $\rightarrow$ \hspace{1em}}  % separation
+
+\newcommand{\headerprint}{
+    \onehalfspacing
+    \begin{center}
+        \font\border=umrandb
+        \generalframe{\border\char'165}{\border\char'151}{\border\char'164}
+                     {\border\char'150}                  {\border\char'150}
+                     {\border\char'166}{\border\char'151}{\border\char'167}
+                     {
+        \begin{minipage}[c]{15cm}{
+            \vspace{0.3cm}
+            \begin{center}
+                \begin{singlespace}
+                    {\LARGE\MakeUppercase{\textbf{\printtitle}}}\\%
+                    {\large \printsubtitle}
+                \end{singlespace}
+                \vspace{1em}
+                
+    
+                {\small \printihe \ (\printdays)\\ \textbf{\printcourse} \printnivel}\hspace{.3cm}\textbf{Teacher}.: \printteacher\\\textbf{Student}.: \printstudent
+                \vspace{0.3 cm}
+                \small{}\\
+            \end{center}}
+        \end{minipage}}
+        \begin{center}
+            \Large\textbf{\printtype \ - \today}
+        \end{center}
+    \end{center}
+}
+
+% \renewcommand{\baselinestretch}{1.2}          % Distance between line
+\newcommand{\printbody}{\input{text/body.tex}}
+\usetikzlibrary{arrows}
+
+\xpatchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\qquad}{}{} % for multiple-choice problems 
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%http://tex.stackexchange.com/questions/278345/changing-indent-after-question-exam-class
+%
+% Make question numbers align to the left margin
+\renewcommand{\questionshook}{%
+    \setlength{\leftmargin}{0pt}%
+    \setlength{\labelwidth}{-\labelsep}%
+}
+
+% Change margins for choices and parts
+\renewcommand{\partshook}{%
+    \setlength{\leftmargin}{1.2cm}%
+    %\setlength{\labelwidth}{0pt}%
+    \renewcommand\makelabel[1]{\rlap{##1}\hss}%
+}
+
+\parindent=0pt
+
+
+\newcommand{\newmulticolumns}[1]{
+    \ifthenelse{\equal{#1}{y}}{%
+        \begin{multicols}{2}[
+            \headerprint
+        ] \printbody
+        \end{multicols}
+    }{%
+        \headerprint
+        \printbody
+    }
+}

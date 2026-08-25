@@ -1,0 +1,204 @@
+\documentclass[grey]{hipstercv}
+% available options are: darkhipster, lighthipster, pastel, allblack, grey, verylight
+\usepackage[utf8]{inputenc}
+\usepackage[default]{raleway}
+\usepackage[margin=1cm, a4paper]{geometry}
+
+
+%------------------------------------------------------------------ Variablen
+
+\newlength{\rightcolwidth}
+\newlength{\leftcolwidth}
+\setlength{\leftcolwidth}{0.3\textwidth}
+\setlength{\rightcolwidth}{0.65\textwidth}
+
+%------------------------------------------------------------------
+\title{CV -- Arthur}
+\author{Séptima Ola}
+\date{Agosto 2026}
+
+\pagestyle{empty}
+\begin{document}
+
+
+\thispagestyle{empty}
+%-------------------------------------------------------------
+
+\section*{Start}
+
+
+
+\header{\bg{headerfontbox}{headerfontboxfont}{Bajista} }{\bgupper{headerfontbox}{headerfontboxfont}{\bfseries\Huge Arthur}}{\bg{headerfontbox}{headerfontboxfont}{\large Séptima Ola}}{arthur.png}{headerblue}{3.5cm}{2cm}
+
+
+
+%------------------------------------------------
+
+% hier muss die "unsichtbare" Überschrift rein, weil er sonst nicht die Paracols startet... komisch...
+\subsection*{}
+\vspace{4em}
+
+\setlength{\columnsep}{1.5cm}
+\columnratio{0.3}[0.65]
+\begin{paracol}{2}
+\hbadness5000
+%\backgroundcolor{c[1]}[rgb]{1,1,0.8} % cream yellow for column-1 %\backgroundcolor{g}[rgb]{0.8,1,1} % \backgroundcolor{l}[rgb]{0,0,0.7} % dark blue for left margin
+
+\paracolbackgroundoptions
+
+% 0.9,0.9,0.9 -- 0.8,0.8,0.8
+
+
+\footnotesize
+{\setasidefontcolour
+\bgupper{cvgreen}{white}{Perfil} \\
+\bg{cvgreen}{white}{Datos personales} \\
+
+\begin{tabular}{ll}
+\faMale&Arthur \\
+\faGlobe& Edo. de México, MX \\
+\faBirthdayCake&Septiembre 1992 \\
+\faMapMarker&Estado de México \\
+\end{tabular}
+
+\bigskip
+
+\bg{cvgreen}{white}{Especialidad} \\
+
+Bajo eléctrico ~•~ Salsa ~•~ Reggae ~•~ Ska
+
+\bigskip
+
+\bgupper{cvgreen}{white}{Habilidades} \\
+\bg{cvgreen}{white}{Idiomas}
+\bigskip
+
+
+\begin{minipage}[t]{\leftcolwidth}
+\begin{tabular}{l | ll}
+\textbf{Español} & C2 & {\phantom{x}\footnotesize lengua materna} \\
+\textbf{Inglés} & A2 & \pictofraction{\faCircle}{cvpurple}{1}{black!30}{3}{\tiny}
+\end{tabular}
+\end{minipage}
+
+\bigskip
+
+\bg{cvgreen}{white}{Intereses}\\
+
+\bubblediagram{el bajo, \textbf{el groove}, salsa, reggae, ska, rocksteady, \textbf{coleccionar}\\ \textbf{bajos}, probar cuerdas, ensayar, \textbf{música}\\ \textbf{latina}}
+
+\bigskip
+
+\bg{cvgreen}{white}{Estilos y géneros} \\
+
+\begin{minipage}[t]{0.3\textwidth}
+\begin{tabular}{r @{\hspace{0.5em}}l}
+     \bg{skilllabelcolour}{iconcolour}{Salsa} &  \barrule{0.9}{0.5em}{cvpurple}\\
+     \bg{skilllabelcolour}{iconcolour}{Reggae} & \barrule{0.9}{0.5em}{cvgreen} \\
+     \bg{skilllabelcolour}{iconcolour}{Ska} & \barrule{0.8}{0.5em}{cvpurple} \\
+     \bg{skilllabelcolour}{iconcolour}{Rocksteady} & \barrule{0.7}{0.5em}{cvpurple} \\
+     \bg{skilllabelcolour}{iconcolour}{Versátil} & \barrule{0.75}{0.5em}{cvpurple} \\
+\end{tabular}
+\end{minipage}
+
+
+\bigskip
+
+\scalebox{0.8}{
+\iconcross{\Huge}{white}{cvred}{\color{black!30}\faBook}{\href{mailto:septimaola@gmail.com}{\faEnvelopeO}}{\faPhone}{\faMusic}
+}
+
+\phantom{turn the page}
+
+\phantom{turn the page}
+}
+%-----------------------------------------------------------
+\switchcolumn
+
+\small
+\section*{Trayectoria}
+
+\begin{tabular}{r| p{0.4\textwidth} c}
+    \cvevent{2024--presente}{Séptima Ola}{Bajo eléctrico}{Edo. de México \color{cvred}}{Bajo que camina entre salsa y reggae, dando identidad rítmica al sonido de la banda.}{music_logo.png} \\
+    \cvevent{2018--2023}{El Croar Norteño}{Bajo eléctrico}{Edo. de México \color{cvred}}{Proyecto de música versátil donde afianzó técnica y criterio en el bajo.}{music_logo.png} \\
+    \cvevent{2015--2018}{Arthur en sus días}{Bajo eléctrico}{Edo. de México \color{cvred}}{Proyecto versátil junto con Alfred. Base del sonido que hoy define su estilo.}{music_logo.png}
+\end{tabular}
+
+\vspace{4em}
+
+\begin{minipage}[t]{0.4\textwidth}
+\section*{Formación}
+\begin{tabular}{r p{0.6\textwidth} c}
+    \cvdegree{2010--presente}{Autodidacta}{Bajo eléctrico}{Trayectoria empírica \color{headerblue}}{Horas con el bajo en mano, copiando líneas de salsa y reggae hasta hacerlas propias.}{music_logo.png} \\
+    \cvdegree{2015}{Taller de bajo}{Curso}{Escena local \color{headerblue}}{Complemento ocasional; la base siempre fue el aprendizaje autodidacta.}{music_logo.png}
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.16\textwidth}
+\section*{Pasatiempos}
+\hobbyicon{\color{iconcolour}\faMusic}{Bajo}{cvgreen}{\iconsize}{2em} \hfill
+\hobbyicon{\color{iconcolour}\faHeadphones}{Discos}{cvorange}{\iconsize}{2em}
+
+\hobbyicon{\color{iconcolour}\faUsers}{Ensayar}{cvpurple}{\iconsize}{2em} \hspace{1em}
+\hobbyicon{\color{iconcolour}\faWrench}{Cuerdas}{headerblue}{\iconsize}{2em}
+\end{minipage}
+
+\vspace{4em}
+
+\begin{minipage}[t]{0.35\textwidth}
+\section*{Influencias}
+\begin{tabular}{>{\footnotesize\bfseries}r >{\footnotesize}p{0.55\textwidth}}
+    & Salsa clásica (bajistas) \\
+    & Bob Marley \& The Wailers \\
+    & Reggae roots jamaiquino \\
+    & Willie Colón \\
+    & Rocksteady jamaiquino
+\end{tabular}
+
+\section*{Fortalezas}
+\cvtag{autodidacta}
+\cvtag{groove}
+\cvtag{disciplina}
+\cvtag{versatilidad}
+
+\section*{Referencias}
+\cvkeyword{Alfred (Séptima Ola)}{cvgreen}{iconcolour}
+\cvkeyword{El Croar Norteño}{cvgreen}{iconcolour}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\section*{Equipo}
+\begin{tabular}{>{\footnotesize\bfseries}r >{\footnotesize}p{0.65\textwidth}}
+    & Colección de bajos eléctricos \\
+    & Variedad de cuerdas (cada instrumento inspira un color distinto)
+\end{tabular}
+
+\section*{Frase}
+\begin{quote}\footnotesize
+``Creo en la música como un puente entre almas; el bajo es el cable que une el ritmo con el corazón.''
+\end{quote}
+\end{minipage}
+
+
+
+
+
+
+
+
+
+\vfill{} % Whitespace before final footer
+
+%----------------------------------------------------------------------------------------
+%	FINAL FOOTER
+%----------------------------------------------------------------------------------------
+\setlength{\parindent}{0pt}
+\begin{minipage}[t]{\rightcolwidth}
+\begin{center}\fontfamily{\sfdefault}\selectfont \color{black!70}
+{\small Arthur \icon{\faEnvelopeO}{cvpurple}{} Séptima Ola \icon{\faMapMarker}{cvpurple}{} Edo. de México \icon{\faPhone}{cvpurple}{} TBD \newline\icon{\faAt}{cvpurple}{} \protect\url{septimaola@gmail.com}
+}
+\end{center}
+\end{minipage}
+
+
+\end{paracol}
+
+\end{document}

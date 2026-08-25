@@ -26,10 +26,6 @@ const itemVariants = {
 
 const members = [
   { name: 'Alfred YearckLei', role: 'Guitarra · Voz', image: 'alfred', imagePosition: 'top' },
-  { name: 'Gil', role: 'Batería', image: 'lemanu', imagePosition: 'top' },
-  { name: 'Levi\'Sax', role: 'Saxofón', image: 'levisax', imagePosition: 'top' },
-  { name: 'Rodrigo Mera', role: 'Violín', image: 'rodrigo', imagePosition: 'top' },
-  { name: 'Sandy Robinsuell', role: 'Teclado · Voz', image: 'sandy', imagePosition: 'center' },
   { name: 'Arthur', role: 'Bajo', image: 'arthur', imagePosition: 'center' },
 ]
 
@@ -55,7 +51,7 @@ export default function Members() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.p className="impact-phrase" variants={itemVariants}>
-            «<strong>Seis almas</strong>, un solo latido»
+            «<strong>Cinco almas</strong>, un solo latido»
           </motion.p>
         </motion.div>
 

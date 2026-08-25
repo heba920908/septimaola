@@ -2,8 +2,8 @@ name: Daily Social Media Post
 
 on:
   schedule:
-    # Run Mondays, Tuesdays and Fridays at 12 UTC (6 AM Mexico City time)
-    - cron: '0 12 * * 1,2,5'
+    # Run Tuesdays and Thursdays at 12 UTC (6 AM Mexico City time)
+    - cron: '0 12 * * 2,4'
   # Dry run to test the workflow without posting to social media
   # push:
   #   branches:
@@ -43,6 +43,15 @@ jobs:
         working-directory: ./automation
         run: uv sync
 
+      - name: Restore posted-video history cache
+        id: posted-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: automation/.state/posted.json
+          key: posted-videos
+          restore-keys: |
+            posted-videos-
+
       - name: Run daily post
         working-directory: ./automation
         env:
@@ -56,3 +65,10 @@ jobs:
           else
             uv run daily-post
           fi
+
+      - name: Save posted-video history cache
+        if: always() && hashFiles('automation/.state/posted.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: automation/.state/posted.json
+          key: posted-videos-${{ github.run_id }}

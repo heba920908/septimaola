@@ -48,5 +48,7 @@ bbl-*
 *.xdv
 *.vrb
 
+*.jpg
+
 # Can be downloaded from google drive
 assets/

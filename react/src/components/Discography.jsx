@@ -30,6 +30,7 @@ const songs = [
   { title: 'Arenga', url: 'https://open.spotify.com/search?q=Septima+Ola' },
   { title: 'A Contraluz', url: 'https://open.spotify.com/search?q=Septima+Ola' },
   { title: 'Acelera', url: 'https://open.spotify.com/search?q=Septima+Ola' },
+  { title: 'TQM', url: 'https://open.spotify.com/search?q=Septima+Ola' },
 ]
 
 export default function Discography() {
