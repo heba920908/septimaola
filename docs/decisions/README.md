@@ -54,3 +54,4 @@ What are the resulting effects — positive, negative, and neutral?
 | [0011](0011-short-video-render-quality-and-ending-append.md) | Short video render quality and ending append | Accepted |
 | [0012](0012-reel-from-video-generation.md) | Reel-from-Video Generation | Accepted |
 | [0013](0013-posted-video-dedup.md) | Posted-video deduplication via GitHub Actions cache | Proposed |
+| [0014](0014-social-insights-json-report.md) | Social insights JSON report via `insights-report` | Proposed |

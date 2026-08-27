@@ -7,11 +7,13 @@ requires-python = ">=3.11"
 dependencies = [
     "httpx>=0.27.0",
     "openai>=1.0.0",
+    "pydantic>=2.0.0",
     "python-dotenv>=1.0.0",
 ]
 
 [project.scripts]
 daily-post = "septima_automation.daily_post:run"
+insights-report = "septima_automation.insights_report:run"
 
 [build-system]
 requires = ["hatchling"]

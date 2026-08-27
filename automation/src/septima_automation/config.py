@@ -1,6 +1,7 @@
 """Configuration for Séptima Ola social media automation."""
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
 
@@ -90,3 +91,43 @@ DEEPSEEK_MODEL = "deepseek-v4-flash"
 # Facebook/Instagram API
 FACEBOOK_API_VERSION = "v25.0"
 FACEBOOK_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"
+
+# Insights / metrics reporting (see insights_report.py)
+#
+# Default number of recent posts/media to pull engagement data for.
+DEFAULT_MEDIA_LIMIT = 10
+
+# Where the generated JSON report is written by default. Lives under
+# react/src/data so a future report/dashboard feature in the React app can
+# read it directly. The file is gitignored and regenerated on demand — see
+# docs/decisions/0014-social-insights-json-report.md.
+INSIGHTS_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "social-metrics.json"
+)
+
+# Instagram Graph API metric names for GET /{ig-media-id}/insights.
+# Requires the `instagram_manage_insights` permission on the access token.
+#
+# NOTE: `engagement` and `impressions` (used in earlier API versions) are
+# deprecated/rejected as of Graph API v22.0+:
+#   "(#100) metric[0] must be one of the following values: impressions,
+#   reach, replies, saved, likes, comments, shares, total_interactions,
+#   follows, profile_visits, ..."
+#   "Starting from version v22.0 and above, the impressions metric is no
+#   longer supported for the queried media."
+# `total_interactions` is the modern replacement for `engagement` (likes +
+# comments + shares + saves, net of un-likes/removed items). All metrics
+# below were confirmed live against both IMAGE and VIDEO/REELS media.
+INSTAGRAM_MEDIA_INSIGHTS_METRICS: List[str] = [
+    "reach",
+    "total_interactions",
+    "likes",
+    "comments",
+    "shares",
+    "saved",
+    "views",
+]
