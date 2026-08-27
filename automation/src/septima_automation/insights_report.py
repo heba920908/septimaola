@@ -31,9 +31,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .ai.factory import create_provider
+from .ai.insights_analyzer import run_insights_analysis
 from .config import (
     DEFAULT_POSTS_LIMIT,
     DEFAULT_POSTS_SINCE_DAYS,
+    INSIGHTS_DATA_OUTPUT_PATH,
     INSIGHTS_OUTPUT_PATH,
     POSTS_OUTPUT_PATH,
 )
@@ -57,8 +60,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Fetch Facebook Page and Instagram account/post metrics and "
-            "write the JSON reports used by the React press kit."
+            "Fetch Facebook Page and Instagram account/post metrics, correlate with "
+            "band agenda events, synthesize AI insights, and write JSON reports."
         )
     )
     parser.add_argument(
@@ -90,6 +93,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=POSTS_OUTPUT_PATH,
         help=f"Path to write the posts-metrics report to (default: {POSTS_OUTPUT_PATH})",
+    )
+    parser.add_argument(
+        "--insights-data-output",
+        type=Path,
+        default=INSIGHTS_DATA_OUTPUT_PATH,
+        help=f"Path to write the React visualization dataset to (default: {INSIGHTS_DATA_OUTPUT_PATH})",
+    )
+    parser.add_argument(
+        "--no-ai",
+        action="store_true",
+        help="Skip AIProvider invocation and use fast heuristic rule-based synthesis",
     )
     parser.add_argument(
         "--dry-run",
@@ -148,12 +162,34 @@ async def main(argv: list[str] | None = None) -> int:
     report = _load_existing_report(args.output)
     report.history.append(snapshot)
 
+    # Resolve AI provider if enabled
+    ai_provider = None
+    if not args.no_ai:
+        try:
+            ai_provider = create_provider()
+        except Exception as exc:
+            logger.info("AI provider not configured (%s); falling back to heuristic analyzer", exc)
+
+    logger.info("Running social metrics & agenda correlation analysis...")
+    insights_data = await run_insights_analysis(
+        snapshot=snapshot,
+        posts_report=posts_report,
+        report_history=report.history,
+        ai_provider=ai_provider,
+        use_ai=not args.no_ai and ai_provider is not None,
+    )
+
     social_payload = report.model_dump_json(indent=2, exclude_none=False)
     posts_payload = posts_report.model_dump_json(indent=2, exclude_none=False)
+    insights_data_payload = insights_data.model_dump_json(indent=2, exclude_none=False)
 
     if args.dry_run:
         logger.info("DRY RUN — not writing to disk.")
-        print(f'{{"social_metrics": {social_payload}, "posts_metrics": {posts_payload}}}')
+        print(
+            f'{{"social_metrics": {social_payload}, '
+            f'"posts_metrics": {posts_payload}, '
+            f'"insights_data": {insights_data_payload}}}'
+        )
         return 0
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -162,9 +198,12 @@ async def main(argv: list[str] | None = None) -> int:
     args.posts_output.parent.mkdir(parents=True, exist_ok=True)
     args.posts_output.write_text(posts_payload + "\n", encoding="utf-8")
 
+    args.insights_data_output.parent.mkdir(parents=True, exist_ok=True)
+    args.insights_data_output.write_text(insights_data_payload + "\n", encoding="utf-8")
+
     # Summary
     logger.info("=" * 50)
-    logger.info("Insights Report Summary")
+    logger.info("Insights Report & Analysis Summary")
     logger.info("=" * 50)
     if snapshot.facebook:
         logger.info(
@@ -189,6 +228,12 @@ async def main(argv: list[str] | None = None) -> int:
         f"instagram={len(posts_report.instagram_posts)} "
         f"(since={posts_report.since})"
     )
+    logger.info(
+        f"Analysis : {len(insights_data.top_posts)} top posts, "
+        f"{len(insights_data.agenda_correlations)} agenda events, "
+        f"{len(insights_data.ai_analysis.recommendations)} recommendations"
+    )
+
     if posts_report.facebook_posts_error:
         logger.warning(f"Facebook posts error: {posts_report.facebook_posts_error}")
     if posts_report.instagram_posts_error:
@@ -200,6 +245,7 @@ async def main(argv: list[str] | None = None) -> int:
         f"Account report written to {args.output} ({len(report.history)} snapshot(s) total)"
     )
     logger.info(f"Posts report written to {args.posts_output} (overwritten, no history)")
+    logger.info(f"Visualization dataset written to {args.insights_data_output}")
 
     return 0
 

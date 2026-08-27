@@ -160,40 +160,60 @@ HASHTAGS = ["#SéptimaOla", "#Reggae", "#Ska", "#Rocksteady", "#MusicaMexicana"]
 3. **Download Video**: Downloads the video file using `httpx` to a temporary directory
 4. **Publish**: Uploads video to Facebook and Instagram with AI-generated caption
 
-## Insights / Metrics Reporting
+## Insights / Metrics Reporting & AI Analysis
 
 `uv run insights-report` fetches Facebook Page and Instagram metrics using
 the same `FACEBOOK_PAGE_ID` / `FACEBOOK_ACCESS_TOKEN` credentials as the
-daily post script, and writes **two** JSON reports consumed by the React
-press kit (see `docs/decisions/0014-social-insights-json-report.md`, the
-2026-08-27 amendment):
+daily post script, correlates post traction against the band's canonical agenda
+(`septima_automation.ai.agenda`), synthesizes AI-driven strategic takeaways, and
+writes **three** JSON files (see `docs/decisions/0014-social-insights-json-report.md`
+and `docs/decisions/0015-social-insights-visualization.md`):
 
 - `react/src/data/social-metrics.json` — a growing `history` array of
   **account-level** snapshots (Facebook `fan_count`/`followers_count`,
-  Instagram `followers_count`/`media_count`). Appended to on every run.
+  Instagram `followers_count`/`media_count`). Appended to on every run (gitignored).
 - `react/src/data/posts-metrics.json` — Facebook posts and Instagram media
   within the `--since` window (default: last 90 days), capped at `--limit`
-  items (default 90). **Fully overwritten** on every run — no history.
+  items (default 90). **Fully overwritten** on every run — no history (gitignored).
+- `react/src/data/insights-data.json` — consolidated visualization dataset
+  containing overall KPIs, SVG time-series points, agenda event correlations,
+  top-performing posts with pattern badges, and executive AI recommendations.
+  **Committed to git** so the React press kit builds reliably offline in CI.
 
 ```bash
 cd automation
 uv run insights-report
-# Or with options:
-uv run insights-report --since 2026-06-01  # override the default 90-day window
+
+# Common options:
+uv run insights-report --since 2026-06-01       # override the default 90-day lookback
 uv run insights-report --limit 20 --verbose
-uv run insights-report --dry-run           # print JSON to stdout, don't write files
-uv run insights-report --output /tmp/social-metrics.json \
-    --posts-output /tmp/posts-metrics.json
+uv run insights-report --no-ai                  # skip LLM calls, use fast heuristic analysis
+uv run insights-report --dry-run                # print combined JSON to stdout without writing files
+uv run insights-report \
+    --output /tmp/social-metrics.json \
+    --posts-output /tmp/posts-metrics.json \
+    --insights-data-output /tmp/insights-data.json
 ```
 
+### CLI Flags Reference
+
+| Flag | Type / Default | Description |
+| :--- | :--- | :--- |
+| `--since YYYY-MM-DD` | `date` (90 days ago) | Lookback window start for posts and media retrieval. |
+| `--limit N` | `int` (`90`) | Maximum number of posts/media items to fetch per platform. |
+| `--output PATH` | `Path` (`social-metrics.json`) | Target path for the account-level historical snapshots. |
+| `--posts-output PATH` | `Path` (`posts-metrics.json`) | Target path for recent post-level metrics. |
+| `--insights-data-output PATH` | `Path` (`insights-data.json`) | Target path for the React visualization and AI summary document. |
+| `--no-ai` | Flag (`False`) | Skip LLM inference (`AIProvider`) and use deterministic rule-based analysis. |
+| `--dry-run` | Flag (`False`) | Output generated payloads as JSON to stdout instead of writing to disk. |
+| `--verbose` | Flag (`False`) | Enable verbose debug logging to stderr. |
+
 `social-metrics.json` is a growing `history` array — every run appends a new
-timestamped account snapshot rather than overwriting the previous one, so it
-can back a future trend report. `posts-metrics.json` is regenerated from
-scratch every run — it always reflects exactly what's in the current
-`--since`/`--limit` window, nothing more. Both files are **gitignored**
-(`react/.gitignore` → `src/data/social-metrics.json`,
-`src/data/posts-metrics.json`) and regenerated on demand; neither is
-committed to version control.
+timestamped account snapshot rather than overwriting the previous one.
+`posts-metrics.json` is regenerated from scratch every run — it always reflects
+exactly what's in the current `--since`/`--limit` window. Both raw files are
+**gitignored**. `insights-data.json` is committed as a baseline so the React
+web app can render `#/social-insights` without live Graph API credentials.
 
 ### What's collected today vs. what requires extra permissions
 

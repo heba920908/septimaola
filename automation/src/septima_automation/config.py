@@ -128,6 +128,16 @@ POSTS_OUTPUT_PATH = (
     / "posts-metrics.json"
 )
 
+# Where the processed insights visualization document is written.
+# Committed to git to provide an offline baseline for the React app.
+INSIGHTS_DATA_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "insights-data.json"
+)
+
 # Instagram Graph API metric names for GET /{ig-media-id}/insights.
 # Requires the `instagram_manage_insights` permission on the access token.
 #
