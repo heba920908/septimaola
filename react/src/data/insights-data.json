@@ -1,0 +1,748 @@
+{
+  "generated_at": "2026-08-27T22:13:40.507827+00:00",
+  "kpis": {
+    "facebook_followers": 358,
+    "facebook_fans": 358,
+    "instagram_followers": 251,
+    "instagram_media_count": 118,
+    "total_analyzed_posts": 141,
+    "total_reach": 8300,
+    "total_views": 14161,
+    "total_interactions": 1381,
+    "avg_interactions_per_post": 9.8
+  },
+  "time_series": [
+    {
+      "date": "2026-07-23",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 26,
+      "views": 301,
+      "reach": 226
+    },
+    {
+      "date": "2026-07-24",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 5,
+      "views": 0,
+      "reach": 0
+    },
+    {
+      "date": "2026-07-26",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 61,
+      "views": 889,
+      "reach": 286
+    },
+    {
+      "date": "2026-07-27",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 10,
+      "views": 153,
+      "reach": 92
+    },
+    {
+      "date": "2026-07-28",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 15,
+      "views": 228,
+      "reach": 168
+    },
+    {
+      "date": "2026-07-30",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 5,
+      "interactions": 28,
+      "views": 275,
+      "reach": 206
+    },
+    {
+      "date": "2026-07-31",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 4,
+      "views": 63,
+      "reach": 38
+    },
+    {
+      "date": "2026-08-03",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 15,
+      "views": 244,
+      "reach": 174
+    },
+    {
+      "date": "2026-08-04",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 11,
+      "views": 109,
+      "reach": 66
+    },
+    {
+      "date": "2026-08-05",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 5,
+      "interactions": 44,
+      "views": 703,
+      "reach": 375
+    },
+    {
+      "date": "2026-08-06",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 5,
+      "interactions": 167,
+      "views": 197,
+      "reach": 97
+    },
+    {
+      "date": "2026-08-07",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 25,
+      "views": 206,
+      "reach": 144
+    },
+    {
+      "date": "2026-08-08",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 13,
+      "views": 127,
+      "reach": 84
+    },
+    {
+      "date": "2026-08-09",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 4,
+      "interactions": 46,
+      "views": 577,
+      "reach": 345
+    },
+    {
+      "date": "2026-08-10",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 5,
+      "views": 92,
+      "reach": 62
+    },
+    {
+      "date": "2026-08-11",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 9,
+      "views": 82,
+      "reach": 50
+    },
+    {
+      "date": "2026-08-13",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 1,
+      "interactions": 2,
+      "views": 0,
+      "reach": 0
+    },
+    {
+      "date": "2026-08-14",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 6,
+      "interactions": 88,
+      "views": 1169,
+      "reach": 784
+    },
+    {
+      "date": "2026-08-15",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 25,
+      "views": 285,
+      "reach": 172
+    },
+    {
+      "date": "2026-08-16",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 1,
+      "interactions": 5,
+      "views": 0,
+      "reach": 0
+    },
+    {
+      "date": "2026-08-17",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 6,
+      "views": 85,
+      "reach": 62
+    },
+    {
+      "date": "2026-08-18",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 10,
+      "views": 49,
+      "reach": 32
+    },
+    {
+      "date": "2026-08-20",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 13,
+      "views": 0,
+      "reach": 0
+    },
+    {
+      "date": "2026-08-21",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 11,
+      "views": 91,
+      "reach": 66
+    },
+    {
+      "date": "2026-08-22",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 14,
+      "views": 87,
+      "reach": 53
+    },
+    {
+      "date": "2026-08-23",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 7,
+      "views": 97,
+      "reach": 47
+    },
+    {
+      "date": "2026-08-24",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 4,
+      "interactions": 28,
+      "views": 242,
+      "reach": 121
+    },
+    {
+      "date": "2026-08-25",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 3,
+      "interactions": 30,
+      "views": 583,
+      "reach": 300
+    },
+    {
+      "date": "2026-08-26",
+      "facebook_followers": null,
+      "instagram_followers": null,
+      "posts_count": 2,
+      "interactions": 8,
+      "views": 160,
+      "reach": 118
+    },
+    {
+      "date": "2026-08-27",
+      "facebook_followers": 358,
+      "instagram_followers": 251,
+      "posts_count": 3,
+      "interactions": 68,
+      "views": 1055,
+      "reach": 499
+    }
+  ],
+  "top_posts": [
+    {
+      "id": "18212272363358064",
+      "platform": "instagram",
+      "media_type": "IMAGE",
+      "timestamp": "2026-08-27T04:12:12+0000",
+      "caption": "¡Mañana estaremos de manteles largos en #SéptimaOlaRadio! 🎙️✨\n\nDirectamente desde Argentina hasta la cabina de @fiv_radio  Y #SéptimaOlaRadio tendremos una agradable charla con la gran banda: ¡Los Casettes! 🇦🇷🎵 Prepárate para una emisión imperdible donde conoceremos todos los detalles de su música y su historia.\nAsí que no te pierdas el live en vivo a través de las redes sociales de Séptima Ola\n🗓️ Jueves 27 de agosto del 2026\n⏰ 16:00 horas (Hora MX)\n\n¡Acompaña a Los Casettes en esta gran charla! ¿Qué canción te gustaría que tocaran o sonara durante la transmisión? 👇",
+      "permalink": "https://www.instagram.com/p/Dch4mDfNC-f/",
+      "like_count": 36,
+      "comments_count": 9,
+      "reach": 495,
+      "views": 1048,
+      "total_interactions": 63,
+      "patterns": [
+        "Imagen / Arte",
+        "Colaboración / Medios",
+        "En Vivo / Cabina"
+      ]
+    },
+    {
+      "id": "17898036768453843",
+      "platform": "instagram",
+      "media_type": "VIDEO",
+      "timestamp": "2026-06-02T02:16:18+0000",
+      "caption": "Gracias a todos los que se subieron a la marea de esta Séptima Ola! Nos regalaron momentos que llevaremos guardados para siempre.\n\nTambién queremos agradecer a quienes le dieron ritmo a esta fiesta: @mayor_skala , @painosrootsband , @saxolevis, @mr_marshalldj . Sin ustedes nada hubiera sido igual.\n\nA todos los medios que nos acompañaron, gracias por darse el tiempo y por su gran labor que complementa enormemente nuestra misión: @reydecibel , @rocktitanio , @phmunderground  y por su puesto a nuestro maestro de ceremonias @radio_bahia \n\nA nuestros patrocinadores @artesanaldelhuerto #AlmaNativa #MezcalMarañon\n\nQue la música nos siga uniendo para generar más momentos llenos de magia y hermandad. Gracias amigos, familia… por todo el cariño y entusiasmo al cantar “Desde mi ventana” 🪟",
+      "permalink": "https://www.instagram.com/reel/DZEP3IDsxc9/",
+      "like_count": 28,
+      "comments_count": 2,
+      "reach": 451,
+      "views": 663,
+      "total_interactions": 43,
+      "patterns": [
+        "Reel / Video",
+        "Colaboración / Medios"
+      ]
+    },
+    {
+      "id": "17942097069267720",
+      "platform": "instagram",
+      "media_type": "CAROUSEL_ALBUM",
+      "timestamp": "2026-07-26T02:27:35+0000",
+      "caption": "Hoy pasamos una gran tarde en @utopialibertadcdmx en el 5to festival mexicano de las serpientes. Fue un gusto compartir escenario con @chakana.band, esperamos vernos pronto otra vez!\n.\n.\n.\n.\n🎥 : @robinsuell",
+      "permalink": "https://www.instagram.com/p/DbPUNs4DIA8/",
+      "like_count": 49,
+      "comments_count": 2,
+      "reach": 286,
+      "views": 889,
+      "total_interactions": 53,
+      "patterns": [
+        "Colaboración / Medios",
+        "En Vivo / Cabina"
+      ]
+    },
+    {
+      "id": "18153534016425563",
+      "platform": "instagram",
+      "media_type": "VIDEO",
+      "timestamp": "2026-05-29T20:23:23+0000",
+      "caption": "Pasamos una gran noche y disfrutamos mucho de la música de @la_matatena @colectivolatinooficial y @manfree_mc !!\nNos vemos pronto para seguir llevando nuestras canciones a cada rincón del planeta!",
+      "permalink": "https://www.instagram.com/reel/DY743GBP0SH/",
+      "like_count": 20,
+      "comments_count": 1,
+      "reach": 387,
+      "views": 601,
+      "total_interactions": 30,
+      "patterns": [
+        "Reel / Video",
+        "Colaboración / Medios",
+        "Convocatoria a Evento"
+      ]
+    },
+    {
+      "id": "17875305168684724",
+      "platform": "instagram",
+      "media_type": "IMAGE",
+      "timestamp": "2026-07-12T00:03:18+0000",
+      "caption": "La pasamos muy chido acompañando a nuestros amigos de @latremendakorte y con todo el power de @rudetimesmx en la Glorieta de Insurgentes",
+      "permalink": "https://www.instagram.com/p/DarAZRfRmws/",
+      "like_count": 27,
+      "comments_count": 0,
+      "reach": 338,
+      "views": 588,
+      "total_interactions": 31,
+      "patterns": [
+        "Imagen / Arte"
+      ]
+    },
+    {
+      "id": "18145106089552310",
+      "platform": "instagram",
+      "media_type": "VIDEO",
+      "timestamp": "2026-08-14T16:24:03+0000",
+      "caption": "@toque_cumbiero con toda la actitud en el escenario en este gran #festivaldelasjuventudes2026",
+      "permalink": "https://www.instagram.com/reel/DcBu2RWRLOs/",
+      "like_count": 23,
+      "comments_count": 2,
+      "reach": 344,
+      "views": 515,
+      "total_interactions": 34,
+      "patterns": [
+        "Reel / Video",
+        "En Vivo / Cabina"
+      ]
+    },
+    {
+      "id": "18028652342907745",
+      "platform": "instagram",
+      "media_type": "CAROUSEL_ALBUM",
+      "timestamp": "2026-08-05T23:16:08+0000",
+      "caption": "🌊🔥¡Séptima Ola en Festival de las Juventudes 2026!🔥🌊\n\nEste jueves 13 de agosto nos vemos en Utopía Mixiuhca para compartir una jornada llena de música, energía y mucha fiesta. 🎶🤘\n\nTenemos el gusto de formar parte de un cartelazo junto a grandes proyectos de diferentes sonidos y estilos:\n\n🎤 Iztapalapa Conexión\n🎸 Eye\n🔥 Insulini y Los Espantajuegras\n🎶 LMAW\n🎤 Bradda\n🎵 Ema Guan\n🎺 Safaella JC\n🥁 Toque Cumbiero\n🌊 Séptima Ola\n🎶 Colectivo Latino\n\nY lo mejor: ¡la entrada es gratuita! 🙌\n\n📍 Utopía Mixiuhca\nViad. Río de la Piedad 6, Granjas México, Iztacalco, CDMX\n🗓️ Jueves 13 de agosto\n🎟️ Entrada gratuita\n🎵 Presentaciones todo el día\n\nNos emociona muchísimo compartir escenario con todas estas propuestas y, sobre todo, encontrarnos con ustedes para disfrutar de la música en comunidad. ❤️💛💚\n\n¡Nos vemos en el Festival de las Juventudes 2026! 🌊🎶\n\n#SéptimaOla #FestivalDeLasJuventudes #skareggaerocksteady #CDMX #EntradaGratuita",
+      "permalink": "https://www.instagram.com/p/DbrTDIjEcFI/",
+      "like_count": 20,
+      "comments_count": 1,
+      "reach": 310,
+      "views": 602,
+      "total_interactions": 29,
+      "patterns": [
+        "Colaboración / Medios",
+        "En Vivo / Cabina",
+        "Convocatoria a Evento"
+      ]
+    },
+    {
+      "id": "18151852654448237",
+      "platform": "instagram",
+      "media_type": "VIDEO",
+      "timestamp": "2026-07-17T18:35:33+0000",
+      "caption": "#SéptimaOlaRadio en entrevista con esta gran banda de reggae que está a unos días de comenzar su gira por tierras colombianas… es un gusto recibir en la cabina de @fivradionorte @fiv_radio a nuestros amigos de @painosrootsband 🎹🎸🎶 Así que no se pierdan detalle de esta gran charla el sábado 18 de julio en punto de las 15 horas… \nhttps://radios.yanapak.org/Fivradio",
+      "permalink": "https://www.instagram.com/reel/Da53GiKRfJ4/",
+      "like_count": 22,
+      "comments_count": 0,
+      "reach": 207,
+      "views": 290,
+      "total_interactions": 104,
+      "patterns": [
+        "Reel / Video",
+        "Colaboración / Medios",
+        "En Vivo / Cabina"
+      ]
+    }
+  ],
+  "agenda_correlations": [
+    {
+      "event_date": "2026-05-14",
+      "event_title": "Junket & Showcase de prensa",
+      "event_venue": "Guadalajara 60, Roma Nte., Cuauhtémoc, CDMX",
+      "event_type": "Foro",
+      "correlated_posts_count": 0,
+      "total_reach": 0,
+      "total_views": 0,
+      "total_interactions": 0,
+      "total_likes": 0,
+      "total_comments": 0,
+      "traction_score": "Moderado",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-05-15",
+      "event_title": "Minifestival Skatepec",
+      "event_venue": "Av. Insurgentes Manzana 1 Lote 6, El Calvario, Ecatepec de Morelos, Méx.",
+      "event_type": "Bar",
+      "correlated_posts_count": 0,
+      "total_reach": 0,
+      "total_views": 0,
+      "total_interactions": 0,
+      "total_likes": 0,
+      "total_comments": 0,
+      "traction_score": "Moderado",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-05-16",
+      "event_title": "Ska en las montañas",
+      "event_venue": "Sol 45, San Bartolo Ameyalco, Álvaro Obregón, CDMX",
+      "event_type": "Festival",
+      "correlated_posts_count": 0,
+      "total_reach": 0,
+      "total_views": 0,
+      "total_interactions": 0,
+      "total_likes": 0,
+      "total_comments": 0,
+      "traction_score": "Moderado",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-05-21",
+      "event_title": "Séptima Ola Radio entrevista Armada Cultural",
+      "event_venue": "Av. Huitzilihuitl 51, Santa Isabel Tola, Gustavo A. Madero, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 0,
+      "total_reach": 0,
+      "total_views": 0,
+      "total_interactions": 0,
+      "total_likes": 0,
+      "total_comments": 0,
+      "traction_score": "Moderado",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-05-28",
+      "event_title": "Concierto con La Matatena (michis y lomitos)",
+      "event_venue": "Guadalajara 60, Roma Nte., Cuauhtémoc, CDMX",
+      "event_type": "Foro",
+      "correlated_posts_count": 2,
+      "total_reach": 633,
+      "total_views": 926,
+      "total_interactions": 36,
+      "total_likes": 25,
+      "total_comments": 1,
+      "traction_score": "Alto",
+      "highlight_caption": "Pasamos una gran noche y disfrutamos mucho de la música de @la_matatena @colectivolatinooficial y @manfree_mc ..."
+    },
+    {
+      "event_date": "2026-06-04",
+      "event_title": "Entrevista en La Machincuepa Radio",
+      "event_venue": "Zarco 115, Moctezuma esq. Guerrero, Cuauhtémoc, CDMX",
+      "event_type": "Foro",
+      "correlated_posts_count": 3,
+      "total_reach": 672,
+      "total_views": 1160,
+      "total_interactions": 76,
+      "total_likes": 51,
+      "total_comments": 8,
+      "traction_score": "Alto",
+      "highlight_caption": "Gracias a todos los que se subieron a la marea de esta Séptima Ola! Nos regalaron momentos que llevaremos guar..."
+    },
+    {
+      "event_date": "2026-06-07",
+      "event_title": "Batallas de Rap Convars",
+      "event_venue": "Foro Mictlan",
+      "event_type": "Foro",
+      "correlated_posts_count": 2,
+      "total_reach": 221,
+      "total_views": 497,
+      "total_interactions": 33,
+      "total_likes": 23,
+      "total_comments": 6,
+      "traction_score": "Alto",
+      "highlight_caption": "🎙️ Surfers de la Séptima Ola 🌊 \nNos vemos el sábado 13 de junio para continuar con el festeje de nuestro lanza..."
+    },
+    {
+      "event_date": "2026-06-13",
+      "event_title": "Acústico en FIV",
+      "event_venue": "Av. Huitzilihuitl 51, Santa Isabel Tola, Gustavo A. Madero, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 4,
+      "total_reach": 83,
+      "total_views": 185,
+      "total_interactions": 9,
+      "total_likes": 18,
+      "total_comments": 0,
+      "traction_score": "Alto",
+      "highlight_caption": "Hoy por la noche no se pierdan la entrevista que tendremos con @trotamusicoficial en donde contaremos todos lo..."
+    },
+    {
+      "event_date": "2026-06-13",
+      "event_title": "Presentación DESDE MI VENTANA en Capitán Gallo",
+      "event_venue": "Ayuntamiento 145, Col Centro, CDMX",
+      "event_type": "Foro",
+      "correlated_posts_count": 4,
+      "total_reach": 83,
+      "total_views": 185,
+      "total_interactions": 9,
+      "total_likes": 18,
+      "total_comments": 0,
+      "traction_score": "Alto",
+      "highlight_caption": "Hoy por la noche no se pierdan la entrevista que tendremos con @trotamusicoficial en donde contaremos todos lo..."
+    },
+    {
+      "event_date": "2026-06-20",
+      "event_title": "Presentación en Bar - Los Haraganes Rock",
+      "event_venue": "Arteaga 13, San Ángel, Álvaro Obregón, CDMX",
+      "event_type": "Bar",
+      "correlated_posts_count": 5,
+      "total_reach": 276,
+      "total_views": 396,
+      "total_interactions": 18,
+      "total_likes": 25,
+      "total_comments": 2,
+      "traction_score": "Alto",
+      "highlight_caption": "Arenga by @septimaolaoficial\n.\n.\n.\n.\n🎥 @mirnitha"
+    },
+    {
+      "event_date": "2026-06-28",
+      "event_title": "Fiesta patronal Cuajimalpa",
+      "event_venue": "Cuajimalpa, CDMX",
+      "event_type": "Familiar",
+      "correlated_posts_count": 13,
+      "total_reach": 484,
+      "total_views": 867,
+      "total_interactions": 49,
+      "total_likes": 85,
+      "total_comments": 2,
+      "traction_score": "Alto",
+      "highlight_caption": "Aún tenemos una gran sonrisa por la increíble tarde que ayer nos regalaron en #cuajimalpa y por el gran cariño..."
+    },
+    {
+      "event_date": "2026-07-04",
+      "event_title": "Recital EMVA",
+      "event_venue": "Utopía Teotongo, Iztapalapa, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 7,
+      "total_reach": 421,
+      "total_views": 614,
+      "total_interactions": 26,
+      "total_likes": 54,
+      "total_comments": 4,
+      "traction_score": "Alto",
+      "highlight_caption": "T.Q.M. by @septimaolaoficial"
+    },
+    {
+      "event_date": "2026-07-05",
+      "event_title": "Reggae y Ska en El Rule",
+      "event_venue": "Centro Cultural El Rule, Centro Histórico, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 7,
+      "total_reach": 421,
+      "total_views": 614,
+      "total_interactions": 26,
+      "total_likes": 54,
+      "total_comments": 4,
+      "traction_score": "Alto",
+      "highlight_caption": "T.Q.M. by @septimaolaoficial"
+    },
+    {
+      "event_date": "2026-07-18",
+      "event_title": "Skandalazo Utópico con Armada Cultural",
+      "event_venue": "Utopía Cuauhtlicalli, Iztapalapa, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 7,
+      "total_reach": 359,
+      "total_views": 481,
+      "total_interactions": 107,
+      "total_likes": 51,
+      "total_comments": 3,
+      "traction_score": "Alto",
+      "highlight_caption": "#SéptimaOlaRadio en entrevista con esta gran banda de reggae que está a unos días de comenzar su gira por tier..."
+    },
+    {
+      "event_date": "2026-07-24",
+      "event_title": "Pulquería Insurgentes",
+      "event_venue": "Pulquería Insurgentes, CDMX",
+      "event_type": "Bar",
+      "correlated_posts_count": 8,
+      "total_reach": 604,
+      "total_views": 1343,
+      "total_interactions": 77,
+      "total_likes": 95,
+      "total_comments": 5,
+      "traction_score": "Alto",
+      "highlight_caption": "Hoy pasamos una gran tarde en @utopialibertadcdmx en el 5to festival mexicano de las serpientes. Fue un gusto ..."
+    },
+    {
+      "event_date": "2026-07-25",
+      "event_title": "5to Festival de las Serpientes",
+      "event_venue": "Utopía Libertad, Iztapalapa, CDMX",
+      "event_type": "Familiar",
+      "correlated_posts_count": 10,
+      "total_reach": 772,
+      "total_views": 1571,
+      "total_interactions": 89,
+      "total_likes": 106,
+      "total_comments": 5,
+      "traction_score": "Alto",
+      "highlight_caption": "Hoy pasamos una gran tarde en @utopialibertadcdmx en el 5to festival mexicano de las serpientes. Fue un gusto ..."
+    },
+    {
+      "event_date": "2026-07-31",
+      "event_title": "Vacas Verdes Bellas Artes",
+      "event_venue": "Pulquería Vacas Verdes Bellas Artes, CDMX",
+      "event_type": "Bar",
+      "correlated_posts_count": 9,
+      "total_reach": 418,
+      "total_views": 582,
+      "total_interactions": 22,
+      "total_likes": 42,
+      "total_comments": 4,
+      "traction_score": "Alto",
+      "highlight_caption": "\"Arenga\" significa fiesta, algarabía y celebración, y Séptima Ola lo usa para unir corazones y mover cuerpos d..."
+    },
+    {
+      "event_date": "2026-08-07",
+      "event_title": "Radio Bahía Colossal Ska Orchestra en Gato Calavera",
+      "event_venue": "Gato Calavera, CDMX",
+      "event_type": "Bar",
+      "correlated_posts_count": 21,
+      "total_reach": 1107,
+      "total_views": 1902,
+      "total_interactions": 104,
+      "total_likes": 276,
+      "total_comments": 38,
+      "traction_score": "Alto",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-08-08",
+      "event_title": "XV años Iztapalapa",
+      "event_venue": "Iztapalapa, CDMX",
+      "event_type": "Familiar",
+      "correlated_posts_count": 18,
+      "total_reach": 782,
+      "total_views": 1281,
+      "total_interactions": 71,
+      "total_likes": 253,
+      "total_comments": 35,
+      "traction_score": "Alto",
+      "highlight_caption": null
+    },
+    {
+      "event_date": "2026-08-13",
+      "event_title": "Festival de las Juventudes 2026 (Colectivo / Insulini)",
+      "event_venue": "Utopía Mixiuhca, Iztacalco, CDMX",
+      "event_type": "Cultural",
+      "correlated_posts_count": 12,
+      "total_reach": 1006,
+      "total_views": 1536,
+      "total_interactions": 100,
+      "total_likes": 105,
+      "total_comments": 2,
+      "traction_score": "Alto",
+      "highlight_caption": "@toque_cumbiero con toda la actitud en el escenario en este gran #festivaldelasjuventudes2026"
+    },
+    {
+      "event_date": "2026-08-20",
+      "event_title": "Live session en Rock Titanio",
+      "event_venue": "Estudio Grabación Titanio Records, CDMX",
+      "event_type": "Foro",
+      "correlated_posts_count": 13,
+      "total_reach": 198,
+      "total_views": 324,
+      "total_interactions": 23,
+      "total_likes": 54,
+      "total_comments": 3,
+      "traction_score": "Alto",
+      "highlight_caption": "Este sábado 22 de agosto no pueden perderse la plática tan interesante y agradable que nos han traído estos gr..."
+    }
+  ],
+  "ai_analysis": {
+    "executive_summary": "Durante el periodo analizado, Séptima Ola registró una audiencia combinada de 609 seguidores (358 en Facebook y 251 en Instagram). Se identificaron 17 fechas de la agenda con tracción destacada. Los formatos de video en formato Reel y las colaboraciones con colectivos y medios de radio mostraron el mayor rendimiento relativo en alcance e interacción.",
+    "key_patterns": [
+      "Los contenidos en formato Reel y video (4 de los 8 posts con mayor impacto) logran el mayor volumen de visualizaciones orgánicas.",
+      "Las publicaciones que mencionan colaboraciones con otras bandas y cabinas de radio (6 de 8) duplican la tasa de comentarios.",
+      "Los eventos en foros y festivales culturales generan mayor volumen de interacción en las 48 horas previas y posteriores a la presentación."
+    ],
+    "recommendations": [
+      {
+        "category": "Formato",
+        "title": "Priorizar Reels con fragmentos en vivo de 15 a 30 segundos",
+        "description": "Las grabaciones directas de directos y sesiones en cabina registran el mejor ratio de reproducciones e interacciones."
+      },
+      {
+        "category": "Colaboraciones",
+        "title": "Co-publicar y etiquetar siempre a bandas invitadas y foros",
+        "description": "La co-promoción con proyectos como Armada Cultural, Colectivo Latino y estaciones de radio amplifica el alcance hacia nuevas audiencias."
+      },
+      {
+        "category": "Timing",
+        "title": "Publicar recordatorios 24h antes y agradecimientos 24h después",
+        "description": "La ventana de 48 horas alrededor de cada evento de la agenda es el periodo crítico donde los seguidores muestran mayor propensión a interactuar."
+      }
+    ]
+  }
+}

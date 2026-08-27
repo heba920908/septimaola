@@ -30,8 +30,10 @@ def setup_logger(
     log_level = logging.DEBUG if verbose else level
     logger.setLevel(log_level)
 
-    # Create console handler with timestamp and level
-    handler = logging.StreamHandler(sys.stdout)
+    # Create console handler with timestamp and level.
+    # Logs go to stderr so stdout stays clean for machine-readable output
+    # (e.g. `insights-report --dry-run` prints JSON to stdout).
+    handler = logging.StreamHandler(sys.stderr)
     handler.setLevel(log_level)
 
     # Create formatter: [LEVEL] [TIME] message

@@ -288,7 +288,7 @@ Traveling party size for out-of-town dates consists of **8 people** (6 on-stage 
 
 ## Experience
 
-* [agenda.md](agenda.md) — shows and presentations that were given by septima ola and the expertise
+* `automation/src/septima_automation/ai/agenda.py` — structured agenda and presentations given by Séptima Ola and show history.
 
 ## Songs Inventory
 

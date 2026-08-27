@@ -1,6 +1,7 @@
 """Configuration for Séptima Ola social media automation."""
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
 
@@ -90,3 +91,72 @@ DEEPSEEK_MODEL = "deepseek-v4-flash"
 # Facebook/Instagram API
 FACEBOOK_API_VERSION = "v25.0"
 FACEBOOK_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"
+
+# Insights / metrics reporting (see insights_report.py)
+#
+# Default cap on the number of recent posts/media items fetched per platform
+# per run (still enforced client-side even if the Graph API `since`/`limit`
+# params behave inconsistently). See
+# docs/decisions/0014-social-insights-json-report.md (2026-08-27 amendment).
+DEFAULT_POSTS_LIMIT = 90
+
+# Default lookback window (in days) for `--since` when not explicitly
+# provided: fetch posts/media from `today - DEFAULT_POSTS_SINCE_DAYS` to now.
+DEFAULT_POSTS_SINCE_DAYS = 90
+
+# Where the generated account-metrics report (history of follower/fan
+# counts) is written by default. Lives under react/src/data so a future
+# report/dashboard feature in the React app can read it directly. The file
+# is gitignored and regenerated on demand — see
+# docs/decisions/0014-social-insights-json-report.md.
+INSIGHTS_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "social-metrics.json"
+)
+
+# Where the generated posts/media report is written by default. Fully
+# overwritten on every run (no history) — see the 2026-08-27 amendment to
+# docs/decisions/0014-social-insights-json-report.md.
+POSTS_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "posts-metrics.json"
+)
+
+# Where the processed insights visualization document is written.
+# Committed to git to provide an offline baseline for the React app.
+INSIGHTS_DATA_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "insights-data.json"
+)
+
+# Instagram Graph API metric names for GET /{ig-media-id}/insights.
+# Requires the `instagram_manage_insights` permission on the access token.
+#
+# NOTE: `engagement` and `impressions` (used in earlier API versions) are
+# deprecated/rejected as of Graph API v22.0+:
+#   "(#100) metric[0] must be one of the following values: impressions,
+#   reach, replies, saved, likes, comments, shares, total_interactions,
+#   follows, profile_visits, ..."
+#   "Starting from version v22.0 and above, the impressions metric is no
+#   longer supported for the queried media."
+# `total_interactions` is the modern replacement for `engagement` (likes +
+# comments + shares + saves, net of un-likes/removed items). All metrics
+# below were confirmed live against both IMAGE and VIDEO/REELS media.
+INSTAGRAM_MEDIA_INSIGHTS_METRICS: List[str] = [
+    "reach",
+    "total_interactions",
+    "likes",
+    "comments",
+    "shares",
+    "saved",
+    "views",
+]
