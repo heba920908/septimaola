@@ -1,14 +1,21 @@
-"""Tests for the social metrics insights report (InsightsClient + CLI)."""
+"""Tests for the social/posts metrics insights report (InsightsClient + CLI)."""
 
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
 from septima_automation.social.insights import (
     InsightsClient,
+    PostsMetricsReport,
     SocialMetricsReport,
     SocialMetricsSnapshot,
 )
+
+# Fixed lookback far enough in the past that fixture timestamps (which use
+# recent/near-future-safe dates) are never filtered out by the client-side
+# `_filter_since` re-check, regardless of when the suite runs.
+SINCE = date(2000, 1, 1)
 
 
 class FakeResponse:
@@ -78,9 +85,9 @@ ACCOUNTS_ROUTE = (
 
 
 @pytest.mark.asyncio
-async def test_build_snapshot_success_with_graceful_insights_fallback():
-    """Snapshot assembles account + media data; missing insights permission
-    degrades to None instead of raising."""
+async def test_build_reports_success_with_graceful_insights_fallback():
+    """build_reports assembles account-only snapshot + posts report; missing
+    insights permission degrades to None instead of raising."""
 
     routes = [
         ACCOUNTS_ROUTE,
@@ -129,17 +136,24 @@ async def test_build_snapshot_success_with_graceful_insights_fallback():
     ]
 
     client = make_client(routes)
-    snapshot = await client.build_snapshot(limit=5)
+    snapshot, posts_report = await client.build_reports(SINCE, limit=5)
 
+    # Account snapshot: account fields only, no posts/media lists.
     assert snapshot.facebook.fan_count == 358
     assert snapshot.facebook.followers_count == 358
-    assert snapshot.facebook.posts == []
-    assert "pages_read_engagement" in snapshot.facebook.posts_error
+    assert not hasattr(snapshot.facebook, "posts")
 
     assert snapshot.instagram.username == "septimaolaoficial"
     assert snapshot.instagram.followers_count == 251
-    assert len(snapshot.instagram.media) == 1
-    media_item = snapshot.instagram.media[0]
+    assert not hasattr(snapshot.instagram, "media")
+
+    # Posts report: Facebook posts failed (permission gate), Instagram media
+    # succeeded but insights soft-failed to None.
+    assert posts_report.facebook_posts == []
+    assert "pages_read_engagement" in posts_report.facebook_posts_error
+
+    assert len(posts_report.instagram_posts) == 1
+    media_item = posts_report.instagram_posts[0]
     assert media_item.like_count == 10
     assert media_item.comments_count == 2
     # Insights permission missing -> soft-failed to None, not raised
@@ -149,12 +163,13 @@ async def test_build_snapshot_success_with_graceful_insights_fallback():
     assert media_item.saved is None
     assert media_item.views is None
 
-    assert snapshot.insights_permission_warning is not None
-    assert "instagram_manage_insights" in snapshot.insights_permission_warning
+    assert posts_report.insights_permission_warning is not None
+    assert "instagram_manage_insights" in posts_report.insights_permission_warning
+    assert posts_report.since == SINCE.isoformat()
 
 
 @pytest.mark.asyncio
-async def test_build_snapshot_with_working_insights_permission():
+async def test_build_reports_with_working_insights_permission():
     """When insights succeed, values are populated (forward-compatible once
     instagram_manage_insights is granted)."""
 
@@ -208,20 +223,118 @@ async def test_build_snapshot_with_working_insights_permission():
     ]
 
     client = make_client(routes)
-    snapshot = await client.build_snapshot(limit=5)
+    snapshot, posts_report = await client.build_reports(SINCE, limit=5)
 
-    media_item = snapshot.instagram.media[0]
+    media_item = posts_report.instagram_posts[0]
     assert media_item.reach == 80
     assert media_item.total_interactions == 12
     assert media_item.shares == 3
     assert media_item.saved == 1
     assert media_item.views == 200
-    assert snapshot.insights_permission_warning is None
-    assert snapshot.facebook.posts_error is None
+    assert posts_report.insights_permission_warning is None
+    assert posts_report.facebook_posts_error is None
+    # Account snapshot has no notion of a permission warning anymore.
+    assert not hasattr(snapshot, "insights_permission_warning")
 
 
-def test_report_round_trip_appends_history(tmp_path: Path):
-    """Simulate the CLI's load-append-write cycle across two runs."""
+@pytest.mark.asyncio
+async def test_build_reports_filters_items_older_than_since():
+    """Items older than `since` are dropped client-side even if the API
+    returns them (defense-in-depth against inconsistent `since` support)."""
+
+    routes = [
+        ACCOUNTS_ROUTE,
+        (
+            lambda url, params: url == "https://graph.facebook.com/v25.0/page-1",
+            {"id": "page-1", "name": "Séptima Ola", "fan_count": 358, "followers_count": 358},
+            200,
+        ),
+        (
+            lambda url, params: url.endswith("/page-1/posts"),
+            {
+                "data": [
+                    {
+                        "id": "post-old",
+                        "message": "old post",
+                        "created_time": "2000-01-01T00:00:00+0000",
+                        "permalink_url": "https://facebook.com/old",
+                    },
+                    {
+                        "id": "post-new",
+                        "message": "new post",
+                        "created_time": "2026-08-01T00:00:00+0000",
+                        "permalink_url": "https://facebook.com/new",
+                    },
+                ]
+            },
+            200,
+        ),
+        (
+            lambda url, params: url == "https://graph.facebook.com/v25.0/ig-1",
+            {"id": "ig-1", "username": "septimaolaoficial", "followers_count": 251, "media_count": 117},
+            200,
+        ),
+        (
+            lambda url, params: url.endswith("/ig-1/media"),
+            {"data": []},
+            200,
+        ),
+    ]
+
+    client = make_client(routes)
+    _, posts_report = await client.build_reports(date(2026, 1, 1), limit=90)
+
+    assert [p.id for p in posts_report.facebook_posts] == ["post-new"]
+
+
+@pytest.mark.asyncio
+async def test_build_reports_enforces_limit_after_filtering():
+    """`limit` caps the number of items returned per platform, applied after
+    the since-filter."""
+
+    posts_data = [
+        {
+            "id": f"post-{i}",
+            "message": "hi",
+            "created_time": "2026-08-01T00:00:00+0000",
+            "permalink_url": "https://facebook.com/x",
+        }
+        for i in range(5)
+    ]
+
+    routes = [
+        ACCOUNTS_ROUTE,
+        (
+            lambda url, params: url == "https://graph.facebook.com/v25.0/page-1",
+            {"id": "page-1", "name": "Séptima Ola", "fan_count": 358, "followers_count": 358},
+            200,
+        ),
+        (
+            lambda url, params: url.endswith("/page-1/posts"),
+            {"data": posts_data},
+            200,
+        ),
+        (
+            lambda url, params: url == "https://graph.facebook.com/v25.0/ig-1",
+            {"id": "ig-1", "username": "septimaolaoficial", "followers_count": 251, "media_count": 117},
+            200,
+        ),
+        (
+            lambda url, params: url.endswith("/ig-1/media"),
+            {"data": []},
+            200,
+        ),
+    ]
+
+    client = make_client(routes)
+    _, posts_report = await client.build_reports(SINCE, limit=2)
+
+    assert len(posts_report.facebook_posts) == 2
+
+
+def test_social_metrics_report_round_trip_appends_history(tmp_path: Path):
+    """Simulate the CLI's load-append-write cycle across two runs for the
+    account-metrics report (still a growing history)."""
 
     output_path = tmp_path / "social-metrics.json"
 
@@ -236,6 +349,23 @@ def test_report_round_trip_appends_history(tmp_path: Path):
 
     final = SocialMetricsReport.model_validate_json(output_path.read_text())
     assert len(final.history) == 2
+
+
+def test_posts_metrics_report_is_overwritten_not_appended(tmp_path: Path):
+    """Unlike social-metrics.json, posts-metrics.json has no history: each
+    run's output fully replaces the previous file's contents."""
+
+    output_path = tmp_path / "posts-metrics.json"
+
+    first = PostsMetricsReport(since="2026-01-01", until="2026-01-02T00:00:00+00:00")
+    output_path.write_text(first.model_dump_json(indent=2), encoding="utf-8")
+
+    second = PostsMetricsReport(since="2026-06-01", until="2026-06-02T00:00:00+00:00")
+    output_path.write_text(second.model_dump_json(indent=2), encoding="utf-8")
+
+    final = PostsMetricsReport.model_validate_json(output_path.read_text())
+    assert final.since == "2026-06-01"
+    assert not hasattr(final, "history")
 
 
 def test_report_handles_missing_file_gracefully(tmp_path: Path):

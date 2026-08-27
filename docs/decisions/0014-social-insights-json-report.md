@@ -113,3 +113,105 @@ forward-compatible as Meta continues to evolve the API.
 - **Neutral**: Changing the logger to write to stderr instead of stdout is a
   shared change affecting `daily-post` too; it does not alter `daily-post`'s
   behavior since it never relied on stdout for machine-readable output.
+
+## Amendment (2026-08-27): `--since` flag and account/posts schema split
+
+### Context
+
+The original schema embedded each run's Facebook posts and Instagram media
+(with per-item Insights) *inside* the same timestamped `history[]` entry as
+the account-level fields (`fan_count`, `followers_count`, `media_count`).
+Two problems emerged as this was used in practice:
+
+1. **Unbounded duplication**: every run re-fetched and re-stored the same
+   recent posts inside a brand-new `history` entry, since there was no
+   time-window control — `--limit` only capped items per call, not how far
+   back to look. Post-level data grew the file on every run even when
+   nothing new was posted.
+2. **Mixed cardinality**: account fields (followers, fan count) are a
+   meaningful time series to keep appending to; individual posts are not —
+   a post's engagement changes over time, but re-appending the *same* post
+   into a growing array on every run is not a useful history, just noise.
+
+Since the project is in early-stage development and both output files are
+gitignored/regenerated on demand (never committed), this amendment changes
+the schema directly rather than introducing a versioned/legacy-compatible
+migration path.
+
+### Decision
+
+- Split output into two files, each with a distinct persistence model:
+  - **`react/src/data/social-metrics.json`** — unchanged in spirit: a
+    growing `SocialMetricsReport.history: list[SocialMetricsSnapshot]`,
+    appended to on every run, containing **only** account-level fields
+    (Facebook: `page_id`, `name`, `fan_count`, `followers_count`; Instagram:
+    `account_id`, `username`, `followers_count`, `media_count`). Post/media
+    lists and `posts_error`/`media_error`/`insights_permission_warning` are
+    removed from this schema — they move to the new file below.
+  - **`react/src/data/posts-metrics.json`** — new. A single
+    `PostsMetricsReport` document (`generated_at`, `since`, `until`,
+    `facebook_posts: list[PostMetric]`, `facebook_posts_error`,
+    `instagram_posts: list[PostMetric]`, `instagram_posts_error`,
+    `insights_permission_warning`) that is **fully overwritten** on every
+    run — no `history`, no append. Each run is a fresh snapshot of "posts
+    in the current window," not a time series of posts.
+- Add a `--since YYYY-MM-DD` flag to `insights-report`. Defaults to
+  `today - 90 days` (`config.DEFAULT_POSTS_SINCE_DAYS = 90`) when omitted.
+  This becomes the `since` field recorded in `posts-metrics.json` and is
+  passed as the Graph API `since` query parameter on both
+  `GET /{page_id}/posts` and `GET /{ig-account-id}/media` (best-effort —
+  Meta's `since`/`until` support on these edges is inconsistent across API
+  versions, consistent with the graceful-degradation approach already
+  established for metric names).
+- Because the Graph API `since` param is best-effort, the client
+  additionally **filters results itself** after fetching: any item whose
+  `timestamp`/`created_time` falls before `since` is dropped, so correctness
+  never depends on Meta honoring the parameter.
+- Repurpose `--limit` as a **hard cap** on the number of posts/media items
+  fetched per platform per run (still passed as the Graph API `limit`
+  param, then re-enforced client-side after the `since` filter). Its
+  default increases from `10` to `90` (`config.DEFAULT_POSTS_LIMIT`), so
+  that "last 90 days" and "cap of 90 items" both hold as sensible defaults
+  simultaneously without one silently truncating the other in the common
+  case.
+- No pagination loop against Graph API cursors is added — one page per
+  platform per run, matching the existing best-effort philosophy. If the
+  window/limit combination needs more than one page's worth of items in
+  practice, that is a follow-up.
+- `InsightsClient` gains `build_reports(since, limit)`, which resolves the
+  Page ID / Page Access Token / Instagram Business Account ID **once** via
+  `resolve_account_context()` and returns both an account-only
+  `SocialMetricsSnapshot` and a `PostsMetricsReport`, avoiding a duplicate
+  account-resolution call per run. `build_snapshot()` is now account-only
+  (no posts/media fetch) for callers that only need account totals.
+- `insights-report` gains a `--posts-output` flag
+  (default: `config.POSTS_OUTPUT_PATH` →
+  `react/src/data/posts-metrics.json`), independent of the existing
+  `--output` flag for `social-metrics.json`.
+- `--dry-run` now prints a single JSON object with both documents:
+  `{"social_metrics": <SocialMetricsSnapshot>, "posts_metrics":
+  <PostsMetricsReport>}`.
+- `react/.gitignore` gains `src/data/posts-metrics.json`, alongside the
+  existing `src/data/social-metrics.json` entry.
+
+### Consequences
+
+- **Positive**: `social-metrics.json` stays a small, meaningful time series
+  of account totals; it no longer grows proportionally to how many posts
+  exist.
+- **Positive**: `posts-metrics.json` always reflects exactly "what's in the
+  last N days (capped at M items), as of this run" — trivial to reason
+  about and safe to regenerate from scratch at any time.
+- **Positive**: `--since`/`--limit` give explicit, predictable control over
+  the fetch window instead of an implicit "whatever the API returns by
+  default."
+- **Negative**: Any consumer that previously relied on
+  `SocialMetricsSnapshot.facebook.posts` / `.instagram.media` from the old
+  combined schema must be updated to read `posts-metrics.json` instead. As
+  of this amendment there are no such consumers (both files are gitignored,
+  local/manual-only, and no React component or CI job reads them yet), so
+  no migration code is written.
+- **Neutral**: Existing `social-metrics.json`/`posts-metrics.json` files on
+  disk from before this amendment are simply deleted and regenerated on the
+  next run — no schema-version field or migration path is introduced, per
+  the project's early-stage-development status.

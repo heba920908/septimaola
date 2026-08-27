@@ -94,12 +94,20 @@ FACEBOOK_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"
 
 # Insights / metrics reporting (see insights_report.py)
 #
-# Default number of recent posts/media to pull engagement data for.
-DEFAULT_MEDIA_LIMIT = 10
+# Default cap on the number of recent posts/media items fetched per platform
+# per run (still enforced client-side even if the Graph API `since`/`limit`
+# params behave inconsistently). See
+# docs/decisions/0014-social-insights-json-report.md (2026-08-27 amendment).
+DEFAULT_POSTS_LIMIT = 90
 
-# Where the generated JSON report is written by default. Lives under
-# react/src/data so a future report/dashboard feature in the React app can
-# read it directly. The file is gitignored and regenerated on demand — see
+# Default lookback window (in days) for `--since` when not explicitly
+# provided: fetch posts/media from `today - DEFAULT_POSTS_SINCE_DAYS` to now.
+DEFAULT_POSTS_SINCE_DAYS = 90
+
+# Where the generated account-metrics report (history of follower/fan
+# counts) is written by default. Lives under react/src/data so a future
+# report/dashboard feature in the React app can read it directly. The file
+# is gitignored and regenerated on demand — see
 # docs/decisions/0014-social-insights-json-report.md.
 INSIGHTS_OUTPUT_PATH = (
     Path(__file__).resolve().parent.parent.parent.parent
@@ -107,6 +115,17 @@ INSIGHTS_OUTPUT_PATH = (
     / "src"
     / "data"
     / "social-metrics.json"
+)
+
+# Where the generated posts/media report is written by default. Fully
+# overwritten on every run (no history) — see the 2026-08-27 amendment to
+# docs/decisions/0014-social-insights-json-report.md.
+POSTS_OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "react"
+    / "src"
+    / "data"
+    / "posts-metrics.json"
 )
 
 # Instagram Graph API metric names for GET /{ig-media-id}/insights.

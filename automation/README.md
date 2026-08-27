@@ -69,7 +69,7 @@ FACEBOOK_APP_CLIENT_SECRET=your_app_client_secret
 The automation needs a Page Access Token, not just an app secret. The recommended flow is:
 
 1. In [Graph API Explorer](https://developers.facebook.com/tools/explorer/), select your app.
-2. Generate a short-lived user token and grant the required permissions:
+2. Generate a short-lived user token and grant the required permissions: **NOTE** Important to use the page "septima ola" it will not work if you use "user token" or "page token" from other pages, should be the same page you want to post to.
    - `pages_manage_posts`
    - `pages_read_engagement`
    - `instagram_basic`
@@ -162,36 +162,50 @@ HASHTAGS = ["#SéptimaOla", "#Reggae", "#Ska", "#Rocksteady", "#MusicaMexicana"]
 
 ## Insights / Metrics Reporting
 
-`uv run insights-report` fetches Facebook Page and Instagram account metrics
-using the same `FACEBOOK_PAGE_ID` / `FACEBOOK_ACCESS_TOKEN` credentials as the
-daily post script, and appends a snapshot to a JSON report consumed by the
-React press kit (`react/src/data/social-metrics.json`).
+`uv run insights-report` fetches Facebook Page and Instagram metrics using
+the same `FACEBOOK_PAGE_ID` / `FACEBOOK_ACCESS_TOKEN` credentials as the
+daily post script, and writes **two** JSON reports consumed by the React
+press kit (see `docs/decisions/0014-social-insights-json-report.md`, the
+2026-08-27 amendment):
+
+- `react/src/data/social-metrics.json` — a growing `history` array of
+  **account-level** snapshots (Facebook `fan_count`/`followers_count`,
+  Instagram `followers_count`/`media_count`). Appended to on every run.
+- `react/src/data/posts-metrics.json` — Facebook posts and Instagram media
+  within the `--since` window (default: last 90 days), capped at `--limit`
+  items (default 90). **Fully overwritten** on every run — no history.
 
 ```bash
 cd automation
 uv run insights-report
 # Or with options:
+uv run insights-report --since 2026-06-01  # override the default 90-day window
 uv run insights-report --limit 20 --verbose
-uv run insights-report --dry-run          # print JSON to stdout, don't write the file
-uv run insights-report --output /tmp/social-metrics.json
+uv run insights-report --dry-run           # print JSON to stdout, don't write files
+uv run insights-report --output /tmp/social-metrics.json \
+    --posts-output /tmp/posts-metrics.json
 ```
 
-The report file is a growing `history` array — every run appends a new
-timestamped snapshot rather than overwriting the previous one, so it can
-back a future trend report. It is **gitignored**
-(`react/.gitignore` → `src/data/social-metrics.json`) and regenerated on
-demand; it is not committed to version control.
+`social-metrics.json` is a growing `history` array — every run appends a new
+timestamped account snapshot rather than overwriting the previous one, so it
+can back a future trend report. `posts-metrics.json` is regenerated from
+scratch every run — it always reflects exactly what's in the current
+`--since`/`--limit` window, nothing more. Both files are **gitignored**
+(`react/.gitignore` → `src/data/social-metrics.json`,
+`src/data/posts-metrics.json`) and regenerated on demand; neither is
+committed to version control.
 
 ### What's collected today vs. what requires extra permissions
 
 With the credentials described above, the script reliably fetches:
 
-- Facebook Page: `fan_count`, `followers_count`
+- Facebook Page account: `fan_count`, `followers_count`
 - Instagram account: `followers_count`, `media_count`
-- Instagram media: recent posts/reels with `like_count`, `comments_count`,
-  `timestamp`, `permalink`, plus real Insights metrics — `reach`,
-  `total_interactions`, `shares`, `saved`, `views` — once the access token
-  has the `instagram_manage_insights` permission (confirmed working live).
+- Instagram media (in `posts-metrics.json`): recent posts/reels with
+  `like_count`, `comments_count`, `timestamp`, `permalink`, plus real
+  Insights metrics — `reach`, `total_interactions`, `shares`, `saved`,
+  `views` — once the access token has the `instagram_manage_insights`
+  permission (confirmed working live).
 
 **Note on metric names**: Graph API v22.0+ rejects the legacy `engagement`
 and `impressions` metric names for media insights
@@ -201,6 +215,14 @@ modern replacement for `engagement` (likes + comments + shares + saves, net
 of removals). `config.INSTAGRAM_MEDIA_INSIGHTS_METRICS` reflects the current
 supported set.
 
+**Note on `--since`**: it's passed as the Graph API `since` query param on
+both `GET /{page_id}/posts` and `GET /{ig-account-id}/media` (best-effort —
+Meta's support for it on these edges is inconsistent), and additionally
+re-enforced client-side by dropping any post/media item whose timestamp
+predates it, so the window is correct regardless of API behavior. There is
+no pagination loop — one page per platform per run — so `--limit` acts as a
+hard cap on how many items can be returned even within the `--since` window.
+
 One endpoint remains gated independent of the token's scopes:
 
 - `GET /{page_id}/posts` requires `pages_read_engagement` **and** either
@@ -209,10 +231,11 @@ One endpoint remains gated independent of the token's scopes:
   `(#10) requires pages_read_engagement... or Page Public Content Access`.
 
 When this call fails, `insights-report` logs a warning once and writes an
-empty `posts` list / `posts_error` message instead of crashing, so the
-report is always generated. To unlock Facebook Page post-level engagement,
-request Advanced Access (or Page Public Content Access) for
-`pages_read_engagement` in the App Dashboard's App Review section.
+empty `facebook_posts` list / `facebook_posts_error` message in
+`posts-metrics.json` instead of crashing, so the report is always
+generated. To unlock Facebook Page post-level engagement, request Advanced
+Access (or Page Public Content Access) for `pages_read_engagement` in the
+App Dashboard's App Review section.
 
 ## Testing Locally
 

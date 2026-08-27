@@ -4,4 +4,5 @@ dist/
 .env.local
 public/images/
 src/data/social-metrics.json
+src/data/posts-metrics.json
 

@@ -1,10 +1,21 @@
-"""CLI entry point for generating the Facebook/Instagram metrics JSON report.
+"""CLI entry point for generating the Facebook/Instagram metrics JSON reports.
 
 Usage:
     uv run insights-report
+    uv run insights-report --since 2026-06-01
     uv run insights-report --limit 20 --verbose
-    uv run insights-report --dry-run          # print JSON, don't write the file
-    uv run insights-report --output /tmp/social-metrics.json
+    uv run insights-report --dry-run          # print JSON, don't write files
+    uv run insights-report --output /tmp/social-metrics.json \\
+        --posts-output /tmp/posts-metrics.json
+
+Writes two files (see docs/decisions/0014-social-insights-json-report.md,
+2026-08-27 amendment):
+
+- ``social-metrics.json`` — a growing ``history`` of account-level snapshots
+  (followers, fan count, media count). Appended to on every run.
+- ``posts-metrics.json`` — Facebook posts and Instagram media within the
+  last ``--since`` days (default 90), capped at ``--limit`` items (default
+  90). Fully overwritten on every run — no history.
 
 See automation/README.md for credential setup and current permission
 limitations (media-level insights require `instagram_manage_insights`,
@@ -15,41 +26,75 @@ import argparse
 import asyncio
 import logging
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .config import DEFAULT_MEDIA_LIMIT, INSIGHTS_OUTPUT_PATH
+from .config import (
+    DEFAULT_POSTS_LIMIT,
+    DEFAULT_POSTS_SINCE_DAYS,
+    INSIGHTS_OUTPUT_PATH,
+    POSTS_OUTPUT_PATH,
+)
 from .logger import setup_logger
 from .social.insights import InsightsClient, SocialMetricsReport
 
 logger = logging.getLogger(__name__)
 
 
+def _parse_since(value: str) -> date:
+    """Parse a `--since` CLI value as an ISO date (YYYY-MM-DD)."""
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            f"Invalid --since value {value!r}; expected YYYY-MM-DD"
+        ) from exc
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Fetch Facebook Page and Instagram account metrics and append "
-            "a snapshot to the JSON report used by the React press kit."
+            "Fetch Facebook Page and Instagram account/post metrics and "
+            "write the JSON reports used by the React press kit."
         )
+    )
+    parser.add_argument(
+        "--since",
+        type=_parse_since,
+        default=None,
+        help=(
+            "Only fetch posts/media created on or after this date "
+            f"(YYYY-MM-DD). Defaults to {DEFAULT_POSTS_SINCE_DAYS} days ago."
+        ),
     )
     parser.add_argument(
         "--limit",
         type=int,
-        default=DEFAULT_MEDIA_LIMIT,
-        help=f"Number of recent posts/media to fetch (default: {DEFAULT_MEDIA_LIMIT})",
+        default=DEFAULT_POSTS_LIMIT,
+        help=(
+            "Max number of posts/media to fetch per platform "
+            f"(default: {DEFAULT_POSTS_LIMIT})"
+        ),
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=INSIGHTS_OUTPUT_PATH,
-        help=f"Path to write the JSON report to (default: {INSIGHTS_OUTPUT_PATH})",
+        help=f"Path to write the account-metrics report to (default: {INSIGHTS_OUTPUT_PATH})",
+    )
+    parser.add_argument(
+        "--posts-output",
+        type=Path,
+        default=POSTS_OUTPUT_PATH,
+        help=f"Path to write the posts-metrics report to (default: {POSTS_OUTPUT_PATH})",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Print the generated snapshot as JSON instead of writing to disk",
+        help="Print the generated reports as JSON instead of writing to disk",
     )
     parser.add_argument(
         "--verbose",
@@ -60,7 +105,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def _load_existing_report(path: Path) -> SocialMetricsReport:
-    """Load an existing report file, or start a fresh one if missing/invalid."""
+    """Load an existing account-metrics report file, or start fresh."""
     if not path.exists():
         return SocialMetricsReport()
     try:
@@ -82,11 +127,17 @@ async def main(argv: list[str] | None = None) -> int:
     env_path = Path(__file__).parent.parent.parent / ".env"
     load_dotenv(env_path)
 
-    logger.info("Fetching Séptima Ola social media metrics...")
+    since = args.since or (date.today() - timedelta(days=DEFAULT_POSTS_SINCE_DAYS))
+
+    logger.info(
+        "Fetching Séptima Ola social media metrics (since=%s, limit=%d)...",
+        since.isoformat(),
+        args.limit,
+    )
 
     try:
         async with InsightsClient() as client:
-            snapshot = await client.build_snapshot(limit=args.limit)
+            snapshot, posts_report = await client.build_reports(since, limit=args.limit)
     except ValueError as exc:
         logger.error(f"Missing credentials: {exc}")
         return 1
@@ -97,15 +148,19 @@ async def main(argv: list[str] | None = None) -> int:
     report = _load_existing_report(args.output)
     report.history.append(snapshot)
 
-    payload = report.model_dump_json(indent=2, exclude_none=False)
+    social_payload = report.model_dump_json(indent=2, exclude_none=False)
+    posts_payload = posts_report.model_dump_json(indent=2, exclude_none=False)
 
     if args.dry_run:
         logger.info("DRY RUN — not writing to disk.")
-        print(payload)
+        print(f'{{"social_metrics": {social_payload}, "posts_metrics": {posts_payload}}}')
         return 0
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(payload + "\n", encoding="utf-8")
+    args.output.write_text(social_payload + "\n", encoding="utf-8")
+
+    args.posts_output.parent.mkdir(parents=True, exist_ok=True)
+    args.posts_output.write_text(posts_payload + "\n", encoding="utf-8")
 
     # Summary
     logger.info("=" * 50)
@@ -115,11 +170,8 @@ async def main(argv: list[str] | None = None) -> int:
         logger.info(
             f"Facebook : {snapshot.facebook.name or snapshot.facebook.page_id} "
             f"(fans={snapshot.facebook.fan_count}, "
-            f"followers={snapshot.facebook.followers_count}, "
-            f"posts_fetched={len(snapshot.facebook.posts)})"
+            f"followers={snapshot.facebook.followers_count})"
         )
-        if snapshot.facebook.posts_error:
-            logger.warning(f"Facebook posts error: {snapshot.facebook.posts_error}")
     else:
         logger.info("Facebook : SKIPPED (no page resolved)")
 
@@ -127,18 +179,27 @@ async def main(argv: list[str] | None = None) -> int:
         logger.info(
             f"Instagram: @{snapshot.instagram.username or snapshot.instagram.account_id} "
             f"(followers={snapshot.instagram.followers_count}, "
-            f"media_count={snapshot.instagram.media_count}, "
-            f"media_fetched={len(snapshot.instagram.media)})"
+            f"media_count={snapshot.instagram.media_count})"
         )
-        if snapshot.instagram.media_error:
-            logger.warning(f"Instagram media error: {snapshot.instagram.media_error}")
     else:
         logger.info("Instagram: SKIPPED (no account resolved)")
 
-    if snapshot.insights_permission_warning:
-        logger.warning(snapshot.insights_permission_warning)
+    logger.info(
+        f"Posts    : facebook={len(posts_report.facebook_posts)}, "
+        f"instagram={len(posts_report.instagram_posts)} "
+        f"(since={posts_report.since})"
+    )
+    if posts_report.facebook_posts_error:
+        logger.warning(f"Facebook posts error: {posts_report.facebook_posts_error}")
+    if posts_report.instagram_posts_error:
+        logger.warning(f"Instagram posts error: {posts_report.instagram_posts_error}")
+    if posts_report.insights_permission_warning:
+        logger.warning(posts_report.insights_permission_warning)
 
-    logger.info(f"Report written to {args.output} ({len(report.history)} snapshot(s) total)")
+    logger.info(
+        f"Account report written to {args.output} ({len(report.history)} snapshot(s) total)"
+    )
+    logger.info(f"Posts report written to {args.posts_output} (overwritten, no history)")
 
     return 0
 

@@ -28,14 +28,14 @@ crashes the whole report.
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 from typing import List, Optional
 
 import httpx
 from pydantic import BaseModel, Field
 
 from ..config import (
-    DEFAULT_MEDIA_LIMIT,
+    DEFAULT_POSTS_LIMIT,
     FACEBOOK_API_VERSION,
     FACEBOOK_BASE_URL,
     INSTAGRAM_MEDIA_INSIGHTS_METRICS,
@@ -66,42 +66,105 @@ class PostMetric(BaseModel):
 
 
 class FacebookAccountSnapshot(BaseModel):
-    """Facebook Page-level metrics available with the current token."""
+    """Facebook Page-level account metrics available with the current token.
+
+    Post-level data lives in ``PostsMetricsReport`` instead (see the
+    2026-08-27 amendment to ADR-0014) — this model is account-fields-only.
+    """
 
     page_id: Optional[str] = None
     name: Optional[str] = None
     fan_count: Optional[int] = None
     followers_count: Optional[int] = None
-    posts: List[PostMetric] = Field(default_factory=list)
-    posts_error: Optional[str] = None
 
 
 class InstagramAccountSnapshot(BaseModel):
-    """Instagram Business Account metrics available with the current token."""
+    """Instagram Business Account metrics available with the current token.
+
+    Media-level data lives in ``PostsMetricsReport`` instead (see the
+    2026-08-27 amendment to ADR-0014) — this model is account-fields-only.
+    """
 
     account_id: Optional[str] = None
     username: Optional[str] = None
     followers_count: Optional[int] = None
     media_count: Optional[int] = None
-    media: List[PostMetric] = Field(default_factory=list)
-    media_error: Optional[str] = None
 
 
 class SocialMetricsSnapshot(BaseModel):
-    """A single point-in-time metrics collection run."""
+    """A single point-in-time account-metrics collection run."""
 
     generated_at: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
     facebook: Optional[FacebookAccountSnapshot] = None
     instagram: Optional[InstagramAccountSnapshot] = None
-    insights_permission_warning: Optional[str] = None
 
 
 class SocialMetricsReport(BaseModel):
-    """Top-level JSON document written to react/src/data/social-metrics.json."""
+    """Top-level JSON document written to react/src/data/social-metrics.json.
+
+    A growing time series of account-level snapshots (followers, fan
+    count, media count) — one entry appended per run.
+    """
 
     history: List[SocialMetricsSnapshot] = Field(default_factory=list)
+
+
+class PostsMetricsReport(BaseModel):
+    """Top-level JSON document written to react/src/data/posts-metrics.json.
+
+    Fully overwritten on every run (no history/append) — a fresh snapshot
+    of Facebook posts and Instagram media within [``since``, ``until``],
+    capped at the run's ``--limit``. See the 2026-08-27 amendment to
+    ADR-0014.
+    """
+
+    generated_at: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
+    since: str
+    until: str
+    facebook_posts: List[PostMetric] = Field(default_factory=list)
+    facebook_posts_error: Optional[str] = None
+    instagram_posts: List[PostMetric] = Field(default_factory=list)
+    instagram_posts_error: Optional[str] = None
+    insights_permission_warning: Optional[str] = None
+
+
+def _parse_item_timestamp(value: Optional[str]) -> Optional[datetime]:
+    """Best-effort parse of a Graph API timestamp (`created_time`/`timestamp`).
+
+    Returns ``None`` if missing/unparseable so filtering can skip (keep)
+    the item rather than dropping data on a formatting surprise.
+    """
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
+def _filter_since(items: List[PostMetric], since: date) -> List[PostMetric]:
+    """Drop items whose timestamp predates ``since`` (client-side re-check).
+
+    The Graph API `since` query param is passed best-effort on the request
+    itself, but its support is inconsistent across edges/API versions, so
+    this filter re-enforces the window regardless of what the API returned.
+    Items with a missing/unparseable timestamp are kept rather than dropped.
+    """
+    since_dt = datetime.combine(since, time.min, tzinfo=timezone.utc)
+    filtered = []
+    for item in items:
+        parsed = _parse_item_timestamp(item.timestamp)
+        if parsed is not None and parsed < since_dt:
+            continue
+        filtered.append(item)
+    return filtered
 
 
 class InsightsClient(SocialPublisher):
@@ -225,9 +288,20 @@ class InsightsClient(SocialPublisher):
         return snapshot
 
     async def fetch_facebook_posts(
-        self, page_id: str, access_token: str, limit: int = DEFAULT_MEDIA_LIMIT
+        self,
+        page_id: str,
+        access_token: str,
+        since: date,
+        limit: int = DEFAULT_POSTS_LIMIT,
     ) -> tuple[List[PostMetric], Optional[str]]:
         """Fetch recent Facebook Page posts with basic engagement fields.
+
+        ``since`` is passed as the Graph API ``since`` query param
+        (best-effort — Meta's support for it on this edge is inconsistent)
+        and additionally re-enforced client-side by dropping any post whose
+        ``created_time`` predates it, so correctness never depends on the
+        API honoring the parameter. Results are capped at ``limit`` items
+        after filtering.
 
         Note: as of this writing this endpoint returns
         "(#10) requires pages_read_engagement permission or Page Public
@@ -244,6 +318,7 @@ class InsightsClient(SocialPublisher):
                         "likes.summary(true),comments.summary(true)"
                     ),
                     "limit": limit,
+                    "since": since.isoformat(),
                     "access_token": access_token,
                 },
             )
@@ -274,6 +349,7 @@ class InsightsClient(SocialPublisher):
             )
             for item in data
         ]
+        posts = _filter_since(posts, since)[:limit]
         return posts, None
 
     async def fetch_instagram_account(
@@ -302,10 +378,17 @@ class InsightsClient(SocialPublisher):
         self,
         account_id: str,
         access_token: str,
-        limit: int = DEFAULT_MEDIA_LIMIT,
+        since: date,
+        limit: int = DEFAULT_POSTS_LIMIT,
         with_insights: bool = True,
     ) -> tuple[List[PostMetric], Optional[str]]:
         """Fetch recent Instagram media with engagement fields.
+
+        ``since`` is passed as the Graph API ``since`` query param
+        (best-effort) and additionally re-enforced client-side by dropping
+        any item whose ``timestamp`` predates it, so correctness never
+        depends on the API honoring the parameter. Results are capped at
+        ``limit`` items after filtering.
 
         When ``with_insights`` is True, also attempts (best-effort) to
         enrich each item with reach/total_interactions/shares/saved/views via
@@ -320,6 +403,7 @@ class InsightsClient(SocialPublisher):
                         "like_count,comments_count,permalink"
                     ),
                     "limit": limit,
+                    "since": since.isoformat(),
                     "access_token": access_token,
                 },
             )
@@ -348,41 +432,75 @@ class InsightsClient(SocialPublisher):
                 like_count=item.get("like_count"),
                 comments_count=item.get("comments_count"),
             )
-            if with_insights:
+            media.append(metric)
+
+        media = _filter_since(media, since)[:limit]
+
+        if with_insights:
+            for metric in media:
                 insights = await self.fetch_media_insights(metric.id, access_token)
                 metric.reach = insights.get("reach")
                 metric.total_interactions = insights.get("total_interactions")
                 metric.shares = insights.get("shares")
                 metric.saved = insights.get("saved")
                 metric.views = insights.get("views")
-            media.append(metric)
         return media, None
 
-    async def build_snapshot(
-        self, limit: int = DEFAULT_MEDIA_LIMIT
-    ) -> SocialMetricsSnapshot:
-        """Fetch everything available and assemble a single snapshot."""
+    async def build_snapshot(self) -> SocialMetricsSnapshot:
+        """Fetch account-level fields only and assemble a single snapshot.
+
+        Post/media-level data is fetched separately by ``build_reports`` —
+        see the 2026-08-27 amendment to ADR-0014.
+        """
         page_id, page_token, instagram_account_id = await self._resolve_context()
 
         facebook_snapshot: Optional[FacebookAccountSnapshot] = None
         if page_id:
             facebook_snapshot = await self.fetch_facebook_account(page_id, page_token)
-            posts, posts_error = await self.fetch_facebook_posts(
-                page_id, page_token, limit=limit
-            )
-            facebook_snapshot.posts = posts
-            facebook_snapshot.posts_error = posts_error
 
         instagram_snapshot: Optional[InstagramAccountSnapshot] = None
         if instagram_account_id:
             instagram_snapshot = await self.fetch_instagram_account(
                 instagram_account_id, page_token
             )
-            media, media_error = await self.fetch_instagram_media(
-                instagram_account_id, page_token, limit=limit
+
+        return SocialMetricsSnapshot(
+            facebook=facebook_snapshot,
+            instagram=instagram_snapshot,
+        )
+
+    async def build_posts_report(
+        self,
+        since: date,
+        limit: int = DEFAULT_POSTS_LIMIT,
+        page_id: Optional[str] = None,
+        page_token: Optional[str] = None,
+        instagram_account_id: Optional[str] = None,
+    ) -> PostsMetricsReport:
+        """Fetch Facebook posts and Instagram media within [since, now].
+
+        If the account-context args are omitted, resolves them via
+        ``_resolve_context()`` first (prefer ``build_reports`` to resolve
+        once and get both documents in a single call).
+        """
+        if page_id is None and page_token is None and instagram_account_id is None:
+            page_id, page_token, instagram_account_id = await self._resolve_context()
+
+        until = datetime.now(timezone.utc)
+
+        facebook_posts: List[PostMetric] = []
+        facebook_posts_error: Optional[str] = None
+        if page_id:
+            facebook_posts, facebook_posts_error = await self.fetch_facebook_posts(
+                page_id, page_token, since=since, limit=limit
             )
-            instagram_snapshot.media = media
-            instagram_snapshot.media_error = media_error
+
+        instagram_posts: List[PostMetric] = []
+        instagram_posts_error: Optional[str] = None
+        if instagram_account_id:
+            instagram_posts, instagram_posts_error = await self.fetch_instagram_media(
+                instagram_account_id, page_token, since=since, limit=limit
+            )
 
         warning = None
         if self._insights_warning_logged:
@@ -395,11 +513,46 @@ class InsightsClient(SocialPublisher):
                 "automation/README.md for details."
             )
 
-        return SocialMetricsSnapshot(
-            facebook=facebook_snapshot,
-            instagram=instagram_snapshot,
+        return PostsMetricsReport(
+            since=since.isoformat(),
+            until=until.isoformat(),
+            facebook_posts=facebook_posts,
+            facebook_posts_error=facebook_posts_error,
+            instagram_posts=instagram_posts,
+            instagram_posts_error=instagram_posts_error,
             insights_permission_warning=warning,
         )
+
+    async def build_reports(
+        self, since: date, limit: int = DEFAULT_POSTS_LIMIT
+    ) -> tuple[SocialMetricsSnapshot, PostsMetricsReport]:
+        """Resolve account context once and build both output documents."""
+        page_id, page_token, instagram_account_id = await self._resolve_context()
+
+        facebook_snapshot: Optional[FacebookAccountSnapshot] = None
+        if page_id:
+            facebook_snapshot = await self.fetch_facebook_account(page_id, page_token)
+
+        instagram_snapshot: Optional[InstagramAccountSnapshot] = None
+        if instagram_account_id:
+            instagram_snapshot = await self.fetch_instagram_account(
+                instagram_account_id, page_token
+            )
+
+        social_metrics = SocialMetricsSnapshot(
+            facebook=facebook_snapshot,
+            instagram=instagram_snapshot,
+        )
+
+        posts_report = await self.build_posts_report(
+            since,
+            limit=limit,
+            page_id=page_id,
+            page_token=page_token,
+            instagram_account_id=instagram_account_id,
+        )
+
+        return social_metrics, posts_report
 
     async def close(self):
         await self.client.aclose()
