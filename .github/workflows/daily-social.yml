@@ -2,8 +2,8 @@ name: Daily Social Media Post
 
 on:
   schedule:
-    # Run Tuesdays and Thursdays at 12 UTC (6 AM Mexico City time)
-    - cron: '0 12 * * 2,4'
+    # Run Tuesdays at 12 UTC (6 AM Mexico City time)
+    - cron: '0 12 * * 2'
   # Dry run to test the workflow without posting to social media
   # push:
   #   branches:

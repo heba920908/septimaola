@@ -46,16 +46,16 @@ VIDEOS_CONFIG: List[VideoAsset] = [
     VideoAsset("16S2aLIQvHSBjwPMp26_P_oQ9oXhthDmN.mp4", "16S2aLIQvHSBjwPMp26_P_oQ9oXhthDmN", "Despertar", "Séptima Ola"),
     VideoAsset("1Bt_Vm2IsfBj70Vnlj5YsXj7GgxhO1O-S.mp4", "1Bt_Vm2IsfBj70Vnlj5YsXj7GgxhO1O-S", "Despertar", "Séptima Ola"),
     VideoAsset("1b0kxvepKzA6y3zUEsrgHn3JPGHfASZ-J.mp4", "1b0kxvepKzA6y3zUEsrgHn3JPGHfASZ-J", "Despertar", "Séptima Ola"),
-    VideoAsset("1spxowVjP9WjLAFUxPHXxMeZwlQDGWIHz.mp4", "1spxowVjP9WjLAFUxPHXxMeZwlQDGWIHz", "Despertar", "Séptima Ola"),
-    VideoAsset("1p9l3Lju-AYpcsgrHBUxDuCL1JTI6pulc.mp4", "1p9l3Lju-AYpcsgrHBUxDuCL1JTI6pulc", "Despertar", "Séptima Ola"),
-    VideoAsset("1Ylw8LdRVJLEbZIvO3lIV1JXHxqXhoghH.mp4", "1Ylw8LdRVJLEbZIvO3lIV1JXHxqXhoghH", "Despertar", "Séptima Ola"),
     VideoAsset("14mRI39q7LuCiMh-XI8cn3xtXwsM_g1um.mp4", "14mRI39q7LuCiMh-XI8cn3xtXwsM_g1um", "TQM", "Séptima Ola"),
     VideoAsset("1D_UAfzsNV34HEmGwFppnEsS3X8vSVYms.mp4", "1D_UAfzsNV34HEmGwFppnEsS3X8vSVYms", "TQM", "Séptima Ola"),
     VideoAsset("1AgJn9HB7_EtIX7ftwH-2WGmArV2bxTXK.mp4", "1AgJn9HB7_EtIX7ftwH-2WGmArV2bxTXK", "TQM", "Séptima Ola"),
     VideoAsset("1RkG47D02x-rlmA_FIAeMlqRQknAJvSVA.mp4", "1RkG47D02x-rlmA_FIAeMlqRQknAJvSVA", "TQM", "Séptima Ola"),
-    VideoAsset("1T_XkwxYjvRbuOALrHfEA1ziTFfQmNkBj.mp4", "1T_XkwxYjvRbuOALrHfEA1ziTFfQmNkBj", "TQM", "Séptima Ola"),
-    VideoAsset("1Gi5qwFSBNljs1bPJrwI7em2jie8uNqVw.mp4", "1Gi5qwFSBNljs1bPJrwI7em2jie8uNqVw", "TQM", "Séptima Ola"),
-    VideoAsset("1F58oDyAVel88td1UspGMbSPkh5ZKyWue.mp4", "1F58oDyAVel88td1UspGMbSPkh5ZKyWue", "TQM", "Séptima Ola"),
+    VideoAsset("1lFkU0829zNukO6VTksdcUF9WrYNNdREx.mp4", "1lFkU0829zNukO6VTksdcUF9WrYNNdREx", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1XMoYIuDfzuouqGgR-bJjHSf01DSaa_KC.mp4", "1XMoYIuDfzuouqGgR-bJjHSf01DSaa_KC", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1yai9hNM06ugHZcUBwIUw3vnGLF3rJcnL.mp4", "1yai9hNM06ugHZcUBwIUw3vnGLF3rJcnL", "A Contraluz", "Séptima Ola"),
+    VideoAsset("13wor9q5uYkfAyTYgPySFYUAyLb7_WpFt.mp4", "13wor9q5uYkfAyTYgPySFYUAyLb7_WpFt", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1gY2r_DPypZA5m0UFWSUycUlpSlv5sXgY.mp4", "1gY2r_DPypZA5m0UFWSUycUlpSlv5sXgY", "A Contraluz", "Séptima Ola"),
+    VideoAsset("1VBvApw2XrxphQ6SjA8cyeH6dZm3nKAQ2.mp4", "1VBvApw2XrxphQ6SjA8cyeH6dZm3nKAQ2", "A Contraluz", "Séptima Ola"),
 ]
 
 # Hashtags to include in posts
