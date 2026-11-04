@@ -12,19 +12,20 @@
 #                   (default: automation/.inputs/input.mp3).
 #   MAIN_VIDEO      Video that will be normalized, then randomly split into
 #                   3 sub-sections (default: automation/.inputs/video_1.mp4).
-#   ENDING_VIDEO    Short closing video appended at the end – trimmed to ~5 s
-#                   if longer (default: automation/.inputs/video_1.mp4).
+#   ENDING_VIDEO    Closing video appended at the end in its entirety
+#                   (default: automation/.inputs/video_1.mp4).
 #   OUTPUT_DIR      Directory to save the generated video (default: ./output).
-#   CLIP_DURATION   Total duration of the final output in seconds (default: 30).
+#   CLIP_DURATION   Legacy requested duration in seconds (default: 30). The
+#                   output is extended when needed to preserve ENDING_VIDEO.
 #
 # Pipeline:
 #   1. Randomly pick 3 non-overlapping sub-sections from the main video.
 #   2. Extract each sub-section, normalize resolution/frame, and apply a random
 #      visual effect (sepia, B&W, cool hues, warm hues, vibrance, or pass-through).
 #   3. Concatenate sub-sections with crossfade transitions between them.
-#   4. Trim ENDING_VIDEO to ~5 s and normalize it to the target resolution.
-#   5. Append the ending video and mux the final MP3 audio segment (random start,
-#      CLIP_DURATION length) into the video stream.
+#   4. Normalize ENDING_VIDEO to the target resolution without trimming it.
+#   5. Append the complete ending video and mux an MP3 audio segment matching the
+#      assembled video duration.
 #
 # Examples:
 #   ./generate_reel_from_video.sh
@@ -42,7 +43,6 @@ OUTPUT_DIR="${4:-./output}"
 CLIP_DURATION="${5:-30}"
 
 SUB_CLIP_DURATION=5
-ENDING_TARGET_SECONDS=5
 TRANSITION_DURATION=0.5
 
 VIDEO_WIDTH=1080
@@ -129,18 +129,7 @@ fi
 
 # ── derive timing ────────────────────────────────────────────────────────────
 
-if [[ "$ending_duration" -gt "$ENDING_TARGET_SECONDS" ]]; then
-    effective_ending="$ENDING_TARGET_SECONDS"
-else
-    effective_ending="$ending_duration"
-fi
-
-if [[ "$effective_ending" -ge "$CLIP_DURATION" ]]; then
-    echo "Error: Ending video duration (${effective_ending}s) must be shorter than CLIP_DURATION (${CLIP_DURATION}s)." >&2
-    exit 1
-fi
-
-remaining_clip=$((CLIP_DURATION - effective_ending))
+effective_ending="$ending_duration"
 min_sub_section=3
 
 if [[ "$main_duration" -lt $((min_sub_section * SUB_CLIP_DURATION)) ]]; then
@@ -260,7 +249,7 @@ echo "======================================"
 echo "Reel-from-Video Generation"
 echo "======================================"
 echo "Main video:      $MAIN_VIDEO (${main_duration}s)"
-echo "Ending video:    $ENDING_VIDEO (${ending_duration}s → trimmed to ${effective_ending}s)"
+echo "Ending video:    $ENDING_VIDEO (${ending_duration}s, kept complete)"
 echo "Audio file:      $AUDIO_FILE (${audio_duration}s)"
 echo "Output directory:$OUTPUT_DIR"
 echo "Clip duration:   ${CLIP_DURATION}s"
@@ -374,9 +363,9 @@ ffmpeg -hide_banner -loglevel error \
 
 echo ""
 
-# ── step 4: normalize and trim ending video ──────────────────────────────────
+# ── step 4: normalize complete ending video ──────────────────────────────────
 
-echo "[4/5] Normalizing and trimming ending video to ${effective_ending}s..."
+echo "[4/5] Normalizing complete ending video (${effective_ending}s)..."
 ENDING_FILTER=$(frame_filter "ending")
 
 ffmpeg -hide_banner -loglevel error \
@@ -385,7 +374,6 @@ ffmpeg -hide_banner -loglevel error \
     -vf "${ENDING_FILTER}" \
     -r "$VIDEO_FPS" \
     -pix_fmt yuv420p \
-    -t "$effective_ending" \
     -an \
     -y "$NORM_ENDING"
 
@@ -406,15 +394,23 @@ ffmpeg -hide_banner -loglevel error \
     -movflags +faststart \
     -y "$MAIN_AND_ENDING"
 
-combined_video_duration_raw=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$MAIN_AND_ENDING")
-combined_video_duration=${combined_video_duration_raw%.*}
+combined_video_duration=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$MAIN_AND_ENDING")
 
-if [[ "$combined_video_duration" -le 0 ]]; then
+if ! awk -v duration="$combined_video_duration" 'BEGIN { exit !(duration > 0) }'; then
     echo "Error: Combined video has zero duration." >&2
     exit 1
 fi
 
-max_audio_start=$((audio_duration - CLIP_DURATION))
+audio_segment_duration="$combined_video_duration"
+if ! awk -v audio_duration="$audio_duration" -v segment_duration="$audio_segment_duration" 'BEGIN { exit !(audio_duration >= segment_duration) }'; then
+    echo "Error: AUDIO_FILE (${audio_duration}s) is shorter than the assembled video (${audio_segment_duration}s); cannot preserve the complete ending video." >&2
+    exit 1
+fi
+
+max_audio_start=$(awk -v audio_duration="$audio_duration" -v segment_duration="$audio_segment_duration" 'BEGIN {
+    max_start = int(audio_duration - segment_duration)
+    print (max_start > 0 ? max_start : 0)
+}')
 if [[ "$max_audio_start" -le 0 ]]; then
     max_audio_start=0
 fi
@@ -436,6 +432,7 @@ audio_start=$(random_audio_start "$max_audio_start")
 audio_start_formatted=$(printf "%02d:%02d:%02d" $((audio_start / 3600)) $(((audio_start % 3600) / 60)) $((audio_start % 60)))
 
 echo "  Audio start: ${audio_start_formatted} (second $audio_start)"
+echo "  Audio duration: ${audio_segment_duration}s"
 
 ffmpeg -hide_banner -loglevel error \
     -ss "$audio_start_formatted" -i "$AUDIO_FILE" \
@@ -443,7 +440,7 @@ ffmpeg -hide_banner -loglevel error \
     -map 1:v:0 -map 0:a:0 \
     -c:v copy \
     -c:a aac -b:a "$AUDIO_BITRATE" -ac 2 -ar "$AUDIO_SAMPLE_RATE" \
-    -t "$CLIP_DURATION" \
+    -t "$audio_segment_duration" \
     -movflags +faststart \
     -y "$OUTPUT_FILE"
 
